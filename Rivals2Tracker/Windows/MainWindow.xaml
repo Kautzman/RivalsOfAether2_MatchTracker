@@ -1,0 +1,111 @@
+﻿<kwin:kWindow x:Class="Rivals2Tracker.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Rivals2Tracker"
+        xmlns:kwin="clr-namespace:kWindows.Core"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="650" Width="1225"
+        Style="{StaticResource BaseWindow}">
+    <kwin:kWindow.DataContext>
+        <local:MainWindow_VM />
+    </kwin:kWindow.DataContext>
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0" ResizeBorderThickness="8, 4, 8, 8" />
+    </WindowChrome.WindowChrome>
+    <Grid>
+        <DockPanel>
+            <Grid DockPanel.Dock="Top" Height="30" Background="{StaticResource BG_Titlebar}" MouseDown="EnableDrag">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button x:Name="WindowMinimize" Style="{StaticResource WindowingButton}" Click="WindowMiminizeClick">
+                        <Image Style="{StaticResource Windowing_Image}" Source="/Rivals2Tracker;component/Resources/Icons/Windowing/Minimize.png" />
+                    </Button>
+
+                    <Button x:Name="WindowMaximize" Style="{StaticResource WindowingButton}" Click="WindowMaximizeClick">
+                        <Image Style="{StaticResource Windowing_MaxMinImage}"/>
+                    </Button>
+
+                    <Button x:Name="WindowClose" Style="{StaticResource WindowingButton_Close}" Click="WindowCloseClick">
+                        <Image Style="{StaticResource Windowing_Image}" Source="/Rivals2Tracker;component/Resources/Icons/Windowing/Close.png" />
+                    </Button>
+                </StackPanel>
+            </Grid>
+            <Grid DockPanel.Dock="Bottom">
+                <DockPanel LastChildFill="True">
+                    <Grid DockPanel.Dock="Left" Width="700">
+                        <DockPanel>
+                            <Grid HorizontalAlignment="Stretch">
+                                <DockPanel LastChildFill="True">
+                                    <Grid DockPanel.Dock="Top" Height="280" Background="{StaticResource BG_ClickedItem}">
+                                        <Label Content="{Binding ActiveMatchStatusString}" Width="160" Height="40" FontSize="18" FontWeight="Bold" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalAlignment="Top" Margin="20, 0, 20, 0" />
+                                        
+                                        <StackPanel Width="100" HorizontalAlignment="Left" Margin="0, 5, 0, 0">
+                                            <Label Content="My Rating:" HorizontalContentAlignment="Right" Margin="0, 5, 0, 0" Height="30"/>
+                                            <Label Content="Opp. Rating:" HorizontalContentAlignment="Right" Margin="0, 5, 0, 0" Height="30"/>
+                                            <Label Content="Opponents:" HorizontalContentAlignment="Right" Margin="0, 5, 0, 0" Height="30"/>
+                                            <Label Content="Patch" HorizontalContentAlignment="Right" Margin="0, 5, 0, 0" Height="30"/>
+                                            <Label Content="Notes" HorizontalContentAlignment="Right" Margin="0, 5, 0, 0" Height="30"/>
+                                            <Label Content="Results:" HorizontalContentAlignment="Right" Margin="0, 10, 0, 0" Height="30"/>
+                                        </StackPanel>
+
+                                        <StackPanel Width="500" HorizontalAlignment="Left" Margin="105, 5, 0, 0">
+                                            <Grid Margin="0, 7, 0, 0">
+                                                <TextBox Text="{Binding ActiveMatch.Me.Elo}" Width="80" HorizontalAlignment="Left" TabIndex="1" IsReadOnly="{Binding IsInputLocked}"/>
+                                                <Label Content="My Char: " Margin="100, 0, 0, 0"/>
+                                                <TextBox Text="{Binding ActiveMatch.Me.Character}" Width="150" HorizontalAlignment="Left" Margin="170, 0, 0, 0" IsReadOnly="{Binding IsInputLocked}"/>
+                                            </Grid>
+
+                                            <TextBox Text="{Binding ActiveMatch.Opponent.Elo}" Width="80" HorizontalAlignment="Left" Margin="0, 9, 0, 0" TabIndex="2" IsReadOnly="{Binding IsInputLocked}"/>
+                                            
+                                            <Grid Margin="0, 9, 0, 0">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBox Text="{Binding ActiveMatch.Opponent.Character}" Width="125" HorizontalAlignment="Left" Margin="0, 0, 10, 0" TabIndex="3" IsReadOnly="{Binding IsInputLocked}"/>
+                                                    <TextBox Text="{Binding ActiveMatch.Opponent.Character2}" Width="125" HorizontalAlignment="Left" Margin="0, 0, 10, 0" TabIndex="4" IsReadOnly="{Binding IsInputLocked}"/>
+                                                    <TextBox Text="{Binding ActiveMatch.Opponent.Character3}" Width="125" HorizontalAlignment="Left" TabIndex="5" IsReadOnly="{Binding IsInputLocked}"/>
+                                                </StackPanel>
+                                            </Grid>
+
+                                            <Grid>
+                                                <TextBox Text="{Binding ActiveMatch.Patch}" Width="80" HorizontalAlignment="Left" Margin="0, 9, 0, 0" IsReadOnly="{Binding IsInputLocked}"/>
+                                                <Label Content="&#xE72B;" Width="40" Height="25" Margin="90, 10, 0, 0" HorizontalAlignment="Left" FontSize="16" FontFamily="Segoe MDL2 Assets"/>
+                                                <TextBox Text="{Binding CurrentPatch}" Width="80" HorizontalAlignment="Left" Margin="120, 9, 0, 0" />
+                                            </Grid>
+
+
+                                            <TextBox Text="{Binding ActiveMatch.Notes}" Width="450" HorizontalAlignment="Left" Margin="0, 9, 0, 0" TabIndex="6" IsReadOnly="{Binding IsInputLocked}"/>
+
+                                            <Grid Margin="0, 9, 0, 0">
+                                                <Button Content="Win" Height="40" FontSize="16" Width="100" HorizontalAlignment="Left" Foreground="#33FF33" Command="{Binding SetMatchWinCommand}"/>
+                                                <Button Content="Lose" Height="40" FontSize="16" Width="100" Margin="110, 0, 0, 0" HorizontalAlignment="Left" Foreground="#FF3333" Command="{Binding SetMatchLoseCommand}"/>
+                                                <Button Content="Discard" Height="40" FontSize="16" Width="100" Margin="220, 0, 0, 0" HorizontalAlignment="Left" Foreground="#DDD" Command="{Binding SetMatchDiscardCommand}"/>
+                                                <Button Content="Get Match" Height="40" FontSize="16" Width="100" Margin="400, 0, 0, 0" HorizontalAlignment="Left" Foreground="#6868FF" Command="{Binding TestOcrCommand}"/>
+                                            </Grid>
+                                        </StackPanel>
+                                        
+                                        <Label Content="{Binding ActivityText}" Width="630" Height="40" FontSize="15" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="20, 0, 0, 5" Foreground="#9090FF"/>
+                                    </Grid>
+
+                                    <Grid Background="{StaticResource BG_Component}">
+                                        <Grid Margin="0, 5, 0, 0">
+                                            <Label Content="Opp. Elo" Margin="60, 0, 0, 0" FontSize="12" FontWeight="DemiBold"/>
+                                            <Label Content="My Elo" Margin="120, 0, 0, 0" FontSize="12" FontWeight="DemiBold"/>
+                                            <Label Content="Opp. Char" Margin="215, 0, 0, 0" FontSize="12" FontWeight="DemiBold"/>
+                                            <Label Content="Opp. Char 2" Margin="330, 0, 0, 0" FontSize="12" FontWeight="DemiBold"/>
+                                            <Label Content="Opp. Char 3" Margin="450, 0, 0, 0" FontSize="12" FontWeight="DemiBold"/>
+                                        </Grid>
+                                        <ListView ItemTemplate="{StaticResource MatchResultsTemplate}" ItemsSource="{Binding MatchResults}" Background="{StaticResource BG_Titlebar}" Margin="0, 40, 0, 0" />
+                                    </Grid>
+                                </DockPanel>
+                            </Grid>
+                        </DockPanel>
+                    </Grid>
+
+                    <Grid DockPanel.Dock="Right" Background="Blue">
+                        <!-- Patch Data -->
+                    </Grid>
+                </DockPanel>
+            </Grid>
+        </DockPanel>
+    </Grid>
+</kwin:kWindow>
