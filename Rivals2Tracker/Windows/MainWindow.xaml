@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Rivals2Tracker"
         xmlns:kwin="clr-namespace:kWindows.Core"
         mc:Ignorable="d"
-        Title="MainWindow" Height="650" Width="1225"
+        Title="MainWindow" Height="950" Width="1725"
         Style="{StaticResource BaseWindow}">
     <kwin:kWindow.DataContext>
         <local:MainWindow_VM />

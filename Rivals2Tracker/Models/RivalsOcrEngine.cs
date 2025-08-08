@@ -42,7 +42,7 @@ namespace Rivals2Tracker.Models
             Rectangle player2Crop = new Rectangle(1720, 1300, 237, 84);
             Rectangle player2EloCrop = new Rectangle(2015, 1281, 80, 41);
 
-            var hWnd = FindWindow(null, "Rivals2  ");
+            nint hWnd = FindWindow(null, "Rivals2  ");
             if (hWnd == IntPtr.Zero)
             {
                 Console.WriteLine("Window not found.");

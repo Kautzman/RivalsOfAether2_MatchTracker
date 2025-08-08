@@ -85,9 +85,9 @@ namespace Rivals2Tracker
 
         public MainWindow_VM()
         {
-            TestOcrCommand = new DelegateCommand(() => _ = SetMatchWin());
-            TestOcrCommand = new DelegateCommand(() => _ = SetMatchLose());
-            TestOcrCommand = new DelegateCommand(() => _ = SetMatchDiscard());
+            SetMatchWinCommand = new DelegateCommand(() => _ = SetMatchWin());
+            SetMatchLoseCommand = new DelegateCommand(() => _ = SetMatchLose());
+            SetMatchDiscardCommand = new DelegateCommand(() => _ = SetMatchDiscard());
             TestOcrCommand = new DelegateCommand(() => _ = DoTheOcr());
 
             GetMatches();
