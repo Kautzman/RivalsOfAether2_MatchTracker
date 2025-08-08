@@ -33,7 +33,7 @@
             </Grid>
             <Grid DockPanel.Dock="Bottom">
                 <DockPanel LastChildFill="True">
-                    <Grid DockPanel.Dock="Left" Width="700">
+                    <Grid DockPanel.Dock="Left" Width="1180">
                         <DockPanel>
                             <Grid HorizontalAlignment="Stretch">
                                 <DockPanel LastChildFill="True">
@@ -88,11 +88,14 @@
 
                                     <Grid Background="{StaticResource BG_Component}">
                                         <Grid Margin="0, 5, 0, 0">
-                                            <Label Content="Opp. Elo" Margin="60, 0, 0, 0" FontSize="12" FontWeight="DemiBold"/>
-                                            <Label Content="My Elo" Margin="120, 0, 0, 0" FontSize="12" FontWeight="DemiBold"/>
-                                            <Label Content="Opp. Char" Margin="215, 0, 0, 0" FontSize="12" FontWeight="DemiBold"/>
-                                            <Label Content="Opp. Char 2" Margin="330, 0, 0, 0" FontSize="12" FontWeight="DemiBold"/>
-                                            <Label Content="Opp. Char 3" Margin="450, 0, 0, 0" FontSize="12" FontWeight="DemiBold"/>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Label Content="My Elo." Margin="65, 0, 0, 0" FontSize="12" FontWeight="DemiBold"/>
+                                                <Label Content="Opp. Elo" Margin="5, 0, 0, 0" FontSize="12" FontWeight="DemiBold"/>
+                                                <Label Content="Opponent" Margin="60, 0, 0, 0" FontSize="12" FontWeight="DemiBold" Width="140"/>
+                                                <Label Content="Opp. Char" Margin="51, 0, 0, 0" FontSize="12" FontWeight="DemiBold" Width="194"/>
+                                                <Label Content="Opp. Char 2" Margin="0, 0, 0, 0" FontSize="12" FontWeight="DemiBold" Width="194"/>
+                                                <Label Content="Opp. Char 3" Margin="0, 0, 0, 0" FontSize="12" FontWeight="DemiBold" Width="120"/>
+                                            </StackPanel>
                                         </Grid>
                                         <ListView ItemTemplate="{StaticResource MatchResultsTemplate}" ItemsSource="{Binding MatchResults}" Background="{StaticResource BG_Titlebar}" Margin="0, 40, 0, 0" />
                                     </Grid>

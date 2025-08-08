@@ -19,7 +19,7 @@ namespace Rivals2Tracker.Data
 
         public static ObservableCollection<MatchResult> GetAllMatches()
         {
-            DataTable table = ExecuteQuery("SELECT * FROM Matches ORDER BY ID ASC");
+            DataTable table = ExecuteQuery("SELECT * FROM Matches ORDER BY ID DESC");
             AllMatches = CreateCollectionFromTable<MatchResult>(table);
             return new ObservableCollection<MatchResult>(AllMatches);
         }

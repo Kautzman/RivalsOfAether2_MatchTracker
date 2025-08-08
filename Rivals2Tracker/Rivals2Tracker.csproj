@@ -10,6 +10,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\CharacterIcons\absa.png" />
+    <None Remove="Resources\CharacterIcons\clairen.png" />
+    <None Remove="Resources\CharacterIcons\etalus.png" />
+    <None Remove="Resources\CharacterIcons\fleet.png" />
+    <None Remove="Resources\CharacterIcons\kragg.png" />
+    <None Remove="Resources\CharacterIcons\loxodont.png" />
+    <None Remove="Resources\CharacterIcons\maypul.png" />
+    <None Remove="Resources\CharacterIcons\nothing.png" />
+    <None Remove="Resources\CharacterIcons\olympia.png" />
+    <None Remove="Resources\CharacterIcons\orcane.png" />
+    <None Remove="Resources\CharacterIcons\ranno.png" />
+    <None Remove="Resources\CharacterIcons\wrastor.png" />
+    <None Remove="Resources\CharacterIcons\yeen.png" />
+    <None Remove="Resources\CharacterIcons\zetterburn.png" />
     <None Remove="Resources\Icons\Windowing\Close.png" />
     <None Remove="Resources\Icons\Windowing\Minimize.png" />
     <None Remove="Resources\Icons\Windowing\WindowOne.png" />
@@ -29,6 +43,22 @@
 	</ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\CharacterIcons\absa.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\CharacterIcons\clairen.png" />
+    <Resource Include="Resources\CharacterIcons\etalus.png" />
+    <Resource Include="Resources\CharacterIcons\fleet.png" />
+    <Resource Include="Resources\CharacterIcons\kragg.png" />
+    <Resource Include="Resources\CharacterIcons\loxodont.png" />
+    <Resource Include="Resources\CharacterIcons\maypul.png" />
+    <Resource Include="Resources\CharacterIcons\nothing.png" />
+    <Resource Include="Resources\CharacterIcons\olympia.png" />
+    <Resource Include="Resources\CharacterIcons\orcane.png" />
+    <Resource Include="Resources\CharacterIcons\ranno.png" />
+    <Resource Include="Resources\CharacterIcons\wrastor.png" />
+    <Resource Include="Resources\CharacterIcons\yeen.png" />
+    <Resource Include="Resources\CharacterIcons\zetterburn.png" />
     <Resource Include="Resources\Icons\Windowing\Close.png" />
     <Resource Include="Resources\Icons\Windowing\Minimize.png" />
     <Resource Include="Resources\Icons\Windowing\WindowOne.png" />
