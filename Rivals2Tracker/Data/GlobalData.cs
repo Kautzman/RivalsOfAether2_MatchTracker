@@ -6,7 +6,24 @@ using System.Threading.Tasks;
 
 namespace Rivals2Tracker.Data
 {
-    class GlobalData
+    public static class GlobalData
     {
+        public static List<string> AllCharacters = new List<string>
+        {
+            "Absa",
+            "Clairen",
+            "Etalus",
+            "Fleet",
+            "Kragg",
+            "Loxodont",
+            "Maypul",
+            "Olympia",
+            "Orcane",
+            "Ranno",
+            "Wrastor",
+            "Forsburn",
+            "Zetterburn",
+            "Unknown"
+        };
     }
 }

@@ -3,12 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Prism.Mvvm;
 
 namespace Rivals2Tracker.Models
 {
-    class CharacterMetadata
+    class CharacterMetadata : BindableBase
     {
-        public string Character { get; set; }
+        private string _character;
+        public string Character
+        {
+            get { return _character; }
+            set { SetProperty(ref _character, value); }
+        }
+
         public int Wins { get; set; }
         public int Loses { get; set; }
         public int TotalGames
@@ -29,7 +36,14 @@ namespace Rivals2Tracker.Models
 
         public string WinRatioString
         {
-            get => $"{WinRatio.ToString()}%";
+            get => $"{WinRatio.ToString("n2")}%";
+        }
+
+        public CharacterMetadata(string character)
+        {
+            Character = character;
+            Wins = 0;
+            Loses = 0;
         }
     }
 }

@@ -13,17 +13,13 @@ namespace Rivals2Tracker.Models
         public RivalsMatch? Match { get; set; }
         public string RawData { get; set; } = String.Empty;
         public bool IsValid { get; set; } = false;
+        public string StatusText { get; set; } = String.Empty;
         public string ErrorText { get; set; } = String.Empty;
 
-        public RivalsOcrResult(RivalsMatch rivalsMatch)
+        public RivalsOcrResult(RivalsMatch rivalsMatch, MatchValidityFlag flag = MatchValidityFlag.Valid)
         {
             Match = rivalsMatch;
-            IsValid = true;
-        }
-
-        public RivalsOcrResult(bool isValid, MatchValidityFlag flag)
-        {
-            IsValid = isValid;
+            IsValid = false;
 
             switch (flag)
             {
@@ -36,7 +32,7 @@ namespace Rivals2Tracker.Models
         public RivalsOcrResult(bool isValid, string errorText)
         {
             IsValid = isValid;
-            ErrorText = errorText;
+            StatusText = errorText;
 
         }
     }

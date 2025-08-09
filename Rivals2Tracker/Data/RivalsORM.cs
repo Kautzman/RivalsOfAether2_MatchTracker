@@ -33,14 +33,15 @@ namespace Rivals2Tracker.Data
                 SqliteCommand cmd = new SqliteCommand();
                 cmd.Connection = conn;
 
-                cmd.CommandText = "INSERT INTO Matches (Date, Opponent, OpponentElo, MyElo, Opponent2, Opponent3, MatchResult, Patch, Notes) " +
-                     "VALUES (@Date, @Opponent, @OpponentElo, @MyElo, @Opponent2, @Opponent3, @MatchResult, @Patch, @Notes); SELECT last_insert_rowid();";
+                cmd.CommandText = "INSERT INTO Matches (Date, Opponent, OppChar1, OpponentElo, MyElo, OppChar2, OppChar3, Result, Patch, Notes) " +
+                     "VALUES (@Date, @OppName, @OppChar1, @OpponentElo, @MyElo, @OppChar2, @OppChar3, @MatchResult, @Patch, @Notes); SELECT last_insert_rowid();";
                 cmd.Parameters.AddWithValue("@Date", DateTime.Now.ToString("MM-dd-yyyy:HH:mm"));
-                cmd.Parameters.AddWithValue("@Opponent", match.Opponent.Character);
+                cmd.Parameters.AddWithValue("@OppName", match.Opponent.Name);
+                cmd.Parameters.AddWithValue("@OppChar1", match.Opponent.Character);
                 cmd.Parameters.AddWithValue("@OpponentElo", match.Opponent.EloString);
                 cmd.Parameters.AddWithValue("@MyElo", match.Me.EloString);
-                cmd.Parameters.AddWithValue("@Opponent2", match.Opponent.Character2);
-                cmd.Parameters.AddWithValue("@Opponent3", match.Opponent.Character3);
+                cmd.Parameters.AddWithValue("@OppChar2", match.Opponent.Character2);
+                cmd.Parameters.AddWithValue("@OppChar3", match.Opponent.Character3);
                 cmd.Parameters.AddWithValue("@MatchResult", match.MatchResult);
                 cmd.Parameters.AddWithValue("@Patch", match.Patch);
                 cmd.Parameters.AddWithValue("@Notes", match.Notes);

@@ -25,6 +25,27 @@ namespace Rivals2Tracker
             set { SetProperty(ref _matchResults, value); }
         }
 
+        private MetaDataTable _currentSeasonResults = new();
+        public MetaDataTable CurrentSeasonResults
+        {
+            get { return _currentSeasonResults; }
+            set { SetProperty(ref _currentSeasonResults, value); }
+        }
+
+        private MetaDataTable _lastSeasonResults = new();
+        public MetaDataTable LastSeasonResults
+        {
+            get { return _lastSeasonResults; }
+            set { SetProperty(ref _lastSeasonResults, value); }
+        }
+
+        private MetaDataTable _allSeasonResults = new();
+        public MetaDataTable AllSeasonResults
+        {
+            get { return _allSeasonResults; }
+            set { SetProperty(ref _allSeasonResults, value); }
+        }
+
         private RivalsMatch? _activeMatch;
         public RivalsMatch? ActiveMatch
         {
@@ -37,6 +58,13 @@ namespace Rivals2Tracker
         {
             get { return _activityText; }
             set { SetProperty(ref _activityText, value); }
+        }
+
+        private string _errorText;
+        public string ErrorText
+        {
+            get { return _errorText; }
+            set { SetProperty(ref _errorText, value); }
         }
 
         private string _activeMatchStatusString;
@@ -70,7 +98,7 @@ namespace Rivals2Tracker
             }
         }
 
-        private string currentPatch = "1.0.0";
+        private string currentPatch = "1.3.2";
         public string CurrentPatch
         {
             get { return currentPatch; }
@@ -100,7 +128,10 @@ namespace Rivals2Tracker
                 ActiveMatch.IsWon = true;
                 ActivityText = "Match has been set to 'Win' and written to DB.";
                 ActiveMatch.Status = MatchStatus.Finished;
+                RaisePropertyChanged("IsInputLocked");
+                RaisePropertyChanged("ActiveMatchStatusString");
                 RivalsORM.AddMatch(ActiveMatch);
+                ErrorText = String.Empty;
                 GetMatches();
                 return;
             }
@@ -115,7 +146,10 @@ namespace Rivals2Tracker
                 ActiveMatch.IsWon = false;
                 ActivityText = "Match has been set to 'Lose' and written to DB.";
                 ActiveMatch.Status = MatchStatus.Finished;
+                RaisePropertyChanged("IsInputLocked");
+                RaisePropertyChanged("ActiveMatchStatusString");
                 RivalsORM.AddMatch(ActiveMatch);
+                ErrorText = String.Empty;
                 GetMatches();
                 return;
             }
@@ -130,7 +164,10 @@ namespace Rivals2Tracker
                 ActiveMatch.IsWon = false;
                 ActivityText = "Match has been set to 'Invalid' and written to DB.";
                 ActiveMatch.Status = MatchStatus.Invalid;
-                RivalsORM.AddMatch(ActiveMatch);
+                RaisePropertyChanged("IsInputLocked");
+                RaisePropertyChanged("ActiveMatchStatusString");
+                // RivalsORM.AddMatch(ActiveMatch);
+                ErrorText = String.Empty;
                 GetMatches();
                 return;
             }
@@ -140,28 +177,25 @@ namespace Rivals2Tracker
 
         private async Task DoTheOcr()
         {
-            RivalsOcrResult result = await RivalsOcrEngine.Capture();
+            RivalsOcrResult result = await RivalsOcrEngine.Capture(); 
 
             if (!result.IsValid)
             {
-                ActivityText = result.ErrorText;
+                ErrorText = result.StatusText;
                 return;
             }
 
-            if (ActiveMatch is not null)
+            if (ActiveMatch is not null && ActiveMatch.Status == MatchStatus.InProgress)
             {
-                if (ActiveMatch.Status == MatchStatus.InProgress)
-                {
-                    ActivityText = "Conclude the active match before starting a new one!";
-                    return;
-                }
-            }
+                ActivityText = "Conclude the active match before starting a new one!";
+                return;
+            }     
 
-            if (ActiveMatch is null || ActiveMatch.Status != MatchStatus.InProgress)
-            {
-                ActiveMatch = result.Match;
-                ActiveMatch.Patch = CurrentPatch;
-            }
+            ActiveMatch = result.Match;
+            ActiveMatch.Patch = CurrentPatch;
+            ActiveMatch.Status = MatchStatus.InProgress;
+            RaisePropertyChanged("IsInputLocked");
+            RaisePropertyChanged("ActiveMatchStatusString");
 
             Console.WriteLine(result);
         }
@@ -174,7 +208,43 @@ namespace Rivals2Tracker
         private void GetMatches()
         {
             MatchResults = RivalsORM.GetAllMatches();
+            LastSeasonResults = GetSeasonData("1.2");
+            CurrentSeasonResults = GetSeasonData("1.3");
+            AllSeasonResults = GetSeasonData("all");
             Console.WriteLine();
+        }
+
+        private MetaDataTable GetSeasonData(string patch)
+        {
+            MetaDataTable metadatatable = new MetaDataTable();
+            metadatatable.Patch = patch;
+
+            metadatatable.TableTitle = patch == "all" ? $"Matchup Totals" : $"{patch} Matchups";
+
+            foreach (MatchResult match in MatchResults)
+            {
+                if (IsPatchMatch(patch, match.Patch))
+                {
+                    metadatatable.AddResult(match);
+                }
+            }
+
+            return metadatatable;
+        }
+
+        private bool IsPatchMatch(string patchToMatch, string thisMatchPatch)
+        {
+            if (patchToMatch == "all")
+            {
+                return true;
+            }
+
+            if (thisMatchPatch.Substring(0, 3) == patchToMatch)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

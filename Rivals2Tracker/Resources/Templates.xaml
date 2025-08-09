@@ -47,14 +47,16 @@
     </DataTemplate>
 
     <DataTemplate x:Key="MetaResultTemplate" DataType="{x:Type data:CharacterMetadata}">
-        <Grid Height="55">
+        <Grid Height="35">
             <StackPanel Orientation="Horizontal">
-                <Grid Width="500">
+                <Grid Width="380">
+                    <Border BorderBrush="#555" BorderThickness="0, 1, 0, 0" />
                     <StackPanel Orientation="Horizontal">
-                        <Label Content="{Binding Character}" Width="140"/>
+                        <Image Source="{Binding Character, Converter={StaticResource IconConverter}}" Height="32" Width="32" Margin="0, 0, 0, 0"/>
+                        <Label Content="{Binding Character}" Width="140" VerticalContentAlignment="Center" Margin="10, 0, 0, 0"/>
                         <Label Content="{Binding TotalGames}" Width="50"/>
                         <Label Content="{Binding Wins}" Width="50"/>
-                        <Label Content="{Binding WinRatio}" Width="100"/>
+                        <Label Content="{Binding WinRatioString}" Width="100"/>
                     </StackPanel>
                 </Grid>
             </StackPanel>

@@ -24,11 +24,11 @@ namespace Rivals2Tracker.Models
             set { SetProperty(ref _player1, value); }
         }
 
-        private RivalsPlayer _player2 { get; set; }
+        private RivalsPlayer _player2;
         public RivalsPlayer Player2
         {
-            get { return _player1; }
-            set { SetProperty(ref _player1, value); }
+            get { return _player2; }
+            set { SetProperty(ref _player2, value); }
         }
 
         private RivalsPlayer _opponent;
@@ -58,7 +58,12 @@ namespace Rivals2Tracker.Models
             set { SetProperty(ref _patch, value); }
         }
 
-        public MatchStatus Status { get; set; } = MatchStatus.InProgress;
+        private MatchStatus _status = MatchStatus.New;
+        public MatchStatus Status
+        {
+            get { return _status; }
+            set { SetProperty(ref _status, value); }
+        }
 
         public string StatusString
         {
@@ -154,7 +159,8 @@ namespace Rivals2Tracker.Models
     {
         InProgress = 1,
         Finished = 2,
-        Invalid = 3
+        Invalid = 3,
+        New = 4
     }
 
     public enum MatchValidityFlag

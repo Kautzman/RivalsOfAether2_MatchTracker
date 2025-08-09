@@ -43,6 +43,8 @@ namespace Rivals2Tracker.Models
             Rectangle player2EloCrop = new Rectangle(2015, 1281, 80, 41);
 
             nint hWnd = FindWindow(null, "Rivals2  ");
+            // nint hWnd = FindWindow(null, "Photos Legacy");
+            // nint hWnd = FindWindow(null, "t2.jpg");
             if (hWnd == IntPtr.Zero)
             {
                 Console.WriteLine("Window not found.");
@@ -89,17 +91,19 @@ namespace Rivals2Tracker.Models
 
             RivalsMatch match = new RivalsMatch(player1, player2);
 
-            if (!match.IsValid(out MatchValidityFlag validityFlag))
-            {
-                return new RivalsOcrResult(false, validityFlag);
-            }
-
             sw.Stop();
           
             string finaltext = $"Player 1: {player1text.Text}~~ Elo: {player1elotext.Text} \n\n Player 2: {player2text.Text}~~ Elo: {player2elotext.Text} \n\n perf: {sw.ElapsedMilliseconds}";
             Console.WriteLine(finaltext);
 
-            return new RivalsOcrResult(match);
+            if (!match.IsValid(out MatchValidityFlag validityFlag))
+            {
+                return new RivalsOcrResult(match, validityFlag);
+            }
+            else
+            {
+                return new RivalsOcrResult(match);
+            }
         }
 
         static async Task<SoftwareBitmap> ConvertToSoftwareBitmap(Bitmap bmp)
