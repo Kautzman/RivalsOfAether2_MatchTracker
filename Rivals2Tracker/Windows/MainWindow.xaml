@@ -17,6 +17,7 @@
     <Grid>
         <DockPanel>
             <Grid DockPanel.Dock="Top" Height="30" Background="{StaticResource BG_Titlebar}" MouseDown="EnableDrag">
+                <Label Content="Rivals Auto Tracker Kinda Sorta 1.1.0" HorizontalAlignment="Center"/>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button x:Name="WindowMinimize" Style="{StaticResource WindowingButton}" Click="WindowMiminizeClick">
                         <Image Style="{StaticResource Windowing_Image}" Source="/Rivals2Tracker;component/Resources/Icons/Windowing/Minimize.png" />
@@ -39,7 +40,36 @@
                                 <DockPanel LastChildFill="True">
                                     <Grid DockPanel.Dock="Top" Height="280" Background="{StaticResource BG_ClickedItem}">
                                         <Label Content="{Binding ActiveMatchStatusString}" Width="160" Height="40" FontSize="18" FontWeight="Bold" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalAlignment="Top" Margin="20, 0, 20, 0" />
-                                        <Label Content="{Binding ErrorText}" Width="560" Height="40" FontSize="16" FontWeight="DemiBold" HorizontalAlignment="Left" HorizontalContentAlignment="Right" VerticalAlignment="Top" Margin="20, 30, 20, 0" Foreground="#DD4444"/>
+                                        <Label Content="{Binding ErrorText}" Width="560" Height="40" FontSize="16" FontWeight="DemiBold" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalAlignment="Top" Margin="20, 30, 20, 0" Foreground="#DD4444"/>
+                                        <Grid HorizontalAlignment="Right" Width="630" Height="200" VerticalAlignment="Bottom">
+                                            <Label Content="Vs" Foreground="#A9A9A9"/>
+                                            <Label Content="{Binding ActiveOpponent.Tag}" Margin="20, 0, 0, 0" FontWeight="Bold" />
+                                            <Border BorderBrush="#555" BorderThickness="0, 0, 0, 1" Margin="20, 30, 20, 0" Height="1" VerticalAlignment="Top"/>
+                                            <StackPanel Margin="10, 33, 0, 0">
+                                                <Label Content="Record" Foreground="#A9A9A9"/>
+                                                <Grid Margin="0, 0, 0, 0">
+                                                    <Label Content="Seasonal:" Foreground="#A9A9A9" Width="80" HorizontalContentAlignment="Right" HorizontalAlignment="Left"/>
+                                                    <StackPanel Margin="78, 0, 0, 0" Orientation="Horizontal">
+                                                        <Label Content="{Binding ActiveOpponent.WinsSeasonal}" />
+                                                        <Label Content=" - " />
+                                                        <Label Content="{Binding ActiveOpponent.LosesSeasonal}" />
+                                                    </StackPanel>
+                                                </Grid>
+                                                <Grid>
+                                                    <Label Content="Total:"  Margin="0, 0, 0, 0" Foreground="#A9A9A9" Width="80" HorizontalContentAlignment="Right" HorizontalAlignment="Left"/>
+                                                    <StackPanel Margin="78, 0, 0, 0" Orientation="Horizontal">
+                                                        <Label Content="{Binding ActiveOpponent.WinsTotal}" />
+                                                        <Label Content=" - " />
+                                                        <Label Content="{Binding ActiveOpponent.LosesTotal}" />
+                                                    </StackPanel>
+                                                </Grid>
+                                            </StackPanel>
+                                            
+                                            <Border BorderBrush="#555" BorderThickness="1, 0, 0, 0" Margin="180, 30, 0, 0" VerticalAlignment="Top" Height="80"/>
+
+                                            <Label Content="Notes " Foreground="#A9A9A9" Margin="200, 0, 0, 0"/>
+                                            <Label Content="{Binding ActiveOpponent.NotesLabel, UpdateSourceTrigger=PropertyChanged}" Height="170" Margin="200, 2, 0, 0" VerticalAlignment="Bottom"/>
+                                        </Grid>
 
                                         <StackPanel Width="100" HorizontalAlignment="Left" Margin="0, 5, 0, 0">
                                             <Label Content="My Rating:" HorizontalContentAlignment="Right" Margin="0, 5, 0, 0" Height="30"/>
@@ -52,39 +82,38 @@
 
                                         <StackPanel Width="500" HorizontalAlignment="Left" Margin="105, 5, 0, 0">
                                             <Grid Margin="0, 7, 0, 0">
-                                                <TextBox Text="{Binding ActiveMatch.Me.Elo}" Width="80" HorizontalAlignment="Left" TabIndex="1" IsReadOnly="{Binding IsInputLocked}"/>
+                                                <TextBox Text="{Binding ActiveMatch.Me.Elo, UpdateSourceTrigger=PropertyChanged}" Width="80" HorizontalAlignment="Left" TabIndex="1" IsReadOnly="{Binding IsInputLocked}"/>
                                                 <Label Content="My Char: " Margin="100, 0, 0, 0"/>
-                                                <TextBox Text="{Binding ActiveMatch.Me.Character}" Width="150" HorizontalAlignment="Left" Margin="170, 0, 0, 0" IsReadOnly="{Binding IsInputLocked}"/>
+                                                <TextBox Text="{Binding ActiveMatch.Me.Character, UpdateSourceTrigger=PropertyChanged}" Width="150" HorizontalAlignment="Left" Margin="170, 0, 0, 0" IsReadOnly="{Binding IsInputLocked}"/>
                                             </Grid>
 
                                             <Grid>
-                                                <TextBox Text="{Binding ActiveMatch.Opponent.Elo}" Width="80" HorizontalAlignment="Left" Margin="0, 9, 0, 0" TabIndex="2" IsReadOnly="{Binding IsInputLocked}"/>
+                                                <TextBox Text="{Binding ActiveMatch.Opponent.Elo, UpdateSourceTrigger=PropertyChanged}" Width="80" HorizontalAlignment="Left" Margin="0, 9, 0, 0" TabIndex="2" IsReadOnly="{Binding IsInputLocked}"/>
                                                 <Label Content="Opp. Tag: " Margin="100, 0, 0, 0"/>
-                                                <TextBox Text="{Binding ActiveMatch.Opponent.Name}" Width="150" HorizontalAlignment="Left" Margin="170, 0, 0, 0" IsReadOnly="{Binding IsInputLocked}"/>
+                                                <TextBox Text="{Binding ActiveMatch.Opponent.Name, UpdateSourceTrigger=PropertyChanged}" Width="150" HorizontalAlignment="Left" Margin="170, 0, 0, 0" IsReadOnly="{Binding IsInputLocked}"/>
                                             </Grid>
 
                                             <Grid Margin="0, 9, 0, 0">
                                                 <StackPanel Orientation="Horizontal">
-                                                    <TextBox Text="{Binding ActiveMatch.Opponent.Character}" Width="125" HorizontalAlignment="Left" Margin="0, 0, 10, 0" TabIndex="3" IsReadOnly="{Binding IsInputLocked}"/>
-                                                    <TextBox Text="{Binding ActiveMatch.Opponent.Character2}" Width="125" HorizontalAlignment="Left" Margin="0, 0, 10, 0" TabIndex="4" IsReadOnly="{Binding IsInputLocked}"/>
-                                                    <TextBox Text="{Binding ActiveMatch.Opponent.Character3}" Width="125" HorizontalAlignment="Left" TabIndex="5" IsReadOnly="{Binding IsInputLocked}"/>
+                                                    <TextBox Text="{Binding ActiveMatch.Opponent.Character, UpdateSourceTrigger=PropertyChanged}" Width="125" HorizontalAlignment="Left" Margin="0, 0, 10, 0" TabIndex="3" IsReadOnly="{Binding IsInputLocked}"/>
+                                                    <TextBox Text="{Binding ActiveMatch.Opponent.Character2, UpdateSourceTrigger=PropertyChanged}" Width="125" HorizontalAlignment="Left" Margin="0, 0, 10, 0" TabIndex="4" IsReadOnly="{Binding IsInputLocked}"/>
+                                                    <TextBox Text="{Binding ActiveMatch.Opponent.Character3, UpdateSourceTrigger=PropertyChanged}" Width="125" HorizontalAlignment="Left" TabIndex="5" IsReadOnly="{Binding IsInputLocked}"/>
                                                 </StackPanel>
                                             </Grid>
 
                                             <Grid>
-                                                <TextBox Text="{Binding ActiveMatch.Patch}" Width="80" HorizontalAlignment="Left" Margin="0, 9, 0, 0" IsReadOnly="{Binding IsInputLocked}"/>
+                                                <TextBox Text="{Binding ActiveMatch.Patch, UpdateSourceTrigger=PropertyChanged}" Width="80" HorizontalAlignment="Left" Margin="0, 9, 0, 0" IsReadOnly="{Binding IsInputLocked}"/>
                                                 <Label Content="&#xE72B;" Width="40" Height="25" Margin="90, 10, 0, 0" HorizontalAlignment="Left" FontSize="16" FontFamily="Segoe MDL2 Assets"/>
-                                                <TextBox Text="{Binding CurrentPatch}" Width="80" HorizontalAlignment="Left" Margin="120, 9, 0, 0" />
+                                                <TextBox Text="{Binding CurrentPatch, UpdateSourceTrigger=PropertyChanged}" Width="80" HorizontalAlignment="Left" Margin="120, 9, 0, 0" />
                                             </Grid>
 
-
-                                            <TextBox Text="{Binding ActiveMatch.Notes}" Width="450" HorizontalAlignment="Left" Margin="0, 9, 0, 0" TabIndex="6" IsReadOnly="{Binding IsInputLocked}"/>
+                                            <TextBox Text="{Binding ActiveMatch.Notes, UpdateSourceTrigger=PropertyChanged}" Width="432" HorizontalAlignment="Left" Margin="0, 9, 0, 0" TabIndex="6" IsReadOnly="{Binding IsInputLocked}"/>
 
                                             <Grid Margin="0, 9, 0, 0">
                                                 <Button Content="Win" Height="40" FontSize="16" Width="100" HorizontalAlignment="Left" Foreground="#33FF33" Command="{Binding SetMatchWinCommand}"/>
                                                 <Button Content="Lose" Height="40" FontSize="16" Width="100" Margin="110, 0, 0, 0" HorizontalAlignment="Left" Foreground="#FF3333" Command="{Binding SetMatchLoseCommand}"/>
                                                 <Button Content="Discard" Height="40" FontSize="16" Width="100" Margin="220, 0, 0, 0" HorizontalAlignment="Left" Foreground="#DDD" Command="{Binding SetMatchDiscardCommand}"/>
-                                                <Button Content="Get Match" Height="40" FontSize="16" Width="100" Margin="400, 0, 0, 0" HorizontalAlignment="Left" Foreground="#6868FF" Command="{Binding TestOcrCommand}"/>
+                                                <Button Content="Get Match" Height="40" FontSize="16" Width="100" Margin="330, 0, 0, 0" HorizontalAlignment="Left" Foreground="#6868FF" Command="{Binding TestOcrCommand}"/>
                                             </Grid>
                                         </StackPanel>
                                         

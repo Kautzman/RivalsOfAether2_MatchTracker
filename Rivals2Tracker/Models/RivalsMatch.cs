@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Rivals2Tracker.Models
 {
@@ -115,12 +116,26 @@ namespace Rivals2Tracker.Models
                 Me = player1;
                 Opponent = player2;
             }
-
-            if (player2.IsKadecgos())
+            else if (player2.IsKadecgos())
             {
                 Me = player2;
                 Opponent = player1;
             }
+            else
+            {
+                Me = player1;
+                Opponent = player2;
+            }
+        }
+
+        public bool HasNoKad()
+        {
+            if (Player1.IsKadecgos() || Player2.IsKadecgos())
+            {
+                return false;
+            }
+
+            return true;
         }
 
         public void Clean()

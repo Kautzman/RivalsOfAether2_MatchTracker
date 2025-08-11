@@ -39,16 +39,16 @@ namespace Rivals2Tracker.Models
 
             Rectangle player1Crop = new Rectangle(625, 1300, 237, 84);
             Rectangle player1EloCrop = new Rectangle(926, 1281, 80, 41);
-            Rectangle player2Crop = new Rectangle(1720, 1300, 237, 84);
+            Rectangle player2Crop = new Rectangle(1715, 1300, 237, 84);
             Rectangle player2EloCrop = new Rectangle(2015, 1281, 80, 41);
 
             nint hWnd = FindWindow(null, "Rivals2  ");
             // nint hWnd = FindWindow(null, "Photos Legacy");
-            // nint hWnd = FindWindow(null, "t2.jpg");
+            // nint hWnd = FindWindow(null, "CaptureAll-08-09-23-40-46.jpg");
             if (hWnd == IntPtr.Zero)
             {
                 Console.WriteLine("Window not found.");
-                return new RivalsOcrResult(false, "Failed to Find Window");
+                return new RivalsOcrResult(false, "Failed to Find Window", false);
             }
 
             GetWindowRect(hWnd, out var rect);

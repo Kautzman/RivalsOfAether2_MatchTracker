@@ -13,6 +13,7 @@ using System.Runtime.CompilerServices;
 using Rivals2Tracker.Data;
 using Rivals2Tracker.HotkeyHandler;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace Rivals2Tracker
 {
@@ -51,6 +52,13 @@ namespace Rivals2Tracker
         {
             get { return _activeMatch; }
             set { SetProperty(ref _activeMatch, value); }
+        }
+
+        private Opponent _activeOpponent;
+        public Opponent ActiveOpponent
+        {
+            get { return _activeOpponent; }
+            set { SetProperty(ref _activeOpponent, value); }
         }
 
         private string _activityText;
@@ -162,13 +170,13 @@ namespace Rivals2Tracker
             if (ActiveMatch is not null && ActiveMatch.Status == MatchStatus.InProgress)
             {
                 ActiveMatch.IsWon = false;
-                ActivityText = "Match has been set to 'Invalid' and written to DB.";
+                ActivityText = "Discarded Match";
                 ActiveMatch.Status = MatchStatus.Invalid;
                 RaisePropertyChanged("IsInputLocked");
                 RaisePropertyChanged("ActiveMatchStatusString");
-                // RivalsORM.AddMatch(ActiveMatch);
                 ErrorText = String.Empty;
                 GetMatches();
+                ActiveOpponent = new();
                 return;
             }
 
@@ -181,7 +189,12 @@ namespace Rivals2Tracker
 
             if (!result.IsValid)
             {
-                ErrorText = result.StatusText;
+                ErrorText = result.ErrorText;
+            }
+
+            if (!result.IsSalvagable)
+            {
+                ErrorText = "Unrecoverable Capture - Try Again.";
                 return;
             }
 
@@ -197,8 +210,50 @@ namespace Rivals2Tracker
             RaisePropertyChanged("IsInputLocked");
             RaisePropertyChanged("ActiveMatchStatusString");
 
-            Console.WriteLine(result);
+            GetPlayerInfo();
         }
+
+        public void GetPlayerInfo()
+        {
+            if (ActiveMatch is null)
+            {
+                Debug.WriteLine("Active Match was null - exiting GetPlayerInfo()");
+                return;
+            }
+
+            ActiveOpponent = new(ActiveMatch.Opponent.Name ?? "??");
+
+            List<MatchResult> opponentResults = MatchResults.Where(r => r.Opponent == ActiveMatch.Opponent.Name).ToList();
+
+            foreach (MatchResult match in opponentResults)
+            {
+                if (match.Result == "Win")
+                {
+                    ActiveOpponent.WinsTotal++;
+
+                    if (IsPatchMatch(currentPatch.Substring(0, 3), match.Patch))
+                    {
+                        ActiveOpponent.WinsSeasonal++;
+                    }
+                }
+                else if (match.Result == "Lose")
+                {
+                    ActiveOpponent.LosesTotal++;
+
+                    if (IsPatchMatch(currentPatch.Substring(0, 3), match.Patch))
+                    {
+                        ActiveOpponent.LosesSeasonal++;
+                    }
+                }
+
+                if (!String.IsNullOrEmpty(match.Notes))
+                {
+                    ActiveOpponent.Notes.Add(match.Notes);
+                    RaisePropertyChanged(ActiveOpponent.NotesLabel);
+                }
+            }
+        }
+
 
         public async Task OnCaptureMatchHotKey()
         {

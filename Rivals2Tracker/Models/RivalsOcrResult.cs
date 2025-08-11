@@ -13,6 +13,7 @@ namespace Rivals2Tracker.Models
         public RivalsMatch? Match { get; set; }
         public string RawData { get; set; } = String.Empty;
         public bool IsValid { get; set; } = false;
+        public bool IsSalvagable { get; set; } = true;
         public string StatusText { get; set; } = String.Empty;
         public string ErrorText { get; set; } = String.Empty;
 
@@ -25,14 +26,16 @@ namespace Rivals2Tracker.Models
             {
                 case MatchValidityFlag.NoKad: ErrorText = "Can't Find a Kadecgos!"; break;
                 case MatchValidityFlag.NoElo: ErrorText = "Failed to parse Elo"; break;
+                case MatchValidityFlag.Valid: ErrorText = String.Empty; break;
                 default: ErrorText = "Unknown Error in parsing Validity Flag"; break;
             }
         }
 
-        public RivalsOcrResult(bool isValid, string errorText)
+        public RivalsOcrResult(bool isValid, string errorText, bool isSalvagable = true)
         {
             IsValid = isValid;
             StatusText = errorText;
+            IsSalvagable = isSalvagable;
 
         }
     }
