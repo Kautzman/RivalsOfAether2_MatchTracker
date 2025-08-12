@@ -14,7 +14,7 @@ namespace Rivals2Tracker.Models
         public string Character2 { get; set; } = String.Empty;
         public string Character3 { get; set; } = String.Empty;
         public string EloString { get; set; } = String.Empty;
-        public int Elo { get; set; } = -1;
+        public string Elo { get; set; } = "-1";
 
 
         public RivalsPlayer(string playerText, string eloText)
@@ -24,7 +24,14 @@ namespace Rivals2Tracker.Models
 
             try
             {
-                Elo = Convert.ToInt32(EloString);
+                if (eloText == "UNRANKED" || eloText == "ANKED")
+                {
+                    Elo = "U";
+                }
+                else
+                {
+                    Elo = EloString;
+                }
             }
             catch (Exception ex)
             {

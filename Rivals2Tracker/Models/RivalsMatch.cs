@@ -159,7 +159,7 @@ namespace Rivals2Tracker.Models
                 return false;
             }
 
-            if (Player1.Elo == -1 || Player2.Elo == -1)
+            if (Player1.Elo == "-1" || Player2.Elo == "-1")
             {
                 validityFlag = MatchValidityFlag.NoElo;
                 return false;
