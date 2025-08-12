@@ -24,6 +24,7 @@ namespace Rivals2Tracker.Models
 
             try
             {
+                // The OCR area clips the rest of 'Unranked' so instead of trying to code around it... just get the 'anked' and call it a day! :P
                 if (eloText == "UNRANKED" || eloText == "ANKED")
                 {
                     Elo = "U";

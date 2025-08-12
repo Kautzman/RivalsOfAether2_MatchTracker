@@ -14,6 +14,7 @@ using Rivals2Tracker.Data;
 using Rivals2Tracker.HotkeyHandler;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Windows.Media;
 
 namespace Rivals2Tracker
 {
@@ -45,6 +46,13 @@ namespace Rivals2Tracker
         {
             get { return _allSeasonResults; }
             set { SetProperty(ref _allSeasonResults, value); }
+        }
+
+        private ObservableCollection<WeightedCharacterMetadata> _weightedMatchupData = new();
+        public ObservableCollection<WeightedCharacterMetadata> WeightedMatchupData
+        {
+            get { return _weightedMatchupData; }
+            set { SetProperty(ref _weightedMatchupData, value); }
         }
 
         private RivalsMatch? _activeMatch;
@@ -254,7 +262,6 @@ namespace Rivals2Tracker
             }
         }
 
-
         public async Task OnCaptureMatchHotKey()
         {
             await DoTheOcr();
@@ -266,7 +273,8 @@ namespace Rivals2Tracker
             LastSeasonResults = GetSeasonData("1.2");
             CurrentSeasonResults = GetSeasonData("1.3");
             AllSeasonResults = GetSeasonData("all");
-            Console.WriteLine();
+            BuildWeightedData();
+            Console.WriteLine(WeightedMatchupData.Count);
         }
 
         private MetaDataTable GetSeasonData(string patch)
@@ -285,6 +293,29 @@ namespace Rivals2Tracker
             }
 
             return metadatatable;
+        }
+
+        private void BuildWeightedData()
+        {
+            WeightedMatchupData.Clear();
+
+            foreach (string character in GlobalData.AllCharacters)
+            {
+                WeightedMatchupData.Add(new WeightedCharacterMetadata(character));
+            }
+
+            foreach (MatchResult match in MatchResults)
+            {
+                try
+                {
+                    WeightedMatchupData.First(wd => wd.Character == match.OppChar1)
+                        .AddResult(match.MyElo, match.OpponentElo, match.Result);
+                }
+                catch(Exception ex)
+                {
+                    Debug.WriteLine($"Failed to find opponent by character {match.OppChar1}");
+                }
+            }
         }
 
         private bool IsPatchMatch(string patchToMatch, string thisMatchPatch)

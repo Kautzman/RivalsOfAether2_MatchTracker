@@ -62,4 +62,26 @@
             </StackPanel>
         </Grid>
     </DataTemplate>
+
+    <DataTemplate x:Key="AdjustedMatchupsTemplate" DataType="{x:Type data:WeightedCharacterMetadata}">
+        <Grid Height="35">
+            <StackPanel Orientation="Horizontal">
+                <Grid Width="380">
+                    <Border BorderBrush="#555" BorderThickness="0, 1, 0, 0" />
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{Binding Character, Converter={StaticResource IconConverter}}" Height="32" Width="32" Margin="0, 0, 0, 0"/>
+                        <Label Content="{Binding Character}" Width="140" VerticalContentAlignment="Center" Margin="10, 0, 0, 0"/>
+                        <Label Content="{Binding RecordClose}" Width="100"/>
+                        <Label Content="{Binding RecordMedium}" Width="100"/>
+                        <Label Content="{Binding RecordFar}" Width="100"/>
+                        <Label Content="{Binding RecordUnranked}" Width="100"/>
+                        <Label Content="{Binding AdjustedEloSeasonal}" Width="60"/>
+                        <Label Content="{Binding AdjustedMUSeasonal}" Width="60"/>
+                        <Label Content="{Binding AdjustedEloTotal}" Width="60"/>
+                        <Label Content="{Binding AdjustedMUtotal}" Width="60"/>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </Grid>
+    </DataTemplate>
 </ResourceDictionary>
