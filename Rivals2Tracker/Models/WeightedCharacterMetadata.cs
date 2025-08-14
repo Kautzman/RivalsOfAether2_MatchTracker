@@ -106,6 +106,12 @@ namespace Rivals2Tracker.Models
                 float weight;
                 int matchDelta = match.EloDelta;
 
+                if (match.Proximity == MatchProximity.Unranked)
+                {
+                    // Unranked is currently set to a delta of 0.  I don't know if we want to do something else with it in the future
+                    // continue;
+                }
+
                 matchDelta = Math.Clamp(0, matchDelta - 25, 500);
 
                 if (matchDelta <= 80)
