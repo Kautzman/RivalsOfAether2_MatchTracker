@@ -16,6 +16,8 @@ namespace Rivals2Tracker.Models
             set { SetProperty(ref _character, value); }
         }
 
+        public WeightedCharacterMetadata WeightedData { get; set; } = new();
+
         public int Wins { get; set; }
         public int Loses { get; set; }
         public int TotalGames
@@ -23,6 +25,14 @@ namespace Rivals2Tracker.Models
             get
             {
                 return Wins + Loses;
+            }
+        }
+
+        public string RecordString
+        {
+            get
+            {
+                return $"{Wins} - {Loses}";
             }
         }
 

@@ -17,7 +17,7 @@
     <Grid>
         <DockPanel>
             <Grid DockPanel.Dock="Top" Height="30" Background="{StaticResource BG_Titlebar}" MouseDown="EnableDrag">
-                <Label Content="Rivals Auto Tracker Kinda Sorta 1.1.0" HorizontalAlignment="Center"/>
+                <Label Content="Slipstream 1.3.0" HorizontalAlignment="Center"/>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button x:Name="WindowMinimize" Style="{StaticResource WindowingButton}" Click="WindowMiminizeClick">
                         <Image Style="{StaticResource Windowing_Image}" Source="/Rivals2Tracker;component/Resources/Icons/Windowing/Minimize.png" />
@@ -139,59 +139,45 @@
                     </Grid>
 
                     <Grid DockPanel.Dock="Right" Background="{StaticResource BG_Titlebar}">
-                        <Grid Width="400" HorizontalAlignment="Left" Margin="20, 20, 0, 0">
+                        <Grid Width="760" HorizontalAlignment="Left" Margin="20, 20, 0, 0">
                             <StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <Label Content="{Binding AllSeasonResults.TableTitle}" FontSize="16" FontWeight="Bold" Width="340" HorizontalContentAlignment="Center"/>
 
+                                <Grid>
+                                    <Label Content="{Binding CurrentSeasonResults.TableTitle}" FontSize="16" FontWeight="Bold" Width="140" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="220, -30, 0, 0"/>
+                                    <Grid Margin="158, 0, 0, 0">
+                                        <Label Content="Record" HorizontalContentAlignment="Center" Width="80" HorizontalAlignment="Left"/>
+                                        <Label Content="Absolute" Margin="90, 0, 0, 0" HorizontalContentAlignment="Center" Width="80" HorizontalAlignment="Left"/>
+                                        <Label Content="Calculated" Margin="190, 0, 0, 0" HorizontalContentAlignment="Center" Width="80" HorizontalAlignment="Left"/>
+                                    </Grid>
+
+                                    <Label Content="{Binding AllSeasonResults.TableTitle}" FontSize="16" FontWeight="Bold" Width="340" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="440, -30, 0, 0"/>
+                                    <Grid Margin="468, 0, 0, 0">
+                                        <Label Content="Record" HorizontalContentAlignment="Center" Width="80" HorizontalAlignment="Left"/>
+                                        <Label Content="Absolute" Margin="90, 0, 0, 0" HorizontalContentAlignment="Center" Width="80" HorizontalAlignment="Left"/>
+                                        <Label Content="Calculated" Margin="190, 0, 0, 0" HorizontalContentAlignment="Center" Width="80" HorizontalAlignment="Left"/>
+                                    </Grid>
+                                </Grid>
+
+
+                                <StackPanel Orientation="Horizontal">
+                                    <ListView ItemsSource="{Binding CurrentSeasonResults.CharacterData}" ItemTemplate="{StaticResource MetaResultTemplate}" Background="{StaticResource BG_Titlebar}" BorderThickness="0"/>
+                                    <ListView ItemsSource="{Binding AllSeasonResults.CharacterData}" ItemTemplate="{StaticResource MetaResultTemplateShort}" Background="{StaticResource BG_Titlebar}" BorderThickness="0" Margin="-5, 0, 0, 0"/>
                                 </StackPanel>
-                                <ListView ItemsSource="{Binding AllSeasonResults.CharacterData}" ItemTemplate="{StaticResource MetaResultTemplate}" Background="{StaticResource BG_Titlebar}" BorderThickness="0"/>
+
                                 <Grid Background="#454545">
                                     <Border BorderBrush="#666" BorderThickness="0, 1, 0, 1" />
-                                    <Label Content="Totals:" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold" Margin="48, 0, 0, 0"/>
-                                    <Label Content="{Binding AllSeasonResults.WinsTotal}" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold" Margin="186, 0, 0, 0"/>
-                                    <Label Content="{Binding AllSeasonResults.LosesTotal}" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold" Margin="236, 0, 0, 0"/>
-                                    <Label Content="{Binding AllSeasonResults.WinPercent}" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold" Margin="290, 0, 0, 0"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="Totals:" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold" Margin="48, 0, 0, 0"/>
+                                        <Label Content="{Binding CurrentSeasonResults.RecordString}" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold" Margin="61, 0, 0, 0" HorizontalContentAlignment="Center" />
+                                        <Label Content="{Binding CurrentSeasonResults.WinPercent}" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold" Margin="75, 0, 0, 0"/>
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal" Margin="424, 0, 0, 0">
+                                        <Label Content="{Binding AllSeasonResults.RecordString}" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold" Margin="46, 0, 0, 0" HorizontalContentAlignment="Center"/>
+                                        <Label Content="{Binding AllSeasonResults.WinPercent}" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold" Margin="75, 0, 0, 0"/>
+                                    </StackPanel>
                                 </Grid>
                             </StackPanel>
-                        </Grid>
-
-                        <Grid Width="400" HorizontalAlignment="Left" Margin="450, 20, 0, 0">
-                            <StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <Label Content="{Binding CurrentSeasonResults.TableTitle}" FontSize="16" FontWeight="Bold" Width="340" HorizontalContentAlignment="Center"/>
-
-                                </StackPanel>
-                                <ListView ItemsSource="{Binding CurrentSeasonResults.CharacterData}" ItemTemplate="{StaticResource MetaResultTemplate}" Background="{StaticResource BG_Titlebar}" BorderThickness="0"/>
-                                <Grid Background="#454545">
-                                    <Border BorderBrush="#666" BorderThickness="0, 1, 0, 1" />
-                                    <Label Content="Totals:" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold" Margin="48, 0, 0, 0"/>
-                                    <Label Content="{Binding CurrentSeasonResults.WinsTotal}" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold" Margin="186, 0, 0, 0"/>
-                                    <Label Content="{Binding CurrentSeasonResults.LosesTotal}" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold" Margin="236, 0, 0, 0"/>
-                                    <Label Content="{Binding CurrentSeasonResults.WinPercent}" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold" Margin="290, 0, 0, 0"/>
-                                </Grid>
-                            </StackPanel>
-                        </Grid>
-
-                        <Grid Width="400" HorizontalAlignment="Left" Margin="880, 20, 0, 0">
-                            <StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <Label Content="{Binding LastSeasonResults.TableTitle}" FontSize="16" FontWeight="Bold" Width="340" HorizontalContentAlignment="Center"/>
-
-                                </StackPanel>
-                                <ListView ItemsSource="{Binding LastSeasonResults.CharacterData}" ItemTemplate="{StaticResource MetaResultTemplate}" Background="{StaticResource BG_Titlebar}" BorderThickness="0"/>
-                                <Grid Background="#454545">
-                                    <Border BorderBrush="#666" BorderThickness="0, 1, 0, 1" />
-                                    <Label Content="Totals:" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold" Margin="48, 0, 0, 0"/>
-                                    <Label Content="{Binding LastSeasonResults.WinsTotal}" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold" Margin="186, 0, 0, 0"/>
-                                    <Label Content="{Binding LastSeasonResults.LosesTotal}" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold" Margin="236, 0, 0, 0"/>
-                                    <Label Content="{Binding LastSeasonResults.WinPercent}" HorizontalAlignment="Left" FontSize="16" FontWeight="Bold" Margin="290, 0, 0, 0"/>
-                                </Grid>
-                            </StackPanel>
-                        </Grid>
-
-                        <Grid>
-                            
                         </Grid>
                     </Grid>
                 </DockPanel>

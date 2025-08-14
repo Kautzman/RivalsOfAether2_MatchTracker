@@ -13,25 +13,37 @@ namespace Rivals2Tracker.Resources.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null || !(value is double d))
-                return Brushes.Transparent;
-
-            d = Math.Max(0.0, Math.Min(1.0, d));
-
-            if (Math.Abs(d - 0.5) < 0.0001)
-                return Brushes.Gray;
-
-            if (d < 0.5)
+            if (value is null)
             {
-                double t = (d - 0.4) / (0.5 - 0.4);
+                return Brushes.Transparent;
+            }
+
+            string valueString = value?.ToString();
+            valueString = new string(valueString.Take(5).ToArray());
+
+            if (!Double.TryParse(valueString, out double doubleValue))
+            {
+                return Brushes.White;
+            }
+
+            doubleValue = doubleValue / 100;
+
+            doubleValue = Math.Max(0.0, Math.Min(1.0, doubleValue));
+
+            if (Math.Abs(doubleValue - 0.5) < 0.0001)
+                return Brushes.LightGray;
+
+            if (doubleValue < 0.5)
+            {
+                double t = (doubleValue - 0.39) / (0.5 - 0.37);
                 t = Math.Max(0, Math.Min(1, t));
-                return LerpBrush(Colors.Red, Colors.Gray, t);
+                return LerpBrush(Colors.OrangeRed, Colors.LightGray, t);
             }
             else
             {
-                double t = (d - 0.5) / (0.6 - 0.5);
+                double t = (doubleValue - 0.5) / (0.61 - 0.5);
                 t = Math.Max(0, Math.Min(1, t));
-                return LerpBrush(Colors.Gray, Colors.Green, t);
+                return LerpBrush(Colors.LightGray, Colors.LightGreen, t);
             }
         }
 

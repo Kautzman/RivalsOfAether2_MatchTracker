@@ -15,6 +15,7 @@ using Rivals2Tracker.HotkeyHandler;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Windows.Media;
+using Windows.Data.Xml.Dom;
 
 namespace Rivals2Tracker
 {
@@ -270,10 +271,10 @@ namespace Rivals2Tracker
         private void GetMatches()
         {
             MatchResults = RivalsORM.GetAllMatches();
-            LastSeasonResults = GetSeasonData("1.2");
+            // LastSeasonResults = GetSeasonData("1.2");
             CurrentSeasonResults = GetSeasonData("1.3");
             AllSeasonResults = GetSeasonData("all");
-            BuildWeightedData();
+            // BuildWeightedData();
             Console.WriteLine(WeightedMatchupData.Count);
         }
 
@@ -289,33 +290,28 @@ namespace Rivals2Tracker
                 if (IsPatchMatch(patch, match.Patch))
                 {
                     metadatatable.AddResult(match);
+
+                    try
+                    {
+                        metadatatable.CharacterData.First(wd => wd.Character == match.OppChar1)
+                            .WeightedData.AddResult(match.MyElo, match.OpponentElo, match.Result, match.Patch);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"Failed to find opponent by character {match.OppChar1}");
+                        continue;
+                    }
                 }
+            }
+
+            metadatatable.CharacterData.Remove(metadatatable.CharacterData.First(c => c.Character == "Unknown"));
+
+            foreach (CharacterMetadata character in metadatatable.CharacterData)
+            {
+                character.WeightedData.DoTheMath();
             }
 
             return metadatatable;
-        }
-
-        private void BuildWeightedData()
-        {
-            WeightedMatchupData.Clear();
-
-            foreach (string character in GlobalData.AllCharacters)
-            {
-                WeightedMatchupData.Add(new WeightedCharacterMetadata(character));
-            }
-
-            foreach (MatchResult match in MatchResults)
-            {
-                try
-                {
-                    WeightedMatchupData.First(wd => wd.Character == match.OppChar1)
-                        .AddResult(match.MyElo, match.OpponentElo, match.Result);
-                }
-                catch(Exception ex)
-                {
-                    Debug.WriteLine($"Failed to find opponent by character {match.OppChar1}");
-                }
-            }
         }
 
         private bool IsPatchMatch(string patchToMatch, string thisMatchPatch)

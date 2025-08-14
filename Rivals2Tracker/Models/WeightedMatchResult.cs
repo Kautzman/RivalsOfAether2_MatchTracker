@@ -14,21 +14,24 @@ namespace Rivals2Tracker.Models
         public int OpponentElo { get; set; }
         public MatchProximity Proximity { get; set; }
         public string Result { get; set; } = String.Empty;
+        public string Patch { get; set; } = String.Empty;
 
-        public WeightedMatchResult(int myElo, MatchProximity proximity, string result)
+        public WeightedMatchResult(int myElo, MatchProximity proximity, string result, string patch)
         {
             MyElo = myElo;
             Proximity = proximity;
             Result = result;
+            Patch = patch;
         }
 
-        public WeightedMatchResult(int eloDelta, int myElo, int opponentElo, MatchProximity proximity, string result)
+        public WeightedMatchResult(int eloDelta, int myElo, int opponentElo, MatchProximity proximity, string result, string patch)
         {
             EloDelta = eloDelta;
             MyElo = myElo;
             OpponentElo = opponentElo;
             Proximity = proximity;
             Result = result;
+            Patch = patch;
         }
     }
 }

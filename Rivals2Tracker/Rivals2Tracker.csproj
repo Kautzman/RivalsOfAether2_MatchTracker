@@ -7,6 +7,7 @@
     <UseWPF>true</UseWPF>
     <SupportedOSPlatformVersion>10.0.22621.0</SupportedOSPlatformVersion>
     <UseWindowsForms>True</UseWindowsForms>
+    <ApplicationIcon>wrastor.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,6 +29,10 @@
     <None Remove="Resources\Icons\Windowing\Minimize.png" />
     <None Remove="Resources\Icons\Windowing\WindowOne.png" />
     <None Remove="Resources\Icons\Windowing\WindowTwo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="wrastor.ico" />
   </ItemGroup>
 
   <ItemGroup>

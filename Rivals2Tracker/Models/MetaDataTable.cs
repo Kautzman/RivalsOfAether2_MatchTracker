@@ -26,6 +26,15 @@ namespace Rivals2Tracker.Models
         {
             get => (WinsTotal + LosesTotal);
         }
+
+        public string RecordString
+        {
+            get
+            {
+                return $"{WinsTotal} - {LosesTotal}";
+            }
+        }
+
         public string WinPercent
         {
             get => (((float)WinsTotal / (float)MatchesTotal) * 100.0f).ToString("n2") + "%";
