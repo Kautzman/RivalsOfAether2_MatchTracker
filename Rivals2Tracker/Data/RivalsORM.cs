@@ -46,7 +46,7 @@ namespace Rivals2Tracker.Data
                 cmd.Parameters.AddWithValue("@OppChar1", match.Opponent.Character);
                 cmd.Parameters.AddWithValue("@OppChar2", match.Opponent.Character2);
                 cmd.Parameters.AddWithValue("@OppChar3", match.Opponent.Character3);
-                cmd.Parameters.AddWithValue("@OpponentElo", match.Opponent.EloString);
+                cmd.Parameters.AddWithValue("@OpponentElo", match.Opponent.Elo);
                 cmd.Parameters.AddWithValue("@MyElo", match.Me.EloString);
                 cmd.Parameters.AddWithValue("@MatchResult", match.MatchResult);
                 cmd.Parameters.AddWithValue("@Patch", match.Patch);
