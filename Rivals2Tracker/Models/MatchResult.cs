@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Rivals2Tracker.Models
 {
-    class MatchResult : BindableBase
+    public class MatchResult : BindableBase
     {
         public long ID { get; set; }
         public string Date { get; set; }

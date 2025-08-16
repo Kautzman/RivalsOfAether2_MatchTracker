@@ -56,6 +56,32 @@ namespace Rivals2Tracker
             set { SetProperty(ref _weightedMatchupData, value); }
         }
 
+        private MatchHistoryCollection _activeMatchHistory = new();
+        public MatchHistoryCollection ActiveMatchHistory
+        {
+            get { return _activeMatchHistory; }
+            set
+            {
+                SetProperty(ref _activeMatchHistory, value); 
+            }
+        }
+
+        public CharacterMetadata ActiveMatchSeason_CharacterData
+        {
+            set
+            {
+                SetActiveMatchHistory(value, "season");
+            }
+        }
+
+        public CharacterMetadata ActiveMatchAll_CharacterData
+        {
+            set
+            {
+                SetActiveMatchHistory(value, "all");
+            }
+        }
+
         private RivalsMatch? _activeMatch;
         public RivalsMatch? ActiveMatch
         {
@@ -312,6 +338,19 @@ namespace Rivals2Tracker
             }
 
             return metadatatable;
+        }
+
+        // Stringly typed nonsense...
+        private void SetActiveMatchHistory(CharacterMetadata characterData, string season)
+        {
+            MatchHistoryCollection matchHistory = new();
+
+            matchHistory.Season = season == "all" ? "All Seasons" : "Current Season";
+            matchHistory.Character = characterData.Character;
+
+            matchHistory.MatchResults = RivalsORM.GetAllMatches(matchHistory.Character);
+
+            ActiveMatchHistory = matchHistory;
         }
 
         private bool IsPatchMatch(string patchToMatch, string thisMatchPatch)

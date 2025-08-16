@@ -47,6 +47,39 @@
         </Grid>
     </DataTemplate>
 
+    <DataTemplate x:Key="MatchResultsSmallTemplate" DataType="{x:Type data:MatchResult}">
+        <Grid Height="55">
+            <StackPanel Orientation="Horizontal">
+                <Grid>
+                    <Label Content="{Binding Date}" Width="90" VerticalAlignment="Center" Margin="5, 0, 0, 0"/>
+                    <Label Content="{Binding Patch}" Width="40" FontSize="12" HorizontalAlignment="Right" HorizontalContentAlignment="Left" Margin="0, 0, 0, 0" Foreground="{StaticResource FG_Component}"/>
+
+                </Grid>
+                
+                <Grid>
+                    <Label Content="{Binding ID}" Width="40" FontSize="11" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="5, 0, 0, 0" Foreground="{StaticResource FG_Component}"/>
+                    <Label Content="{Binding Result}" Width="45" Margin="5, 18, 0, 0" HorizontalAlignment="Left" HorizontalContentAlignment="Left" FontSize="16"
+                           Foreground="{Binding Result, Converter={StaticResource WinLoseColorConverter}}"/>
+                </Grid>
+
+                <Border BorderBrush="#585858" BorderThickness="1, 0, 0, 0" Margin="10, 10, 0, 10"/>
+
+                <StackPanel Margin="0, 5, 0, 0" Orientation="Horizontal">
+                    <Grid>
+                        <Label Content="{Binding Opponent}" Width="130" Margin="5, 0, 0, 0" HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="16" />
+                    </Grid>
+                    
+                    <Label Content="{Binding MyElo}" Width="50" Margin="10, 0, 0, 0" Foreground="#DFDFDF" FontWeight="DemiBold"/>
+                    <Label Content="{Binding OpponentElo}" Width="50" Margin="10, 0, 0, 0" Foreground="#DFDFDF" FontWeight="DemiBold"/>
+                </StackPanel>
+
+                <Label Content="{Binding Notes}" FontSize="12" Width="340" Margin="-245, 30, 0, 0" Foreground="{StaticResource FG_Control_Disabled}" HorizontalAlignment="Left" HorizontalContentAlignment="Left"/>
+
+                <Border BorderBrush="#585858" BorderThickness="0, 0, 0, 1" Margin="20, 0, 10, 0"/>
+            </StackPanel>
+        </Grid>
+    </DataTemplate>
+
     <DataTemplate x:Key="MetaResultTemplate" DataType="{x:Type data:CharacterMetadata}">
         <Grid Height="65">
             <StackPanel Orientation="Horizontal">

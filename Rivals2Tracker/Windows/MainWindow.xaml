@@ -138,7 +138,24 @@
                         </DockPanel>
                     </Grid>
 
-                    <Grid DockPanel.Dock="Right" Background="{StaticResource BG_Titlebar}">
+                    <Grid DockPanel.Dock="Right" HorizontalAlignment="Right" Width="570" Background="{StaticResource BG_Titlebar}">
+                        <Label Content="{Binding ActiveMatchHistory.Character}" Margin="10, 15, 0, 0" FontSize="18" FontWeight="Bold"/>
+                        <Image Source="{Binding ActiveMatchHistory.Character, Converter={StaticResource IconConverter}}" Height="48" Width="48" Margin="0, 10, 0, 0" HorizontalAlignment="Center" VerticalAlignment="Top" />
+                        <Label Content="{Binding ActiveMatchHistory.Season}" Margin="0, 15, 0, 0" FontSize="18" HorizontalAlignment="Right" FontWeight="Bold"/>
+
+                        <Grid Margin="0, 5, 0, 0">
+                            <StackPanel Orientation="Horizontal" Background="{StaticResource BG_Component}" Height="40" VerticalAlignment="Top" Margin="0, 60, 0, 0">
+                                <Label Content="Date" Margin="5, 0, 0, 0" FontSize="12" FontWeight="DemiBold" Width="90" HorizontalAlignment="Center" HorizontalContentAlignment="Center"/>
+                                <Label Content="Opponent" Margin="105, 0, 0, 0" FontSize="12" FontWeight="DemiBold" HorizontalAlignment="Center" HorizontalContentAlignment="Center"/>
+                                <Label Content="My Elo" Margin="40, 0, 0, 0" FontSize="12" FontWeight="DemiBold" Width="52"/>
+                                <Label Content="Opp Elo" Margin="0, 0, 0, 0" FontSize="12" FontWeight="DemiBold" Width="55"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <ListView ItemsSource="{Binding ActiveMatchHistory.MatchResults}" ItemTemplate="{StaticResource MatchResultsSmallTemplate}" Background="{StaticResource BG_Titlebar}" BorderThickness="0" Margin="0, 100, 0, 0"/>
+                    </Grid>
+
+                    <Grid DockPanel.Dock="Right" Background="{StaticResource BG_ClickedItem}">
                         <Grid Width="760" HorizontalAlignment="Left" Margin="20, 20, 0, 0">
                             <StackPanel>
                                 <Grid>
@@ -157,10 +174,9 @@
                                     </Grid>
                                 </Grid>
 
-
                                 <StackPanel Orientation="Horizontal">
-                                    <ListView ItemsSource="{Binding CurrentSeasonResults.CharacterData}" ItemTemplate="{StaticResource MetaResultTemplate}" Background="{StaticResource BG_Titlebar}" BorderThickness="0"/>
-                                    <ListView ItemsSource="{Binding AllSeasonResults.CharacterData}" ItemTemplate="{StaticResource MetaResultTemplateShort}" Background="{StaticResource BG_Titlebar}" BorderThickness="0" Margin="-5, 0, 0, 0"/>
+                                    <ListView SelectedItem="{Binding ActiveMatchSeason_CharacterData}" ItemsSource="{Binding CurrentSeasonResults.CharacterData}" ItemTemplate="{StaticResource MetaResultTemplate}" Background="{StaticResource BG_Titlebar}" BorderThickness="0"/>
+                                    <ListView SelectedItem="{Binding ActiveMatchAll_CharacterData}" ItemsSource="{Binding AllSeasonResults.CharacterData}" ItemTemplate="{StaticResource MetaResultTemplateShort}" Background="{StaticResource BG_Titlebar}" BorderThickness="0" Margin="-5, 0, 0, 0"/>
                                 </StackPanel>
 
                                 <Grid Background="#454545">

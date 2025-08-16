@@ -17,9 +17,20 @@ namespace Rivals2Tracker.Data
 
         public static List<MatchResult> AllMatches = new();
 
-        public static ObservableCollection<MatchResult> GetAllMatches()
+        public static ObservableCollection<MatchResult> GetAllMatches(string characterToGet = "None")
         {
-            DataTable table = ExecuteQuery("SELECT * FROM Matches ORDER BY ID DESC");
+            DataTable table;
+
+            if (characterToGet == "None")
+            {
+                table = ExecuteQuery("SELECT * FROM Matches ORDER BY ID DESC");
+            }
+            else
+            {
+                table = ExecuteQuery($"SELECT * FROM Matches WHERE OppChar1 = '{characterToGet}' ORDER BY ID DESC");
+            }
+
+
             AllMatches = CreateCollectionFromTable<MatchResult>(table);
             return new ObservableCollection<MatchResult>(AllMatches);
         }
