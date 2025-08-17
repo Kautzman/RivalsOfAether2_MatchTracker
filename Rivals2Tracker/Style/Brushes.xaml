@@ -50,4 +50,20 @@
     <SolidColorBrush x:Key="FG_Orange" Color="#CCE8AE50" />
     <SolidColorBrush x:Key="FG_Purple" Color="#CCBF50E8" />
 
+    <!-- ==================================================================================================================== -->
+    <!-- Rivals Brushes -->
+    <!-- ==================================================================================================================== -->
+
+    <SolidColorBrush x:Key="FG_WhiteLabel" Color="#FFF" />
+    <SolidColorBrush x:Key="FG_GreyLabel" Color="#999" />
+    <SolidColorBrush x:Key="FG_BlueLabel" Color="#6AB0FA" />
+    <SolidColorBrush x:Key="FG_Gold" Color="#FFDF77" />
+    <SolidColorBrush x:Key="FG_DarkGold" Color="#867100" />
+    <SolidColorBrush x:Key="FG_DarkDarkGold" Color="#564100" />
+    <SolidColorBrush x:Key="FG_WinGreen" Color="#85FFBC" />
+    <SolidColorBrush x:Key="FG_LoseRed" Color="#FF858C" />
+    <SolidColorBrush x:Key="BG_DarkBlue" Color="#02102E" />
+    <SolidColorBrush x:Key="GR_DarkBlue" Color="#121A56" />
+    <SolidColorBrush x:Key="GR_Blue" Color="#252789" />
+
 </ResourceDictionary>

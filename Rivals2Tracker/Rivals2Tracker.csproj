@@ -11,6 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Fonts\after_disaster.ttf" />
     <None Remove="Resources\CharacterIcons\absa.png" />
     <None Remove="Resources\CharacterIcons\clairen.png" />
     <None Remove="Resources\CharacterIcons\etalus.png" />
@@ -48,6 +49,9 @@
 	</ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Fonts\after_disaster.ttf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\CharacterIcons\absa.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
