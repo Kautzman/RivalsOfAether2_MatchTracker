@@ -7,6 +7,91 @@
     <converters:WinLoseColorConverter x:Key="WinLoseColorConverter" />
     <converters:WinRatioToBackgroundConverter x:Key="WinRatioToColor" />
 
+    <DataTemplate x:Key="MatchResultsFancy" DataType="{x:Type data:MatchResult}">
+        <Grid Height="74" Width="840" Background="{StaticResource LGR_Blue}" Opacity="0.8">
+            <Border BorderBrush="{StaticResource GR_DarkBlue}" BorderThickness="1" Width="840">
+                <StackPanel Orientation="Horizontal" Width="840" >
+                    <Label Content="{Binding Result}" Width="75" Margin="25, 0, 0, 0" HorizontalAlignment="Left" HorizontalContentAlignment="Left" VerticalAlignment="Center" FontSize="28"
+                               Foreground="{Binding Result, Converter={StaticResource WinLoseColorConverter}}" FontFamily="Franklin Gothic Demi Cond" />
+
+                    <StackPanel Margin="10, 0, 0, 0" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Grid Height="74" Margin="10, 0, 0, 0">
+                            <Image Source="{Binding MyChar, Converter={StaticResource IconConverter}}" Height="40" Width="40" Margin="0" VerticalAlignment="Top"/>
+                            <Label Content="{Binding MyElo}" FontFamily="{StaticResource AfterDisaster}" Width="50" FontSize="24" Margin="0, 0, 0, 0" Foreground="{StaticResource FG_WhiteLabel}"  
+                                   VerticalAlignment="Bottom" HorizontalAlignment="Center" HorizontalContentAlignment="Center"/>
+                        </Grid>
+
+                        <Grid Height="74" Margin="15, 0, 0, 0">
+                            <Image Source="{Binding OppChar1, Converter={StaticResource IconConverter}}" Height="40" Width="40" Margin="0" VerticalAlignment="Top"/>
+                            <Label Content="{Binding OpponentElo}" FontFamily="{StaticResource AfterDisaster}" Width="50" Margin="0, 0, 0, 0" FontSize="24" Foreground="{StaticResource FG_WhiteLabel}"
+                                   VerticalAlignment="Bottom" HorizontalAlignment="Center" HorizontalContentAlignment="Center"/>
+                        </Grid>
+
+                        <Grid>
+                            <Image Source="{Binding OppChar2, Converter={StaticResource IconConverter}}" Height="32" Width="32" Margin="15, 0, 0, 0"/>
+                        </Grid>
+
+                        <Label Content="{Binding Opponent}" FontFamily="Franklin Gothic Demi Cond" Width="180" FontSize="26" Margin="50, 0, 0, 0" VerticalContentAlignment="Center" Foreground="{StaticResource FG_WhiteLabel}"/>
+                    </StackPanel>
+
+                    <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Width="250">
+                        <Grid>
+                            <Label Content="{Binding Date}" Foreground="{StaticResource FG_WhiteLabel}" Width="190" FontSize="22" VerticalAlignment="Top" Margin="5, 0, 0, 0"
+                                   HorizontalAlignment="Right" HorizontalContentAlignment="Right" FontFamily="Franklin Gothic Demi Cond"/>
+                            <Label Content="{Binding Patch}" Foreground="{StaticResource FG_GreyLabel}" Width="100" FontSize="18" HorizontalAlignment="Right" HorizontalContentAlignment="Right" Margin="0, 35, 0, 0" FontFamily="Franklin Gothic Demi Cond"/>
+                        </Grid>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="MetaResultTemplateFancy" DataType="{x:Type data:CharacterMetadata}">
+        <Grid Height="180" Width="200" Background="{StaticResource LGR_Blue_Opacity}" Opacity="0.80">
+            <StackPanel Orientation="Vertical" Margin="0, 20, 0, 0">
+                <Image Source="{Binding Character, Converter={StaticResource IconConverter}}" Height="56" Width="56" Margin="0, 0, 0, 0"/>
+                <Label Content="{Binding RecordString}" Margin="0, 5, 0, 0"  HorizontalAlignment="Center" HorizontalContentAlignment="Center" FontSize="24" FontFamily="Franklin Gothic Demi Cond"/>
+
+                <Grid Margin="0, 0, 0, 0">
+                    <StackPanel Margin="10, 0, 0, 0" HorizontalAlignment="Left" Width="90" >
+                        <Label Content="Win %" Foreground="{StaticResource FG_GreyLabel}" FontFamily="Franklin Gothic Demi Cond" FontSize="16" FontWeight="Light" HorizontalContentAlignment="Center"/>
+                        <Label Content="{Binding WinRatioString}" Foreground="{Binding WinRatioString, Converter={StaticResource WinRatioToColor}}" Margin="0, 0, 0, 5"
+                               VerticalAlignment="Center" FontSize="22" FontFamily="{StaticResource AfterDisaster}" HorizontalContentAlignment="Center"/>
+                    </StackPanel>
+
+                    <StackPanel Margin="0, 0, 10, 0" HorizontalAlignment="Right" Width="90">
+                        <Label Content="Weighed %" Foreground="{StaticResource FG_GreyLabel}" FontFamily="Franklin Gothic Demi Cond" FontSize="16" FontWeight="Light" HorizontalContentAlignment="Center"/>
+                        <Label Content="{Binding WeightedData.AdjustedMatchupRating}" Foreground="{Binding WeightedData.AdjustedMatchupRating, Converter={StaticResource WinRatioToColor}}"
+                               VerticalAlignment="Center" FontSize="22" FontFamily="{StaticResource AfterDisaster}" HorizontalContentAlignment="Center" Margin="0, 0, 0, 5"/>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="MetaResultTemplate" DataType="{x:Type data:CharacterMetadata}">
+        <Grid Height="65">
+            <StackPanel Orientation="Horizontal">
+                <Grid Width="455">
+                    <Border BorderBrush="#555" BorderThickness="0, 1, 0, 0" />
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{Binding Character, Converter={StaticResource IconConverter}}" Height="32" Width="32" Margin="0, 0, 0, 0"/>
+                        <Label Content="{Binding Character}" Width="110" VerticalContentAlignment="Center" Margin="10, 0, 0, 0"/>
+                        <Border BorderBrush="#555" BorderThickness="0, 0, 1, 0" Margin="0, 20, 0, 20"/>
+                        <Grid Width="100">
+                            <Label Content="{Binding RecordString}" Width="80" Margin="0, 0, 0, 0"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="16" FontWeight="DemiBold"/>
+                            <Label Content="{Binding TotalGames}" Margin="0, 0, 0, 5" VerticalAlignment="Bottom" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Width="80"
+                                   Foreground="{StaticResource FG_Control_Disabled}" FontSize="13"/>
+                        </Grid>
+                        <Label Content="{Binding WinRatioString}" Width="100" Foreground="{Binding WinRatioString, Converter={StaticResource WinRatioToColor}}" VerticalAlignment="Center" FontSize="16" FontWeight="DemiBold"/>
+                        <Label Content="{Binding WeightedData.AdjustedMatchupRating}" Foreground="{Binding WeightedData.AdjustedMatchupRating, Converter={StaticResource WinRatioToColor}}" Width="100" VerticalAlignment="Center" FontSize="16" FontWeight="DemiBold"/>
+                        <Border BorderBrush="#555" BorderThickness="0, 0, 1, 0" Margin="0, 20, 0, 20"/>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </Grid>
+    </DataTemplate>
+
     <DataTemplate x:Key="MatchResultsTemplate" DataType="{x:Type data:MatchResult}">
         <Grid Height="55">
             <StackPanel Orientation="Horizontal">
@@ -53,9 +138,8 @@
                 <Grid>
                     <Label Content="{Binding Date}" Width="90" VerticalAlignment="Top" Margin="5, 0, 0, 0"/>
                     <Label Content="{Binding Patch}" Width="40" FontSize="12" HorizontalAlignment="Center" HorizontalContentAlignment="Left" Margin="0, 20, 0, 0" Foreground="{StaticResource FG_Component}"/>
-
                 </Grid>
-                
+
                 <Grid>
                     <Label Content="{Binding ID}" Width="40" FontSize="11" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="5, 0, 0, 0" Foreground="{StaticResource FG_Component}"/>
                     <Label Content="{Binding Result}" Width="45" Margin="5, 18, 0, 0" HorizontalAlignment="Left" HorizontalContentAlignment="Left" FontSize="16"
@@ -68,7 +152,7 @@
                     <Grid>
                         <Label Content="{Binding Opponent}" Width="130" Margin="5, 0, 0, 0" HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="16" />
                     </Grid>
-                    
+
                     <Label Content="{Binding MyElo}" Width="50" Margin="10, 0, 0, 0" Foreground="#DFDFDF" FontWeight="DemiBold"/>
                     <Label Content="{Binding OpponentElo}" Width="50" Margin="10, 0, 0, 0" Foreground="#DFDFDF" FontWeight="DemiBold"/>
                 </StackPanel>
@@ -76,29 +160,6 @@
                 <Label Content="{Binding Notes}" FontSize="13" Width="340" Margin="-245, 30, 0, 0" Foreground="{StaticResource FG_Control_Disabled}" HorizontalAlignment="Left" HorizontalContentAlignment="Left"/>
 
                 <Border BorderBrush="#585858" BorderThickness="0, 0, 0, 1" Margin="20, 0, 10, 0"/>
-            </StackPanel>
-        </Grid>
-    </DataTemplate>
-
-    <DataTemplate x:Key="MetaResultTemplate" DataType="{x:Type data:CharacterMetadata}">
-        <Grid Height="65">
-            <StackPanel Orientation="Horizontal">
-                <Grid Width="455">
-                    <Border BorderBrush="#555" BorderThickness="0, 1, 0, 0" />
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="{Binding Character, Converter={StaticResource IconConverter}}" Height="32" Width="32" Margin="0, 0, 0, 0"/>
-                        <Label Content="{Binding Character}" Width="110" VerticalContentAlignment="Center" Margin="10, 0, 0, 0"/>
-                        <Border BorderBrush="#555" BorderThickness="0, 0, 1, 0" Margin="0, 20, 0, 20"/>
-                        <Grid Width="100">
-                            <Label Content="{Binding RecordString}" Width="80" Margin="0, 5, 0, 0"  HorizontalAlignment="Left" HorizontalContentAlignment="Center" FontSize="16" FontWeight="DemiBold"/>
-                            <Label Content="{Binding TotalGames}" Margin="0, 0, 0, 5" VerticalAlignment="Bottom" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Width="80"
-                                   Foreground="{StaticResource FG_Control_Disabled}" FontSize="13"/>
-                        </Grid>
-                        <Label Content="{Binding WinRatioString}" Width="100" Foreground="{Binding WinRatioString, Converter={StaticResource WinRatioToColor}}" VerticalAlignment="Center" FontSize="16" FontWeight="DemiBold"/>
-                        <Label Content="{Binding WeightedData.AdjustedMatchupRating}" Foreground="{Binding WeightedData.AdjustedMatchupRating, Converter={StaticResource WinRatioToColor}}" Width="100" VerticalAlignment="Center" FontSize="16" FontWeight="DemiBold"/>
-                        <Border BorderBrush="#555" BorderThickness="0, 0, 1, 0" Margin="0, 20, 0, 20"/>
-                    </StackPanel>
-                </Grid>
             </StackPanel>
         </Grid>
     </DataTemplate>
@@ -136,7 +197,7 @@
                         <Label Content="{Binding RecordUnranked}" Width="100"/>
                         <Label Content="{Binding AdjustedEloSeasonal}" Width="60"/>
                         <Label Content="{Binding AdjustedMUSeasonal}" Width="60"/>
-                        <Label Content="{Binding AdjustedEloTotal}" Width="60"/>
+                        <Label Content="{Binding AdjustedEloTotal}" Width="60"/>ound="{StaticResourc
                         <Label Content="{Binding AdjustedMUtotal}" Width="60"/>
                     </StackPanel>
                 </Grid>

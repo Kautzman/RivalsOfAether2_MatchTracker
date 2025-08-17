@@ -21,10 +21,10 @@ namespace Rivals2Tracker.Resources.Converters
 
             if (stringValue == "Win")
             {
-                return "#33DD33";
+                return "#85FFBC";
             }
 
-            return "#DD3333";
+            return "#FF858C";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

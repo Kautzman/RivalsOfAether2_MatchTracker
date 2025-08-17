@@ -56,5 +56,18 @@ namespace Rivals2Tracker
 
             return IntPtr.Zero;
         }
+
+        private void OuterBorder_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (sender is Border border)
+            {
+                border.Clip = new RectangleGeometry
+                {
+                    Rect = new Rect(0, 0, border.ActualWidth, border.ActualHeight),
+                    RadiusX = border.CornerRadius.TopLeft,
+                    RadiusY = border.CornerRadius.TopLeft
+                };
+            }
+        }
     }
 }

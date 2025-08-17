@@ -31,19 +31,19 @@ namespace Rivals2Tracker.Resources.Converters
             doubleValue = Math.Max(0.0, Math.Min(1.0, doubleValue));
 
             if (Math.Abs(doubleValue - 0.5) < 0.0001)
-                return Brushes.LightGray;
+                return Brushes.White;
 
             if (doubleValue < 0.5)
             {
                 double t = (doubleValue - 0.39) / (0.5 - 0.37);
                 t = Math.Max(0, Math.Min(1, t));
-                return LerpBrush(Colors.OrangeRed, Colors.LightGray, t);
+                return LerpBrush(Color.FromRgb(255, 133, 140), Colors.White, t);
             }
             else
             {
                 double t = (doubleValue - 0.5) / (0.61 - 0.5);
                 t = Math.Max(0, Math.Min(1, t));
-                return LerpBrush(Colors.LightGray, Colors.LightGreen, t);
+                return LerpBrush(Colors.White, Color.FromRgb(133, 255, 188), t);
             }
         }
 

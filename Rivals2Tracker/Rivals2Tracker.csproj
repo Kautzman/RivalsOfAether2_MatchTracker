@@ -12,6 +12,8 @@
 
   <ItemGroup>
     <None Remove="Fonts\after_disaster.ttf" />
+    <None Remove="ImageResources\embossLogo2.png" />
+    <None Remove="ImageResources\Portraits\wrastor_portrait.png" />
     <None Remove="Resources\CharacterIcons\absa.png" />
     <None Remove="Resources\CharacterIcons\clairen.png" />
     <None Remove="Resources\CharacterIcons\etalus.png" />
@@ -52,6 +54,8 @@
     <Resource Include="Fonts\after_disaster.ttf">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="ImageResources\embossLogo2.png" />
+    <Resource Include="ImageResources\Portraits\wrastor_portrait.png" />
     <Resource Include="Resources\CharacterIcons\absa.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>

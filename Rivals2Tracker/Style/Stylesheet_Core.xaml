@@ -98,41 +98,39 @@
         <Setter Property="Background" Value="{StaticResource BG_Button}" />
         <Setter Property="Foreground" Value="{StaticResource FG_Interactable}" />
         <Setter Property="BorderBrush" Value="{StaticResource Border_Control}" />
+        <Setter Property="BorderThickness" Value="4" />
         <Setter Property="Height" Value="20" />
         <Setter Property="FontSize" Value="11" />
-        
+
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border CornerRadius="2" Background="{StaticResource BG_Component}" BorderBrush="{StaticResource Shadow_Dark}" BorderThickness="0, 0, 0, 1">
-                        <Grid>
-                            <Border CornerRadius="2" Background="{StaticResource BG_Component}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" >
-                                <Grid>
-                                    <Border x:Name="InnerBorder" CornerRadius="2" Background="{StaticResource BG_Component}" BorderBrush="{StaticResource Shadow_Dark}" BorderThickness="0, 1, 0, 0" />
-                                    <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                                </Grid>
-                            </Border>
-                        </Grid>
-                    </Border>
+                    <Grid>
+                        <Border CornerRadius="0" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" >
+                            <Grid x:Name="InnerContent" Background="{TemplateBinding Background}" Margin="-1, 0, -1, 0">
+                                <ContentPresenter x:Name="ContentPresenter" TextElement.Foreground="{TemplateBinding Foreground}" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                            </Grid>
+                        </Border>
+                    </Grid>
+
                     <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                                <Condition Property="IsPressed" Value="False"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="InnerContent" Property="Background" Value="{Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}" />
+                            <Setter TargetName="ContentPresenter" Property="TextElement.Foreground" Value="{Binding Background, RelativeSource={RelativeSource TemplatedParent}}" />
+                        </MultiTrigger>
+
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="InnerBorder" Property="Background" Value="{StaticResource BG_ClickedItem}" />
-                            <Setter Property="Background" Value="{StaticResource BG_ClickedItem}" />
+                            <Setter TargetName="ContentPresenter" Property="TextElement.Foreground" Value="{StaticResource FG_WhiteLabel}" />
+                            <Setter TargetName="InnerContent" Property="Background" Value="{StaticResource GR_DarkBlue}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="BorderBrush" Value="{StaticResource FG_Orange}" />
-            </Trigger>
-
-            <Trigger Property="IsFocused" Value="True">
-                <Setter Property="BorderBrush" Value="{StaticResource FG_Orange}" />
-            </Trigger>
-        </Style.Triggers>
     </Style>
 
     <Style TargetType="{x:Type Button}" x:Key="Button_NoCorners" BasedOn="{StaticResource BaseButton}">
@@ -825,7 +823,57 @@
     </Style>
 
     <Style TargetType="{x:Type ListBox}" BasedOn="{StaticResource ListBoxBase}" />
-    
+
+    <!-- ==================================================================================================================== -->
+    <!-- ListView -->
+    <!-- ==================================================================================================================== -->
+
+    <SolidColorBrush x:Key="ListView.Item.Border.Default" Color="Transparent"/>
+    <SolidColorBrush x:Key="ListView.Item.Border.Selected" Color="#0078D4"/>
+    <SolidColorBrush x:Key="ListView.Item.Background.Default" Color="Transparent"/>
+    <SolidColorBrush x:Key="ListView.Item.Background.Selected" Color="Transparent"/>
+    <SolidColorBrush x:Key="ListView.Item.Background.Hover" Color="Transparent"/>
+
+    <ControlTemplate x:Key="CustomListViewItemTemplate" TargetType="ListViewItem">
+        <Border Name="ItemBorder" BorderThickness="2" BorderBrush="{StaticResource ListView.Item.Border.Default}"
+                Background="{StaticResource ListView.Item.Background.Default}" Padding="{TemplateBinding Padding}" Margin="1" CornerRadius="2">
+            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+        </Border>
+
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter TargetName="ItemBorder" Property="BorderBrush" Value="{StaticResource LGR_Gold}"/>
+                <Setter TargetName="ItemBorder" Property="BorderThickness" Value="2"/>
+                <Setter TargetName="ItemBorder" Property="Background" Value="{StaticResource ListView.Item.Background.Selected}"/>
+            </Trigger>
+
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsMouseOver" Value="True"/>
+                    <Condition Property="IsSelected" Value="False"/>
+                </MultiTrigger.Conditions>
+                <Setter TargetName="ItemBorder" Property="BorderBrush" Value="{StaticResource LGR_Gold_Opacity}"/>
+                <Setter TargetName="ItemBorder" Property="Background" Value="{StaticResource ListView.Item.Background.Hover}"/>
+            </MultiTrigger>
+
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter TargetName="ItemBorder" Property="Opacity" Value="0.5"/>
+            </Trigger>
+
+            <Trigger Property="IsFocused" Value="True">
+                <Setter TargetName="ItemBorder" Property="BorderBrush" Value="{StaticResource LGR_Gold}"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <Style x:Key="CustomListViewItemStyle" TargetType="ListViewItem">
+        <Setter Property="Template" Value="{StaticResource CustomListViewItemTemplate}"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Focusable" Value="True"/>
+    </Style>
+
     <!-- ==================================================================================================================== -->
     <!-- ComboBox -->
     <!-- ==================================================================================================================== -->
@@ -1044,11 +1092,11 @@
         <Setter Property="OverridesDefaultStyle" Value="true" />
         <Setter Property="IsTabStop" Value="false" />
         <Setter Property="Focusable" Value="false" />
-        <Setter Property="Background" Value="{StaticResource Clickable_Component}" />
+        <Setter Property="Background" Value="{StaticResource FG_WhiteLabel}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Thumb}">
-                    <Border CornerRadius="6" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" />
+                    <Border CornerRadius="0" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -1064,26 +1112,13 @@
     </Style>
 
     <ControlTemplate x:Key="VerticalScrollBar" TargetType="{x:Type ScrollBar}">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition MaxHeight="18" />
-                <RowDefinition Height="0.00001*" />
-                <RowDefinition MaxHeight="18" />
-            </Grid.RowDefinitions>
-            <Border Grid.RowSpan="3" CornerRadius="0" Background="{StaticResource BG_Component}" />
-            <RepeatButton Grid.Row="0" Style="{StaticResource ScrollBarLineButton}" Height="18" Command="ScrollBar.LineUpCommand"  Content="M 0 6 L 8 6 L 4 0 Z" />
-            <Track x:Name="PART_Track" Grid.Row="1" IsDirectionReversed="true">
-                <Track.DecreaseRepeatButton>
-                    <RepeatButton Style="{StaticResource ScrollBarPageButton}" Command="ScrollBar.PageUpCommand" />
-                </Track.DecreaseRepeatButton>
+        <Grid Width="4">
+            <Border CornerRadius="0" Background="#192541" />
+            <Track x:Name="PART_Track" IsDirectionReversed="true">
                 <Track.Thumb>
-                    <Thumb Style="{StaticResource ScrollBarThumb}" Margin="6,0,5,0"/>
+                    <Thumb Style="{StaticResource ScrollBarThumb}" Margin="-2,0,-2,0"/>
                 </Track.Thumb>
-                <Track.IncreaseRepeatButton>
-                    <RepeatButton Style="{StaticResource ScrollBarPageButton}" Command="ScrollBar.PageDownCommand" />
-                </Track.IncreaseRepeatButton>
             </Track>
-            <RepeatButton Grid.Row="2" Style="{StaticResource ScrollBarLineButton}" Height="18" Command="ScrollBar.LineDownCommand" Content="M 0 0 L 4 6 L 8 0 Z" />
         </Grid>
     </ControlTemplate>
 
