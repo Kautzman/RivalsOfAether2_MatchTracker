@@ -51,8 +51,8 @@
         <Grid Height="55">
             <StackPanel Orientation="Horizontal">
                 <Grid>
-                    <Label Content="{Binding Date}" Width="90" VerticalAlignment="Center" Margin="5, 0, 0, 0"/>
-                    <Label Content="{Binding Patch}" Width="40" FontSize="12" HorizontalAlignment="Right" HorizontalContentAlignment="Left" Margin="0, 0, 0, 0" Foreground="{StaticResource FG_Component}"/>
+                    <Label Content="{Binding Date}" Width="90" VerticalAlignment="Top" Margin="5, 0, 0, 0"/>
+                    <Label Content="{Binding Patch}" Width="40" FontSize="12" HorizontalAlignment="Center" HorizontalContentAlignment="Left" Margin="0, 20, 0, 0" Foreground="{StaticResource FG_Component}"/>
 
                 </Grid>
                 
@@ -73,7 +73,7 @@
                     <Label Content="{Binding OpponentElo}" Width="50" Margin="10, 0, 0, 0" Foreground="#DFDFDF" FontWeight="DemiBold"/>
                 </StackPanel>
 
-                <Label Content="{Binding Notes}" FontSize="12" Width="340" Margin="-245, 30, 0, 0" Foreground="{StaticResource FG_Control_Disabled}" HorizontalAlignment="Left" HorizontalContentAlignment="Left"/>
+                <Label Content="{Binding Notes}" FontSize="13" Width="340" Margin="-245, 30, 0, 0" Foreground="{StaticResource FG_Control_Disabled}" HorizontalAlignment="Left" HorizontalContentAlignment="Left"/>
 
                 <Border BorderBrush="#585858" BorderThickness="0, 0, 0, 1" Margin="20, 0, 10, 0"/>
             </StackPanel>

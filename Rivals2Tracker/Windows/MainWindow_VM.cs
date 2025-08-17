@@ -343,6 +343,11 @@ namespace Rivals2Tracker
         // Stringly typed nonsense...
         private void SetActiveMatchHistory(CharacterMetadata characterData, string season)
         {
+            if (characterData is null)
+            {
+                return;
+            }
+
             MatchHistoryCollection matchHistory = new();
 
             matchHistory.Season = season == "all" ? "All Seasons" : "Current Season";
