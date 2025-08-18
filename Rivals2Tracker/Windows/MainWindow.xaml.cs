@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -20,6 +23,9 @@ namespace Rivals2Tracker
 {
     public partial class MainWindow : kWindow
     {
+        private double originalHeight = 1300; // Store the original height
+        private bool isMinimized = false;
+        private string _selectedImagePath = "/resources/charactericons/unknown.png"; // Default image
         public MainWindow()
         {
             InitializeComponent();
@@ -68,6 +74,52 @@ namespace Rivals2Tracker
                     RadiusY = border.CornerRadius.TopLeft
                 };
             }
+        }
+
+        private void TextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter || e.Key == Key.Escape)
+            {
+                Keyboard.ClearFocus();
+                FocusDump.Focus();
+            }
+        }
+
+        public string SelectedImagePath
+        {
+            get { return _selectedImagePath; }
+            set
+            {
+                if (_selectedImagePath != value)
+                {
+                    _selectedImagePath = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        // Event handler for the main button click - shows the flyout
+        private void ImageSelectorButton_Click(object sender, RoutedEventArgs e)
+        {
+            ImageFlyout.IsOpen = true;
+        }
+
+        // Event handler for flyout image button clicks
+        private void FlyoutImageButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is System.Windows.Controls.Button button && button.Tag is string imagePath)
+            {
+                SelectedImagePath = imagePath; // Update the binding
+                ImageFlyout.IsOpen = false; // Close the flyout
+            }
+        }
+
+        // INotifyPropertyChanged implementation
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Rivals2Tracker.Data;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -67,9 +68,9 @@ namespace Rivals2Tracker.Models
             }
         }
 
-        public bool IsKadecgos()
+        public bool IsLocalPlayer()
         {
-            return Name == "Kadecgos";
+            return Name.ToLower() == GlobalData.MyName.ToLower();
         }
 
         public string FormatName(string name)

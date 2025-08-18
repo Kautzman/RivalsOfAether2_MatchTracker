@@ -182,7 +182,8 @@
     <Style TargetType="{x:Type TextBox}" x:Key="TextBoxBase">
         <Setter Property="Background" Value="{StaticResource BG_Component}" />
         <Setter Property="BorderBrush" Value="{StaticResource Border_Component}" />
-        <Setter Property="Foreground" Value="{StaticResource FG_Interactable}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Foreground" Value="{StaticResource FG_BlueLabel}" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="Height" Value="25" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -191,39 +192,38 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TextBoxBase}">
                     <Border Background="{TemplateBinding Background}" x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="2">
-                        <ScrollViewer x:Name="PART_ContentHost"/>
+                        <ScrollViewer x:Name="PART_ContentHost" />
                     </Border>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="Height" Value="Auto">
+                        <!--<Trigger Property="Height" Value="Auto">
                             <Setter Property="MinHeight" Value="20"/>
                         </Trigger>
                         <Trigger Property="IsReadOnly" Value="True">
-                            <Setter Property="Background" Value="{StaticResource BG_CheckBox}"/>
                             <Setter Property="Foreground" Value="{StaticResource FG_Control_Disabled}" />
+                        </Trigger>-->
+                        <Trigger Property="IsFocused" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource FG_BlueLabel}"/>
+                            <Setter Property="Foreground" Value="{StaticResource BG_DarkBlue}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
 
-        <Style.Triggers>
+        <!--<Style.Triggers>
             <MultiTrigger>
                 <MultiTrigger.Conditions>
                     <Condition Property="IsMouseOver" Value="True" />
-                    <Condition Property="IsReadOnly" Value="False" />
+                    <Condition Property="IsReadOnly" Value="True" />
                 </MultiTrigger.Conditions>
                 <MultiTrigger.Setters>
                     <Setter Property="Background" Value="{StaticResource BG_Toolbar2}"/>
                 </MultiTrigger.Setters>
             </MultiTrigger>
-
-            <Trigger Property="IsFocused" Value="True">
-                <Setter Property="BorderBrush" Value="{StaticResource Combobox_SelectedItem}"/>
-            </Trigger>
-        </Style.Triggers>
+        </Style.Triggers>-->
     </Style>
 
-    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource TextBoxBase}" x:Key="ValidationTextBox">
+    <!--<Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource TextBoxBase}" x:Key="ValidationTextBox">
         <Style.Triggers>
             <MultiDataTrigger>
                 <MultiDataTrigger.Conditions>
@@ -245,7 +245,7 @@
                 <Setter Property="BorderBrush" Value="{StaticResource FG_Purple}" />
             </MultiDataTrigger>
         </Style.Triggers>
-    </Style>
+    </Style>-->
 
     <Style BasedOn="{StaticResource TextBoxBase}" TargetType="{x:Type TextBox}" />
 

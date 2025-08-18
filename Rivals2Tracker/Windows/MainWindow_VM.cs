@@ -16,6 +16,8 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.Windows.Media;
 using Windows.Data.Xml.Dom;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Rivals2Tracker
 {
@@ -27,6 +29,14 @@ namespace Rivals2Tracker
             get { return _matchResults; }
             set { SetProperty(ref _matchResults, value); }
         }
+
+        private MetaDataTable _displayedCharacterResults = new();
+        public MetaDataTable DisplayedCharacterResults
+        {
+            get { return _displayedCharacterResults; }
+            set { SetProperty(ref _displayedCharacterResults, value); }
+        }
+
 
         private MetaDataTable _currentSeasonResults = new();
         public MetaDataTable CurrentSeasonResults
@@ -54,6 +64,25 @@ namespace Rivals2Tracker
         {
             get { return _weightedMatchupData; }
             set { SetProperty(ref _weightedMatchupData, value); }
+        }
+
+        private bool _showLifetimeResults = false;
+        public bool ShowLifetimeResults
+        {
+            get { return _showLifetimeResults; }
+            set
+            {
+                if (value == false)
+                {
+                    DisplayedCharacterResults = CurrentSeasonResults;
+                }
+                else
+                {
+                    DisplayedCharacterResults = AllSeasonResults;
+                }
+
+                SetProperty(ref _showLifetimeResults, value);
+            }
         }
 
         private MatchHistoryCollection _activeMatchHistory = new();
@@ -86,14 +115,86 @@ namespace Rivals2Tracker
         public RivalsMatch? ActiveMatch
         {
             get { return _activeMatch; }
-            set { SetProperty(ref _activeMatch, value); }
+            set
+            {
+                if (value == null)
+                {
+                    SetProperty(ref _activeMatch, value);
+                    return;
+                }
+
+                if ((value as RivalsMatch).Opponent.Name.Length == 0)
+                {
+                    LocalPlayerNameVisibility = Visibility.Visible;
+                }
+                else
+                {
+                    LocalPlayerNameVisibility = Visibility.Collapsed;
+                }
+
+                if ((value as RivalsMatch).Notes.Length == 0)
+                {
+                    NotesVisibility = Visibility.Visible;
+                }
+                else
+                {
+                    NotesVisibility = Visibility.Collapsed;
+                }
+
+                SetProperty(ref _activeMatch, value);
+            }
         }
 
         private Opponent _activeOpponent;
         public Opponent ActiveOpponent
         {
             get { return _activeOpponent; }
-            set { SetProperty(ref _activeOpponent, value); }
+            set
+            {
+                SetProperty(ref _activeOpponent, value);
+            }
+        }
+
+        private string _myName = "Kadecgos";
+        public string MyName
+        {
+            get { return _myName; }
+            set
+            {
+                GlobalData.MyName = value;
+
+                if (value.Length == 0)
+                {
+                    LocalPlayerNameVisibility = Visibility.Visible;
+                }
+                else
+                {
+                    LocalPlayerNameVisibility = Visibility.Collapsed;
+                }
+                
+                SetProperty(ref _myName, value);
+            }
+        }
+
+        private Visibility _awaitingDataVisibility = Visibility.Visible;
+        public Visibility AwaitingDataVisibility
+        {
+            get { return _awaitingDataVisibility; }
+            set { SetProperty(ref _awaitingDataVisibility, value); }
+        }
+
+        private Visibility _localPlayerNameVisibility = Visibility.Collapsed;
+        public Visibility LocalPlayerNameVisibility
+        {
+            get { return _localPlayerNameVisibility; }
+            set { SetProperty(ref _localPlayerNameVisibility, value); }
+        }
+
+        private Visibility _notesVisibility = Visibility.Visible;
+        public Visibility NotesVisibility
+        {
+            get { return _notesVisibility; }
+            set { SetProperty(ref _notesVisibility, value); }
         }
 
         private string _activityText;
@@ -148,11 +249,28 @@ namespace Rivals2Tracker
             set { SetProperty(ref currentPatch, value); }
         }
 
+        private string _selectedImagePath = "/Resources/CharacterIcons/unknown.png";
+        public string SelectedImagePath
+        {
+            get { return _selectedImagePath; }
+            set { SetProperty(ref _selectedImagePath, value); }
+        }
+
+        private bool _isFlyoutOpen = false;
+        public bool IsFlyoutOpen
+        {
+            get { return _isFlyoutOpen; }
+            set { SetProperty(ref _isFlyoutOpen, value); }
+        }
+
+        public ObservableCollection<string> AvailableCharacters { get; set; }
 
         public DelegateCommand SetMatchWinCommand { get; private set; }
         public DelegateCommand SetMatchLoseCommand { get; private set; }
         public DelegateCommand SetMatchDiscardCommand { get; private set; }
         public DelegateCommand TestOcrCommand { get; private set; }
+        public DelegateCommand ShowFlyoutCommand { get; }
+        public DelegateCommand<string> SelectCharacterCommand { get; set; }
 
         public MainWindow_VM()
         {
@@ -160,8 +278,47 @@ namespace Rivals2Tracker
             SetMatchLoseCommand = new DelegateCommand(() => _ = SetMatchLose());
             SetMatchDiscardCommand = new DelegateCommand(() => _ = SetMatchDiscard());
             TestOcrCommand = new DelegateCommand(() => _ = DoTheOcr());
+            ShowFlyoutCommand = new DelegateCommand(ShowFlyout);
+            SelectCharacterCommand = new DelegateCommand<string>(SelectCharacter);
 
-            GetMatches();
+            SetupImages();
+            GetMatches(true);
+
+            RaisePropertyChanged("ActiveMatch");
+        }
+
+        public void SetupImages()
+        {
+            AvailableCharacters = new ObservableCollection<string>
+            {
+                "Forsburn",
+                "Loxodont",
+                "Clairen",
+                "Zetterburn",
+                "Wrastor",
+                "Fleet",
+                "Absa",
+                "Olympia",
+                "Maypul",
+                "Kragg",
+                "Ranno",
+                "Orcane",
+                "Etalus"
+
+                //"/Resources/CharacterIcons/absa.png",
+                //"/Resources/CharacterIcons/clairen.png",
+                //"/Resources/CharacterIcons/etalus.png",
+                //"/Resources/CharacterIcons/fleet.png",
+                //"/Resources/CharacterIcons/kragg.png",
+                //"/Resources/CharacterIcons/loxodont.png",
+                //"/Resources/CharacterIcons/maypul.png",
+                //"/Resources/CharacterIcons/olympia.png",
+                //"/Resources/CharacterIcons/orcane.png",
+                //"/Resources/CharacterIcons/ranno.png",
+                //"/Resources/CharacterIcons/wrastor.png",
+                //"/Resources/CharacterIcons/yeen.png",
+                //"/Resources/CharacterIcons/zetterburn.png",
+            };
         }
 
         private async Task SetMatchWin()
@@ -229,7 +386,7 @@ namespace Rivals2Tracker
 
             if (!result.IsSalvagable)
             {
-                ErrorText = "Unrecoverable Capture - Try Again.";
+                ErrorText = "Unrecoverable Capture - Is Rivals running?";
                 return;
             }
 
@@ -294,13 +451,19 @@ namespace Rivals2Tracker
             await DoTheOcr();
         }
 
-        private void GetMatches()
+        private void GetMatches(bool isOnStart = false)
         {
+
             MatchResults = RivalsORM.GetAllMatches();
             // LastSeasonResults = GetSeasonData("1.2");
             CurrentSeasonResults = GetSeasonData("1.3");
             AllSeasonResults = GetSeasonData("all");
-            // BuildWeightedData();
+
+            if (isOnStart)
+            {
+                DisplayedCharacterResults = CurrentSeasonResults;
+            }
+
             Console.WriteLine(WeightedMatchupData.Count);
         }
 
@@ -338,6 +501,53 @@ namespace Rivals2Tracker
             }
 
             return metadatatable;
+        }
+
+        private void ShowFlyout()
+        {
+            IsFlyoutOpen = true;
+        }
+
+        private void SelectCharacter(string character)
+        {
+            if (!string.IsNullOrEmpty(character) && ActiveMatch is not null)
+            {
+                if (GlobalData.CharacterImageDict.TryGetValue(character, out string imagePath))
+                {
+                    SelectedImagePath = imagePath;
+                    ActiveMatch.Opponent.Character = character;
+                }
+                // OverrideOpponentCharBaseOnImage(character);
+            }
+            IsFlyoutOpen = false;
+        }
+
+        // TODO: This is utter nonsense.  This mapping of image directory to characters by String.  Please just fix this...
+        // FUTURE ME:  Lmao no thats k - how about I twiddle my thumbs instead ???
+        private void OverrideOpponentCharBaseOnImage(string imagePath)
+        {
+            if (ActiveMatch is not null && ActiveMatch.Status == MatchStatus.InProgress)
+            {
+                switch (imagePath)
+                {
+                    case "/Resources/CharacterIcons/absa.png": ActiveMatch.Opponent.Character = "Absa"; break;
+                    case "/Resources/CharacterIcons/clairen.png": ActiveMatch.Opponent.Character = "Clairen"; break;
+                    case "/Resources/CharacterIcons/etalus.png": ActiveMatch.Opponent.Character = "Etalus"; break;
+                    case "/Resources/CharacterIcons/fleet.png": ActiveMatch.Opponent.Character = "Fleet"; break;
+                    case "/Resources/CharacterIcons/kragg.png": ActiveMatch.Opponent.Character = "Kragg"; break;
+                    case "/Resources/CharacterIcons/loxodont.png": ActiveMatch.Opponent.Character = "Loxodont"; break;
+                    case "/Resources/CharacterIcons/maypul.png": ActiveMatch.Opponent.Character = "Maypul"; break;
+                    case "/Resources/CharacterIcons/olympia.png": ActiveMatch.Opponent.Character = "Olympia"; break;
+                    case "/Resources/CharacterIcons/orcane.png": ActiveMatch.Opponent.Character = "Orcane"; break;
+                    case "/Resources/CharacterIcons/ranno.png": ActiveMatch.Opponent.Character = "Ranno"; break;
+                    case "/Resources/CharacterIcons/wrastor.png": ActiveMatch.Opponent.Character = "Wrastor"; break;
+                    case "/Resources/CharacterIcons/yeen.png": ActiveMatch.Opponent.Character = "Forsburn"; break;
+                    case "/Resources/CharacterIcons/zetterburn.png": ActiveMatch.Opponent.Character = "Zetterburn"; break;
+                }
+
+                RaisePropertyChanged(nameof(ActiveMatch));
+                RaisePropertyChanged(ActiveMatch.Opponent.Character);
+            }
         }
 
         // Stringly typed nonsense...

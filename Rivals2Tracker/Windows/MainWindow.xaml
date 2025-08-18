@@ -15,31 +15,106 @@
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="0" ResizeBorderThickness="8, 4, 8, 8" />
     </WindowChrome.WindowChrome>
+    <Window.Resources>
+        <!-- Style for the flyout buttons -->
+        <Style x:Key="ImageFlyoutButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="60"/>
+            <Setter Property="Height" Value="60"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="Blue"/>
+                    <Setter Property="BorderThickness" Value="2"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="MainImageButtonStyle" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="ImageBorder"  BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"  Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ImageBorder" Property="BorderBrush" Value="{StaticResource GR_Blue}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="ImageBorder" Property="BorderBrush" Value="{StaticResource GR_DarkBlue}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- DataTemplate for goofy flyout -->
+        <DataTemplate x:Key="CharacterItemTemplate">
+            <Button Style="{StaticResource ImageFlyoutButtonStyle}"
+                    Command="{Binding DataContext.SelectCharacterCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                    CommandParameter="{Binding}">
+                <Image Source="{Binding Converter={StaticResource IconConverter}}" Stretch="UniformToFill"/>
+            </Button>
+        </DataTemplate>
+    </Window.Resources>
     <Grid>
         <DockPanel>
             <!-- Top Bar-->
             <Grid DockPanel.Dock="Top" Background="{StaticResource BG_DarkBlue}" Height="130" MouseDown="EnableDrag" Panel.ZIndex="1000">
                 <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Panel.ZIndex="1000">
                     <Grid Margin="145, 8, 0, 0">
-                        <TextBox Text="KADECGOS" FontFamily="Franklin Gothic Demi Cond" Background="Transparent" Foreground="{StaticResource FG_BlueLabel}" FontSize="42" Height="60" VerticalAlignment="Top" />
-                        <TextBox Text="1013" Margin="0, 0, 0, 10" FontFamily="{StaticResource AfterDisaster}" Background="Transparent" Foreground="{StaticResource FG_WhiteLabel}" FontSize="42" Height="60" VerticalAlignment="Bottom" />
+                        <TextBox Text="{Binding MyName, UpdateSourceTrigger=PropertyChanged}" KeyDown="TextBox_KeyDown" MinWidth="160" FontFamily="Franklin Gothic Demi Cond" Background="Transparent" FontSize="42" Height="60" VerticalAlignment="Top" />
+                        <!--<Label Content="INSERT NAME" FontFamily="Franklin Gothic Demi Cond" FontSize="36" Height="60" VerticalAlignment="Top" Foreground="{StaticResource FG_GreyLabel}" IsHitTestVisible="False" Visibility="{Binding LocalPlayerNameVisibility}"/>-->
+                        <TextBox Text="{Binding ActiveMatch.Me.Elo, UpdateSourceTrigger=PropertyChanged}" KeyDown="TextBox_KeyDown" MinWidth="160" Margin="0, 0, 0, 10" FontFamily="{StaticResource AfterDisaster}" Background="Transparent" Foreground="{StaticResource FG_WhiteLabel}" FontSize="42" Height="50" VerticalAlignment="Bottom" />
                     </Grid>
 
                     <Label Content="VS" FontFamily="Franklin Gothic Demi Cond" Foreground="{StaticResource FG_WhiteLabel}" FontSize="42" Margin="30, 0, 0, 0" VerticalAlignment="Center" />
 
                     <Grid Margin="0, 8, 0, 0">
-                        <Image Width="74" Height="74" />
-                        <TextBox Text="CARRIEDBYHO..." Margin="85, 0, 0, 0" FontFamily="Franklin Gothic Demi Cond" Background="Transparent" Foreground="{StaticResource FG_BlueLabel}" FontSize="42" Height="60" VerticalAlignment="Top" />
-                        <TextBox Text="1090" Margin="85, 0, 0, 10" FontFamily="{StaticResource AfterDisaster}" Background="Transparent" Foreground="{StaticResource FG_WhiteLabel}" FontSize="42" Height="60" VerticalAlignment="Bottom" />
+                        <Button Name="ImageSelectorButton" Grid.Row="0" Width="74" Height="74"  Margin="20" HorizontalAlignment="Left" Command="{Binding ShowFlyoutCommand}"
+                                BorderThickness="2" BorderBrush="Transparent" Style="{StaticResource MainImageButtonStyle}">
+                            <Button.Background>
+                                <ImageBrush ImageSource="{Binding SelectedImagePath, TargetNullValue=C:\\Users\\mkautzman\\Documents\\Projects\\RivalsOfAether2_MatchTracker\\Rivals2Tracker\\Resources\\CharacterIcons\\unknown.png}" Stretch="UniformToFill"/>
+                            </Button.Background>
+                        </Button>
+
+                        <!-- Flyout Popup -->
+                        <Popup Name="ImageFlyout" Grid.Row="0" PlacementTarget="{Binding ElementName=ImageSelectorButton}" Placement="Bottom" IsOpen="{Binding IsFlyoutOpen}" StaysOpen="False"
+                            AllowsTransparency="True" PopupAnimation="Slide">
+                            <Border Background="{StaticResource BG_DarkBlue}" BorderBrush="{StaticResource FG_BlueLabel}" BorderThickness="1" CornerRadius="0" Padding="0">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="Black" Direction="315" ShadowDepth="5" Opacity="0.3"/>
+                                </Border.Effect>
+
+                                <ItemsControl ItemsSource="{Binding AvailableCharacters}" ItemTemplate="{StaticResource CharacterItemTemplate}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel Width="280" Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
+                            </Border>
+                        </Popup>
+
+                        <!--<Label Content="Awaiting Data..." Margin="85, 5, 0, 0" FontFamily="Franklin Gothic Demi Cond" FontSize="32" Height="60" VerticalAlignment="Top" Foreground="{StaticResource FG_GreyLabel}" IsHitTestVisible="False" Visibility="{Binding AwaitingDataVisibility}"/>-->
+                        <TextBox Text="{Binding ActiveMatch.Opponent.Name, UpdateSourceTrigger=PropertyChanged}" KeyDown="TextBox_KeyDown" MinWidth="240" Margin="105, 0, 0, 0" FontFamily="Franklin Gothic Demi Cond" Background="Transparent" FontSize="42" Height="60" VerticalAlignment="Top" />
+                        <TextBox Text="{Binding ActiveMatch.Opponent.Elo, UpdateSourceTrigger=PropertyChanged}" KeyDown="TextBox_KeyDown" MinWidth="160" Margin="105, 0, 0, 10" FontFamily="{StaticResource AfterDisaster}" Background="Transparent" Foreground="{StaticResource FG_WhiteLabel}" FontSize="42" Height="50" VerticalAlignment="Bottom" />
                     </Grid>
 
                     <Button FontSize="78" Foreground="{StaticResource FG_BlueLabel}" Background="{StaticResource BG_DarkBlue}" BorderBrush="{StaticResource FG_BlueLabel}"
-                            Height="80" Width="80" Margin="15, 0, 0, 0" VerticalContentAlignment="Center">
-                        <TextBlock Text="+" Foreground="White" FontSize="64" Height="80" Margin="0, 0, 0, 18" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            Height="60" Width="60" Margin="15, 0, 0, 0" VerticalContentAlignment="Center">
+                        <TextBlock Text="+" Foreground="White" FontSize="48" Height="70" Margin="0, 0, 0, 7" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                     </Button>
                 </StackPanel>
 
-                <Label Content="MATCH IN PROGRESS" FontFamily="Franklin Gothic Demi" FontStyle="Italic" Foreground="{StaticResource FG_WhiteLabel}" FontSize="48" Margin="0, 0, 0, 0" VerticalAlignment="Top" HorizontalAlignment="Center" />
+                <Label Content="{Binding ActiveMatchStatusString, UpdateSourceTrigger=PropertyChanged}" Name="FocusDump" Focusable="True" FontFamily="Franklin Gothic Demi" Foreground="{StaticResource FG_WhiteLabel}" FontSize="38" Margin="0, 0, 0, 0" VerticalAlignment="Top" HorizontalAlignment="Center" />
+                <Label Content="{Binding ActivityText, UpdateSourceTrigger=PropertyChanged}" FontFamily="Franklin Gothic Demi" Foreground="{StaticResource FG_Gold}" FontSize="18" Margin="0, 45, 0, 0" VerticalAlignment="Top" HorizontalAlignment="Center" />
 
                 <StackPanel VerticalAlignment="Bottom">
                     <Border BorderBrush="{StaticResource FG_Gold}" BorderThickness="0, 3, 0, 0" VerticalAlignment="Bottom" />
@@ -55,9 +130,12 @@
                                CornerRadius="15" Margin="0" Loaded="OuterBorder_Loaded">
                             <Grid Width="450" Height="80">
                                 <StackPanel Orientation="Horizontal">
-                                    <Button Content="WIN" Width="150" Height="80" FontSize="32" FontFamily="Franklin Gothic Demi Cond" BorderThickness="0" Background="{StaticResource BG_DarkBlue}" Foreground="{StaticResource FG_BlueLabel}" Padding="0, 0, 0, 12"/>
-                                    <Button Content="LOSE" Width="150" Height="80" FontSize="32" FontFamily="Franklin Gothic Demi Cond" BorderThickness="3, 0, 3, 0" Background="{StaticResource BG_DarkBlue}" Foreground="{StaticResource FG_BlueLabel}" Padding="0, 0, 0, 12"/>
-                                    <Button Content="CANCEL" Width="150" Height="80" FontSize="28" FontFamily="Franklin Gothic Demi Cond" BorderThickness="0" Background="{StaticResource BG_DarkBlue}" Foreground="{StaticResource FG_BlueLabel}" VerticalContentAlignment="Center" Padding="0, 0, 15, 12"/>
+                                    <Button Content="WIN" Width="150" Height="80" FontSize="32" FontFamily="Franklin Gothic Demi Cond" BorderThickness="0" Background="{StaticResource BG_DarkBlue}"
+                                            Foreground="{StaticResource FG_BlueLabel}" Padding="0, 0, 0, 12" Command="{Binding SetMatchWinCommand}"/>
+                                    <Button Content="LOSE" Width="150" Height="80" FontSize="32" FontFamily="Franklin Gothic Demi Cond" BorderThickness="3, 0, 3, 0" Background="{StaticResource BG_DarkBlue}"
+                                            Foreground="{StaticResource FG_BlueLabel}" Padding="0, 0, 0, 12" Command="{Binding SetMatchLoseCommand}"/>
+                                    <Button Content="CANCEL" Width="150" Height="80" FontSize="28" FontFamily="Franklin Gothic Demi Cond" BorderThickness="0" Background="{StaticResource BG_DarkBlue}"
+                                            Foreground="{StaticResource FG_BlueLabel}" VerticalContentAlignment="Center" Padding="0, 0, 15, 12" Command="{Binding SetMatchDiscardCommand}"/>
                                 </StackPanel>
                             </Grid>
                         </Border>
@@ -67,21 +145,36 @@
                 <Grid HorizontalAlignment="Right" Margin="0, 0, 100, 0">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right">
                         <Label Content="Patch:" FontFamily="Franklin Gothic Demi" FontStyle="Italic" Foreground="{StaticResource FG_BlueLabel}" FontSize="48" Margin="30, 0, 0, 0"  />
-                        <TextBox Text="1.3.2" FontFamily="{StaticResource AfterDisaster}" Background="Transparent" Foreground="{StaticResource FG_WhiteLabel}" FontSize="42" Height="60" Margin="10, 6, 20, 0"/>
+                        <TextBox Text="{Binding CurrentPatch, UpdateSourceTrigger=PropertyChanged}" FontFamily="{StaticResource AfterDisaster}" Background="Transparent" Foreground="{StaticResource FG_WhiteLabel}" FontSize="42" Height="60" Margin="10, 6, 20, 0"/>
                     </StackPanel>
 
-                    <TextBox Text="Write some notes here about the match if you want!" FontFamily="Franklin Gothic Demi" Background="Transparent" Foreground="{StaticResource FG_GreyLabel}" FontSize="24" Height="60" Margin="0, 0, 20, 5"
-                         VerticalAlignment="Bottom" HorizontalAlignment="Right"/>
+                    <!--<Label Content="Write some notes here about the match if you want" Visibility="{Binding NotesVisibility}" Height="60" Margin="0, 0, 20, 5" VerticalAlignment="Bottom" HorizontalAlignment="Right" FontSize="24" Foreground="{StaticResource FG_GreyLabel}"/>-->
+
+                    <TextBox Text="{Binding ActiveMatch.Notes}" KeyDown="TextBox_KeyDown" FontFamily="Franklin Gothic Demi" Width="800" Background="Transparent" FontSize="24" Height="60" Margin="0, 0, 20, 7"
+                         VerticalAlignment="Bottom" HorizontalAlignment="Right" HorizontalContentAlignment="Right"/>
                 </Grid>
 
-                <Button Width="68" Content="&#xE713;" FontSize="38" FontFamily="Segoe MDL2 Assets" Height="68" HorizontalAlignment="Right" Margin="0, 0, 35, 0" Foreground="{StaticResource FG_BlueLabel}" Background="{StaticResource BG_DarkBlue}" BorderBrush="{StaticResource FG_BlueLabel}">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
+                    <Button x:Name="WindowMinimize" Style="{StaticResource WindowingButton}" Click="WindowMiminizeClick">
+                        <Image Style="{StaticResource Windowing_Image}" Source="/Rivals2Tracker;component/Resources/Icons/Windowing/Minimize.png" />
+                    </Button>
+
+                    <Button x:Name="WindowMaximize" Style="{StaticResource WindowingButton}" Click="WindowMaximizeClick">
+                        <Image Style="{StaticResource Windowing_MaxMinImage}"/>
+                    </Button>
+
+                    <Button x:Name="WindowClose" Style="{StaticResource WindowingButton_Close}" Click="WindowCloseClick">
+                        <Image Style="{StaticResource Windowing_Image}" Source="/Rivals2Tracker;component/Resources/Icons/Windowing/Close.png" />
+                    </Button>
+                </StackPanel>
+
+                <Button Width="68" Content="&#xE713;" FontSize="38" FontFamily="Segoe MDL2 Assets" Height="68" HorizontalAlignment="Right" Margin="0, 10, 18, 0" Foreground="{StaticResource FG_BlueLabel}" Background="{StaticResource BG_DarkBlue}" BorderBrush="{StaticResource FG_BlueLabel}">
                 </Button>
             </Grid>
 
             <!-- Bottom Content-->
             <Grid DockPanel.Dock="Bottom" Background="{StaticResource BG_DarkBlue}" Panel.ZIndex="1">
                 <Image Source="pack://application:,,,/ImageResources/embossLogo2.png" Opacity="0.08" Width="900"/>
-
 
                 <Label Content="Recent Matches" FontFamily="Franklin Gothic Demi" FontSize="32" Margin="50, 25, 0, 0"/>
 
@@ -98,7 +191,7 @@
                     <controls:ToggleSwitch x:Name="ResultTypeToggle" HorizontalAlignment="Left" VerticalAlignment="Top" OffContent="Seasonal"
                         OnContent="Lifetime" IsOn="{Binding ShowLifetimeResults, Mode=TwoWay}" Margin="203, 0, 0, 0" />
 
-                    <ListView ItemsSource="{Binding CurrentSeasonResults.CharacterData}" ItemTemplate="{StaticResource MetaResultTemplateFancy}" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Top"
+                    <ListView ItemsSource="{Binding DisplayedCharacterResults.CharacterData}" ItemTemplate="{StaticResource MetaResultTemplateFancy}" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Top"
                             BorderThickness="0" Margin="0, 50, 0, 0" SelectedItem="{Binding ActiveMatchSeason_CharacterData}">
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -113,8 +206,8 @@
                     </ListView>
                 </Grid>
 
-                <ListView ItemsSource="{Binding ActiveMatchHistory}" ItemTemplate="{StaticResource MatchResultsFancy}" Background="Transparent" HorizontalAlignment="Right" VerticalAlignment="Top"
-                          BorderThickness="0" Margin="10, 70, 0, 45">
+                <ListView ItemsSource="{Binding ActiveMatchHistory.MatchResults}" ItemTemplate="{StaticResource MatchResultsFancy}" Background="Transparent" HorizontalAlignment="Right" VerticalAlignment="Top"
+                          BorderThickness="0" Margin="10, 70, 10, 45">
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem" BasedOn="{StaticResource CustomListViewItemStyle}">
                             <Setter Property="Padding" Value="0, 2, 15, 0" />
@@ -129,5 +222,7 @@
                 <Image Source="pack://application:,,,/ImageResources/Portraits/wrastor_portrait.png" Panel.ZIndex="1000"/>
             </Border>
         </Border>
+
+        <Label Content="{Binding ErrorText, UpdateSourceTrigger=PropertyChanged}" FontFamily="Franklin Gothic Demi" Foreground="Red" FontSize="18" Margin="0, 0, 0, 10" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
     </Grid>
 </kwin:kWindow>

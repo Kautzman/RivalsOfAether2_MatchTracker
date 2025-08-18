@@ -34,7 +34,7 @@ namespace Rivals2Tracker.Resources.Converters
                 "Ranno" => "pack://application:,,,/Resources/CharacterIcons/ranno.png",
                 "Orcane" => "pack://application:,,,/Resources/CharacterIcons/orcane.png",
                 "Etalus" => "pack://application:,,,/Resources/CharacterIcons/etalus.png",
-                _ => "pack://application:,,,/Resources/CharacterIcons/nothing.png"
+                _ => "C:\\Users\\mkautzman\\Documents\\Projects\\RivalsOfAether2_MatchTracker\\Rivals2Tracker\\Resources\\CharacterIcons\\unknown.png"
             };
 
             return new BitmapImage(new Uri(imagePath));

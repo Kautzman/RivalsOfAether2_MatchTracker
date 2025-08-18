@@ -111,12 +111,12 @@ namespace Rivals2Tracker.Models
             Player1 = player1;
             Player2 = player2;
 
-            if (player1.IsKadecgos())
+            if (player1.IsLocalPlayer())
             {
                 Me = player1;
                 Opponent = player2;
             }
-            else if (player2.IsKadecgos())
+            else if (player2.IsLocalPlayer())
             {
                 Me = player2;
                 Opponent = player1;
@@ -130,7 +130,7 @@ namespace Rivals2Tracker.Models
 
         public bool HasNoKad()
         {
-            if (Player1.IsKadecgos() || Player2.IsKadecgos())
+            if (Player1.IsLocalPlayer() || Player2.IsLocalPlayer())
             {
                 return false;
             }
@@ -140,12 +140,12 @@ namespace Rivals2Tracker.Models
 
         public void Clean()
         {
-            if (String.IsNullOrEmpty(Player1.Name) && Player2.IsKadecgos())
+            if (String.IsNullOrEmpty(Player1.Name) && Player2.IsLocalPlayer())
             {
                 Player1.Name = "???";
             }
 
-            if (String.IsNullOrEmpty(Player2.Name) && Player1.IsKadecgos())
+            if (String.IsNullOrEmpty(Player2.Name) && Player1.IsLocalPlayer())
             {
                 Player1.Name = "???";
             }
@@ -153,7 +153,7 @@ namespace Rivals2Tracker.Models
 
         public bool IsValid(out MatchValidityFlag validityFlag)
         {
-            if (!Player1.IsKadecgos() && !Player2.IsKadecgos())
+            if (!Player1.IsLocalPlayer() && !Player2.IsLocalPlayer())
             {
                 validityFlag = MatchValidityFlag.NoKad;
                 return false;

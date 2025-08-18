@@ -25,6 +25,7 @@
     <None Remove="Resources\CharacterIcons\olympia.png" />
     <None Remove="Resources\CharacterIcons\orcane.png" />
     <None Remove="Resources\CharacterIcons\ranno.png" />
+    <None Remove="Resources\CharacterIcons\unknown.png" />
     <None Remove="Resources\CharacterIcons\wrastor.png" />
     <None Remove="Resources\CharacterIcons\yeen.png" />
     <None Remove="Resources\CharacterIcons\zetterburn.png" />
@@ -69,6 +70,9 @@
     <Resource Include="Resources\CharacterIcons\olympia.png" />
     <Resource Include="Resources\CharacterIcons\orcane.png" />
     <Resource Include="Resources\CharacterIcons\ranno.png" />
+    <Resource Include="Resources\CharacterIcons\unknown.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\CharacterIcons\wrastor.png" />
     <Resource Include="Resources\CharacterIcons\yeen.png" />
     <Resource Include="Resources\CharacterIcons\zetterburn.png" />
