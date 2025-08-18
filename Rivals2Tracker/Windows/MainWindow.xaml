@@ -66,7 +66,7 @@
     <Grid>
         <DockPanel>
             <!-- Top Bar-->
-            <Grid DockPanel.Dock="Top" Background="{StaticResource BG_DarkBlue}" Height="130" MouseDown="EnableDrag" Panel.ZIndex="1000">
+            <Grid DockPanel.Dock="Top" Background="{StaticResource LGR_Banner}" Height="130" MouseDown="EnableDrag" Panel.ZIndex="1000">
                 <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Panel.ZIndex="1000">
                     <Grid Margin="145, 8, 0, 0">
                         <TextBox Text="{Binding MyName, UpdateSourceTrigger=PropertyChanged}" KeyDown="TextBox_KeyDown" MinWidth="160" FontFamily="Franklin Gothic Demi Cond" Background="Transparent" FontSize="42" Height="60" VerticalAlignment="Top" />
@@ -174,7 +174,7 @@
 
             <!-- Bottom Content-->
             <Grid DockPanel.Dock="Bottom" Background="{StaticResource BG_DarkBlue}" Panel.ZIndex="1">
-                <Image Source="pack://application:,,,/ImageResources/embossLogo2.png" Opacity="0.08" Width="900"/>
+                <Image Source="pack://application:,,,/ImageResources/embossLogo2.png" Opacity="0.06" Width="900"/>
 
                 <Label Content="Recent Matches" FontFamily="Franklin Gothic Demi" FontSize="32" Margin="50, 25, 0, 0"/>
 

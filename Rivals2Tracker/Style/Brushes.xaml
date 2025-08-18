@@ -66,6 +66,11 @@
     <SolidColorBrush x:Key="GR_DarkBlue" Color="#121A56" />
     <SolidColorBrush x:Key="GR_Blue" Color="#252789" />
 
+    <LinearGradientBrush x:Key="LGR_Banner" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#05011A" Offset="0"/>
+        <GradientStop Color="#241A41" Offset="1"/>
+    </LinearGradientBrush>
+
     <LinearGradientBrush x:Key="LGR_Blue" StartPoint="0,0" EndPoint="1,0">
         <GradientStop Color="#121A56" Offset="0"/>
         <GradientStop Color="#252789" Offset="0.4"/>
