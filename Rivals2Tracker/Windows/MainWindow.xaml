@@ -62,29 +62,50 @@
                 <Image Source="{Binding Converter={StaticResource IconConverter}}" Stretch="UniformToFill"/>
             </Button>
         </DataTemplate>
+
+        <!-- DataTemplate for goofy flyout -->
+        <DataTemplate x:Key="SecondaryCharacterItemTemplate">
+            <Button Style="{StaticResource ImageFlyoutButtonStyle}"
+                    Command="{Binding DataContext.SelectSecondaryCharacterCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                    CommandParameter="{Binding}">
+                <Image Source="{Binding Converter={StaticResource IconConverter}}" Stretch="UniformToFill"/>
+            </Button>
+        </DataTemplate>
     </Window.Resources>
     <Grid>
         <DockPanel>
             <!-- Top Bar-->
             <Grid DockPanel.Dock="Top" Background="{StaticResource LGR_Banner}" Height="130" MouseDown="EnableDrag" Panel.ZIndex="1000">
+
+                <Label Content="COMPLETED" Panel.ZIndex="1001" FontSize="54" Margin="230, 50, 0, 0" FontFamily="Franklin Gothic Demi Cond" Foreground="{StaticResource FG_Gold}" IsHitTestVisible="False"
+                       Visibility="{Binding CompletedLabelVisibility}">
+                    <Label.Effect>
+                        <DropShadowEffect Color="Black" Direction="0" ShadowDepth="6" BlurRadius="1" Opacity="1" />
+                    </Label.Effect>
+                    <Label.RenderTransform>
+                        <RotateTransform Angle="-10" />
+                    </Label.RenderTransform>
+                </Label>
+
                 <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Panel.ZIndex="1000">
                     <Grid Margin="145, 8, 0, 0">
-                        <TextBox Text="{Binding MyName, UpdateSourceTrigger=PropertyChanged}" KeyDown="TextBox_KeyDown" MinWidth="160" FontFamily="Franklin Gothic Demi Cond" Background="Transparent" FontSize="42" Height="60" VerticalAlignment="Top" />
+                        <TextBox Text="{Binding MyName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="1" KeyDown="TextBox_KeyDown" MinWidth="160" FontFamily="Franklin Gothic Demi Cond" Background="Transparent" FontSize="42" Height="60" VerticalAlignment="Top" />
                         <!--<Label Content="INSERT NAME" FontFamily="Franklin Gothic Demi Cond" FontSize="36" Height="60" VerticalAlignment="Top" Foreground="{StaticResource FG_GreyLabel}" IsHitTestVisible="False" Visibility="{Binding LocalPlayerNameVisibility}"/>-->
-                        <TextBox Text="{Binding ActiveMatch.Me.Elo, UpdateSourceTrigger=PropertyChanged}" KeyDown="TextBox_KeyDown" MinWidth="160" Margin="0, 0, 0, 10" FontFamily="{StaticResource AfterDisaster}" Background="Transparent" Foreground="{StaticResource FG_WhiteLabel}" FontSize="42" Height="50" VerticalAlignment="Bottom" />
+                        <TextBox Text="{Binding ActiveMatch.Me.Elo, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="2" KeyDown="TextBox_KeyDown" MinWidth="160" Margin="0, 0, 0, 10" FontFamily="{StaticResource AfterDisaster}" Background="Transparent" Foreground="{StaticResource FG_WhiteLabel}" FontSize="42" Height="50" VerticalAlignment="Bottom" />
                     </Grid>
 
                     <Label Content="VS" FontFamily="Franklin Gothic Demi Cond" Foreground="{StaticResource FG_WhiteLabel}" FontSize="42" Margin="30, 0, 0, 0" VerticalAlignment="Center" />
 
                     <Grid Margin="0, 8, 0, 0">
-                        <Button Name="ImageSelectorButton" Grid.Row="0" Width="74" Height="74"  Margin="20" HorizontalAlignment="Left" Command="{Binding ShowFlyoutCommand}"
+                        <!-- Button For Main -->
+                        <Button Name="ImageSelectorButton" Grid.Row="0" Width="74" Height="74" Margin="15, 20, 20, 20" HorizontalAlignment="Left" Command="{Binding ShowFlyoutCommand}"
                                 BorderThickness="2" BorderBrush="Transparent" Style="{StaticResource MainImageButtonStyle}">
                             <Button.Background>
                                 <ImageBrush ImageSource="{Binding SelectedImagePath, TargetNullValue=C:\\Users\\mkautzman\\Documents\\Projects\\RivalsOfAether2_MatchTracker\\Rivals2Tracker\\Resources\\CharacterIcons\\unknown.png}" Stretch="UniformToFill"/>
                             </Button.Background>
                         </Button>
 
-                        <!-- Flyout Popup -->
+                        <!-- Flyout Popup For Main -->
                         <Popup Name="ImageFlyout" Grid.Row="0" PlacementTarget="{Binding ElementName=ImageSelectorButton}" Placement="Bottom" IsOpen="{Binding IsFlyoutOpen}" StaysOpen="False"
                             AllowsTransparency="True" PopupAnimation="Slide">
                             <Border Background="{StaticResource BG_DarkBlue}" BorderBrush="{StaticResource FG_BlueLabel}" BorderThickness="1" CornerRadius="0" Padding="0">
@@ -102,15 +123,40 @@
                             </Border>
                         </Popup>
 
-                        <!--<Label Content="Awaiting Data..." Margin="85, 5, 0, 0" FontFamily="Franklin Gothic Demi Cond" FontSize="32" Height="60" VerticalAlignment="Top" Foreground="{StaticResource FG_GreyLabel}" IsHitTestVisible="False" Visibility="{Binding AwaitingDataVisibility}"/>-->
-                        <TextBox Text="{Binding ActiveMatch.Opponent.Name, UpdateSourceTrigger=PropertyChanged}" KeyDown="TextBox_KeyDown" MinWidth="240" Margin="105, 0, 0, 0" FontFamily="Franklin Gothic Demi Cond" Background="Transparent" FontSize="42" Height="60" VerticalAlignment="Top" />
-                        <TextBox Text="{Binding ActiveMatch.Opponent.Elo, UpdateSourceTrigger=PropertyChanged}" KeyDown="TextBox_KeyDown" MinWidth="160" Margin="105, 0, 0, 10" FontFamily="{StaticResource AfterDisaster}" Background="Transparent" Foreground="{StaticResource FG_WhiteLabel}" FontSize="42" Height="50" VerticalAlignment="Bottom" />
-                    </Grid>
+                        <!-- Button For Secondary -->
+                        <Grid Margin="66, 50, 0, 0">
+                            <Button Name="ImageSelectorButtonSecondary" Grid.Row="0" Width="36" Height="36" Margin="20" HorizontalAlignment="Left" Command="{Binding ShowSecondaryFlyoutCommand}"
+                                    BorderThickness="2" BorderBrush="Transparent" Style="{StaticResource MainImageButtonStyle}">
+                                <Button.Background>
+                                    <ImageBrush ImageSource="{Binding SecondarySelectedImagePath, TargetNullValue=C:\\Users\\mkautzman\\Documents\\Projects\\RivalsOfAether2_MatchTracker\\Rivals2Tracker\\Resources\\CharacterIcons\\unknown.png}" Stretch="UniformToFill"/>
+                                </Button.Background>
+                            </Button>
 
-                    <Button FontSize="78" Foreground="{StaticResource FG_BlueLabel}" Background="{StaticResource BG_DarkBlue}" BorderBrush="{StaticResource FG_BlueLabel}"
-                            Height="60" Width="60" Margin="15, 0, 0, 0" VerticalContentAlignment="Center">
-                        <TextBlock Text="+" Foreground="White" FontSize="48" Height="70" Margin="0, 0, 0, 7" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                    </Button>
+                            <!-- Flyout Popup For Secondary -->
+                            <Popup Name="ImageFlyoutSecondary" Grid.Row="0" PlacementTarget="{Binding ElementName=ImageSelectorButtonSecondary}" Placement="Bottom" IsOpen="{Binding IsSecondaryFlyoutOpen}" StaysOpen="False"
+                                AllowsTransparency="True" PopupAnimation="Slide">
+                                <Border Background="{StaticResource BG_DarkBlue}" BorderBrush="{StaticResource FG_BlueLabel}" BorderThickness="1" CornerRadius="0" Padding="0">
+                                    <Border.Effect>
+                                        <DropShadowEffect Color="Black" Direction="315" ShadowDepth="5" Opacity="0.3"/>
+                                    </Border.Effect>
+
+                                    <ItemsControl ItemsSource="{Binding AvailableCharacters}" ItemTemplate="{StaticResource SecondaryCharacterItemTemplate}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel Width="280" Orientation="Horizontal"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                    </ItemsControl>
+                                </Border>
+                            </Popup>
+                        </Grid>
+
+                        <Grid Margin="20, 0, 0, 0">
+                            <!--<Label Content="Awaiting Data..." Margin="85, 5, 0, 0" FontFamily="Franklin Gothic Demi Cond" FontSize="32" Height="60" VerticalAlignment="Top" Foreground="{StaticResource FG_GreyLabel}" IsHitTestVisible="False" Visibility="{Binding AwaitingDataVisibility}"/>-->
+                            <TextBox Text="{Binding ActiveMatch.Opponent.Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="3" KeyDown="TextBox_KeyDown" MinWidth="240" Margin="105, 0, 0, 0" FontFamily="Franklin Gothic Demi Cond" Background="Transparent" FontSize="42" Height="60" VerticalAlignment="Top" />
+                            <TextBox Text="{Binding ActiveMatch.Opponent.Elo, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="4" KeyDown="TextBox_KeyDown" MinWidth="160" Margin="105, 0, 0, 10" FontFamily="{StaticResource AfterDisaster}" Background="Transparent" Foreground="{StaticResource FG_WhiteLabel}" FontSize="42" Height="50" VerticalAlignment="Bottom" />
+                        </Grid>
+                    </Grid>
                 </StackPanel>
 
                 <Label Content="{Binding ActiveMatchStatusString, UpdateSourceTrigger=PropertyChanged}" Name="FocusDump" Focusable="True" FontFamily="Franklin Gothic Demi" Foreground="{StaticResource FG_WhiteLabel}" FontSize="38" Margin="0, 0, 0, 0" VerticalAlignment="Top" HorizontalAlignment="Center" />
@@ -150,7 +196,7 @@
 
                     <!--<Label Content="Write some notes here about the match if you want" Visibility="{Binding NotesVisibility}" Height="60" Margin="0, 0, 20, 5" VerticalAlignment="Bottom" HorizontalAlignment="Right" FontSize="24" Foreground="{StaticResource FG_GreyLabel}"/>-->
 
-                    <TextBox Text="{Binding ActiveMatch.Notes}" KeyDown="TextBox_KeyDown" FontFamily="Franklin Gothic Demi" Width="800" Background="Transparent" FontSize="24" Height="60" Margin="0, 0, 20, 7"
+                    <TextBox Text="{Binding ActiveMatch.Notes}" TabIndex="5" KeyDown="TextBox_KeyDown" FontFamily="Franklin Gothic Demi" Width="800" Background="Transparent" FontSize="24" Height="60" Margin="0, 0, 20, 7"
                          VerticalAlignment="Bottom" HorizontalAlignment="Right" HorizontalContentAlignment="Right"/>
                 </Grid>
 

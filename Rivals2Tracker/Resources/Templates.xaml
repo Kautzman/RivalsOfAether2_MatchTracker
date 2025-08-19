@@ -47,7 +47,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="MetaResultTemplateFancy" DataType="{x:Type data:CharacterMetadata}">
-        <Grid Height="180" Width="200" Background="{StaticResource LGR_Blue_Opacity}" Opacity="0.80">
+        <Grid Height="180" Width="200" Background="{StaticResource LGR_Blue_Opacity}" Opacity="0.83">
             <StackPanel Orientation="Vertical" Margin="0, 20, 0, 0">
                 <Image Source="{Binding Character, Converter={StaticResource IconConverter}}" Height="56" Width="56" Margin="0, 0, 0, 0"/>
                 <Label Content="{Binding RecordString}" Margin="0, 5, 0, 0"  HorizontalAlignment="Center" HorizontalContentAlignment="Center" FontSize="24" FontFamily="Franklin Gothic Demi Cond"/>
@@ -197,7 +197,7 @@
                         <Label Content="{Binding RecordUnranked}" Width="100"/>
                         <Label Content="{Binding AdjustedEloSeasonal}" Width="60"/>
                         <Label Content="{Binding AdjustedMUSeasonal}" Width="60"/>
-                        <Label Content="{Binding AdjustedEloTotal}" Width="60"/>ound="{StaticResourc
+                        <Label Content="{Binding AdjustedEloTotal}" Width="60"/>
                         <Label Content="{Binding AdjustedMUtotal}" Width="60"/>
                     </StackPanel>
                 </Grid>

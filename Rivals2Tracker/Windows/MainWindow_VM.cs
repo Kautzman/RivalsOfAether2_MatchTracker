@@ -18,6 +18,7 @@ using System.Windows.Media;
 using Windows.Data.Xml.Dom;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Security.Permissions;
 
 namespace Rivals2Tracker
 {
@@ -197,6 +198,13 @@ namespace Rivals2Tracker
             set { SetProperty(ref _notesVisibility, value); }
         }
 
+        private Visibility _completedLabelVisibility = Visibility.Collapsed;
+        public Visibility CompletedLabelVisibility
+        {
+            get { return _completedLabelVisibility; }
+            set { SetProperty(ref _completedLabelVisibility, value); }
+        }
+
         private string _activityText;
         public string ActivityText
         {
@@ -223,7 +231,20 @@ namespace Rivals2Tracker
 
                 return ActiveMatch.StatusString;
             }
-            set { SetProperty(ref _activeMatchStatusString, value); }
+            set
+            {
+                if (value == "Finished")
+                {
+                    CompletedLabelVisibility = Visibility.Visible;
+                }
+                else
+                {
+                    CompletedLabelVisibility = Visibility.Collapsed;
+                }
+
+                RaisePropertyChanged(nameof(CompletedLabelVisibility));
+                SetProperty(ref _activeMatchStatusString, value);
+            }
         }
 
         public bool IsInputLocked
@@ -256,11 +277,25 @@ namespace Rivals2Tracker
             set { SetProperty(ref _selectedImagePath, value); }
         }
 
+        private string _secondarySelectedImagePath = "/Resources/CharacterIcons/unknown.png";
+        public string SecondarySelectedImagePath
+        {
+            get { return _secondarySelectedImagePath; }
+            set { SetProperty(ref _secondarySelectedImagePath, value); }
+        }
+
         private bool _isFlyoutOpen = false;
         public bool IsFlyoutOpen
         {
             get { return _isFlyoutOpen; }
             set { SetProperty(ref _isFlyoutOpen, value); }
+        }
+
+        private bool _isSecondaryFlyoutOpen = false;
+        public bool IsSecondaryFlyoutOpen
+        {
+            get { return _isSecondaryFlyoutOpen; }
+            set { SetProperty(ref _isSecondaryFlyoutOpen, value); }
         }
 
         public ObservableCollection<string> AvailableCharacters { get; set; }
@@ -270,7 +305,10 @@ namespace Rivals2Tracker
         public DelegateCommand SetMatchDiscardCommand { get; private set; }
         public DelegateCommand TestOcrCommand { get; private set; }
         public DelegateCommand ShowFlyoutCommand { get; }
+        public DelegateCommand ShowSecondaryFlyoutCommand { get; }
+
         public DelegateCommand<string> SelectCharacterCommand { get; set; }
+        public DelegateCommand<string> SelectSecondaryCharacterCommand { get; set; }
 
         public MainWindow_VM()
         {
@@ -279,7 +317,9 @@ namespace Rivals2Tracker
             SetMatchDiscardCommand = new DelegateCommand(() => _ = SetMatchDiscard());
             TestOcrCommand = new DelegateCommand(() => _ = DoTheOcr());
             ShowFlyoutCommand = new DelegateCommand(ShowFlyout);
+            ShowSecondaryFlyoutCommand = new DelegateCommand(ShowSecondaryFlyout);
             SelectCharacterCommand = new DelegateCommand<string>(SelectCharacter);
+            SelectSecondaryCharacterCommand = new DelegateCommand<string>(SelectSecondaryCharacter);
 
             SetupImages();
             GetMatches(true);
@@ -304,20 +344,6 @@ namespace Rivals2Tracker
                 "Ranno",
                 "Orcane",
                 "Etalus"
-
-                //"/Resources/CharacterIcons/absa.png",
-                //"/Resources/CharacterIcons/clairen.png",
-                //"/Resources/CharacterIcons/etalus.png",
-                //"/Resources/CharacterIcons/fleet.png",
-                //"/Resources/CharacterIcons/kragg.png",
-                //"/Resources/CharacterIcons/loxodont.png",
-                //"/Resources/CharacterIcons/maypul.png",
-                //"/Resources/CharacterIcons/olympia.png",
-                //"/Resources/CharacterIcons/orcane.png",
-                //"/Resources/CharacterIcons/ranno.png",
-                //"/Resources/CharacterIcons/wrastor.png",
-                //"/Resources/CharacterIcons/yeen.png",
-                //"/Resources/CharacterIcons/zetterburn.png",
             };
         }
 
@@ -394,11 +420,17 @@ namespace Rivals2Tracker
             {
                 ActivityText = "Conclude the active match before starting a new one!";
                 return;
-            }     
+            }
 
             ActiveMatch = result.Match;
             ActiveMatch.Patch = CurrentPatch;
             ActiveMatch.Status = MatchStatus.InProgress;
+
+            if (GlobalData.CharacterImageDict.TryGetValue(ActiveMatch.Opponent.Character, out string imagePath))
+            {
+                SelectedImagePath = imagePath;
+            }
+
             RaisePropertyChanged("IsInputLocked");
             RaisePropertyChanged("ActiveMatchStatusString");
 
@@ -464,7 +496,7 @@ namespace Rivals2Tracker
                 DisplayedCharacterResults = CurrentSeasonResults;
             }
 
-            Console.WriteLine(WeightedMatchupData.Count);
+            RaisePropertyChanged(nameof(DisplayedCharacterResults));
         }
 
         private MetaDataTable GetSeasonData(string patch)
@@ -508,6 +540,13 @@ namespace Rivals2Tracker
             IsFlyoutOpen = true;
         }
 
+        private void ShowSecondaryFlyout()
+        {
+            IsSecondaryFlyoutOpen = true;
+        }
+
+        // TODO: This dual-split but almost identical operation on primary and secondary is dumb.  Combine this into a better flow.
+        // There is also a duplicate DataTemplate to pull out
         private void SelectCharacter(string character)
         {
             if (!string.IsNullOrEmpty(character) && ActiveMatch is not null)
@@ -517,9 +556,30 @@ namespace Rivals2Tracker
                     SelectedImagePath = imagePath;
                     ActiveMatch.Opponent.Character = character;
                 }
-                // OverrideOpponentCharBaseOnImage(character);
             }
+            else
+            {
+                ActivityText = "No Active Match - You can't select a character without a match active";
+            }
+            
             IsFlyoutOpen = false;
+        }
+        public void SelectSecondaryCharacter(string character)
+        {
+            if (!string.IsNullOrEmpty(character) && ActiveMatch is not null)
+            {
+                if (GlobalData.CharacterImageDict.TryGetValue(character, out string imagePath))
+                {
+                    SecondarySelectedImagePath = imagePath;
+                    ActiveMatch.Opponent.Character2 = character;
+                }
+            }
+            else
+            {
+                ActivityText = "No Active Match - You can't select a character without a match active";
+            }
+
+            IsSecondaryFlyoutOpen = false;
         }
 
         // TODO: This is utter nonsense.  This mapping of image directory to characters by String.  Please just fix this...

@@ -10,7 +10,6 @@ namespace Rivals2Tracker.Resources.Controls
             InitializeComponent();
         }
 
-        // IsOn Property
         public static readonly DependencyProperty IsOnProperty =
             DependencyProperty.Register("IsOn", typeof(bool), typeof(ToggleSwitch),
                 new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
@@ -24,11 +23,10 @@ namespace Rivals2Tracker.Resources.Controls
 
         private static void OnIsOnChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var toggleSwitch = (ToggleSwitch)d;
+            ToggleSwitch toggleSwitch = (ToggleSwitch)d;
             toggleSwitch.OnToggled?.Invoke(toggleSwitch, new ToggleEventArgs((bool)e.NewValue));
         }
 
-        // Header Property
         public static readonly DependencyProperty HeaderProperty =
             DependencyProperty.Register("Header", typeof(string), typeof(ToggleSwitch),
                 new PropertyMetadata(null));
@@ -39,7 +37,6 @@ namespace Rivals2Tracker.Resources.Controls
             set { SetValue(HeaderProperty, value); }
         }
 
-        // OnContent Property
         public static readonly DependencyProperty OnContentProperty =
             DependencyProperty.Register("OnContent", typeof(string), typeof(ToggleSwitch),
                 new PropertyMetadata("On"));
@@ -50,7 +47,6 @@ namespace Rivals2Tracker.Resources.Controls
             set { SetValue(OnContentProperty, value); }
         }
 
-        // OffContent Property
         public static readonly DependencyProperty OffContentProperty =
             DependencyProperty.Register("OffContent", typeof(string), typeof(ToggleSwitch),
                 new PropertyMetadata("Off"));
@@ -61,10 +57,8 @@ namespace Rivals2Tracker.Resources.Controls
             set { SetValue(OffContentProperty, value); }
         }
 
-        // Toggled Event
         public event System.EventHandler<ToggleEventArgs> OnToggled;
 
-        // Custom EventArgs for toggle events
         public class ToggleEventArgs : System.EventArgs
         {
             public bool IsOn { get; }
