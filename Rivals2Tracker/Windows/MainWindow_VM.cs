@@ -495,8 +495,10 @@ namespace Rivals2Tracker
             {
                 DisplayedCharacterResults = CurrentSeasonResults;
             }
-
-            RaisePropertyChanged(nameof(DisplayedCharacterResults));
+            else
+            {
+                DisplayedCharacterResults = ShowLifetimeResults ? AllSeasonResults : CurrentSeasonResults;
+            }
         }
 
         private MetaDataTable GetSeasonData(string patch)
