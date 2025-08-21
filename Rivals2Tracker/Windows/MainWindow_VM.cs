@@ -96,8 +96,10 @@ namespace Rivals2Tracker
             }
         }
 
+        private CharacterMetadata? _activeMatchSeason_CharacterData;
         public CharacterMetadata ActiveMatchSeason_CharacterData
         {
+            get { return _activeMatchSeason_CharacterData; }
             set
             {
                 SetActiveMatchHistory(value, "season");
@@ -203,6 +205,66 @@ namespace Rivals2Tracker
         {
             get { return _completedLabelVisibility; }
             set { SetProperty(ref _completedLabelVisibility, value); }
+        }
+
+        private string _myElo;
+        public string MyElo
+        {
+            get { return _myElo; }
+            set
+            {
+                if (ActiveMatch is not null)
+                {
+                    ActiveMatch.Me.Elo = value;
+                }
+
+                SetProperty(ref _myElo, value);
+            }
+        }
+
+        private string _opponentElo;
+        public string OpponentElo
+        {
+            get { return _opponentElo; }
+            set
+            {
+                if (ActiveMatch is not null)
+                {
+                    ActiveMatch.Opponent.Elo = value;
+                }
+
+                SetProperty(ref _opponentElo, value);
+            }
+        }
+
+        private string _opponentName;
+        public string OpponentName
+        {
+            get { return _opponentName; }
+            set
+            {
+                if (ActiveMatch is not null)
+                {
+                    ActiveMatch.Opponent.Name = value;
+                }
+
+                SetProperty(ref _opponentName, value);
+            }
+        }
+
+        private string _activeMatchNotes;
+        public string ActiveMatchNotes
+        {
+            get { return _activeMatchNotes; }
+            set
+            {
+                if (ActiveMatch is not null)
+                {
+                    ActiveMatch.Notes = value;
+                }
+
+                SetProperty(ref _activeMatchNotes, value);
+            }
         }
 
         private string _activityText;
@@ -312,6 +374,9 @@ namespace Rivals2Tracker
 
         public MainWindow_VM()
         {
+            System.Diagnostics.PresentationTraceSources.DataBindingSource.Listeners.Add(new System.Diagnostics.ConsoleTraceListener());
+            System.Diagnostics.PresentationTraceSources.DataBindingSource.Switch.Level = System.Diagnostics.SourceLevels.Warning | System.Diagnostics.SourceLevels.Error;
+
             SetMatchWinCommand = new DelegateCommand(() => _ = SetMatchWin());
             SetMatchLoseCommand = new DelegateCommand(() => _ = SetMatchLose());
             SetMatchDiscardCommand = new DelegateCommand(() => _ = SetMatchDiscard());

@@ -5,17 +5,24 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Prism.Mvvm;
 
 namespace Rivals2Tracker.Models
 {
-    class RivalsPlayer
+    class RivalsPlayer : BindableBase
     {
         public string Name { get; set; } = String.Empty;
         public string Character { get; set; } = String.Empty;
         public string Character2 { get; set; } = String.Empty;
         public string Character3 { get; set; } = String.Empty;
         public string EloString { get; set; } = String.Empty;
-        public string Elo { get; set; } = "-1";
+
+        private string _elo = String.Empty;
+        public string Elo
+        {
+            get { return _elo; }
+            set { SetProperty(ref _elo, value); }
+        }
 
 
         public RivalsPlayer(string playerText, string eloText)

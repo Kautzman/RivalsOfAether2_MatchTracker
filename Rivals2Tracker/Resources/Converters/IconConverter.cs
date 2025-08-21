@@ -18,8 +18,7 @@ namespace Rivals2Tracker.Resources.Converters
 
             string charName = value.ToString();
 
-            // Example: choose image based on string
-            string imagePath = charName switch
+            return charName switch
             {
                 "Forsburn" => "pack://application:,,,/Resources/CharacterIcons/yeen.png",
                 "Loxodont" => "pack://application:,,,/Resources/CharacterIcons/loxodont.png",
@@ -34,10 +33,8 @@ namespace Rivals2Tracker.Resources.Converters
                 "Ranno" => "pack://application:,,,/Resources/CharacterIcons/ranno.png",
                 "Orcane" => "pack://application:,,,/Resources/CharacterIcons/orcane.png",
                 "Etalus" => "pack://application:,,,/Resources/CharacterIcons/etalus.png",
-                _ => "C:\\Users\\mkautzman\\Documents\\Projects\\RivalsOfAether2_MatchTracker\\Rivals2Tracker\\Resources\\CharacterIcons\\unknown.png"
+                _ => "pack://application:,,,/Resources/CharacterIcons/unknown.png"
             };
-
-            return new BitmapImage(new Uri(imagePath));
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

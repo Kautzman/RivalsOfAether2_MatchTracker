@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -75,7 +76,11 @@ namespace Rivals2Tracker.Models
                 }
 
                 int opponentEloInt = Convert.ToInt32(opponentElo);
-                int delta = Math.Abs(myEloInt - opponentEloInt);
+
+
+                // A negative number means an upset.  -50 on a win means I beat someone with 50 more Elo.  Negative 50 on a loss means I lost to someone with less Elo
+                // Negative numbers are weighted higher as a result.
+                int delta = result == "Win" ? myEloInt - opponentEloInt : opponentEloInt - myEloInt;
 
                 if (delta <= 50)
                 {
@@ -92,50 +97,43 @@ namespace Rivals2Tracker.Models
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Failed to parse a match: My Elo: {myElo}, Opponentn Elo: {opponentElo}");
+                Debug.WriteLine($"Ignoring Match for Elo calculations: My Elo: {myElo}, Opponentn Elo: {opponentElo}");
             }
         }
 
-        public void DoTheMath()
+        // Lambda is the strength knob for adjustment here
+        public void DoTheMath(double lambda = 0.8)
         {
-            float totalWinWeight = 0f;
-            float totalLoseWeight = 0f;
+            double totalScore = 0.0;
+            double totalExpect = 0.0;
 
             foreach (WeightedMatchResult match in MatchResults)
             {
-                float weight;
-                int matchDelta = match.EloDelta;
+                double score = match.Result switch
+                {
+                    "Win" => 1.0,
+                    "Lose" => 0.0,
+                    _ => throw new ArgumentException($"Unknown result: {match.Result}")
+                };
 
-                if (match.Proximity == MatchProximity.Unranked)
-                {
-                    // Unranked is currently set to a delta of 0.  I don't know if we want to do something else with it in the future
-                    // continue;
-                }
+                double expected = 1.0 / (1.0 + Math.Pow(10.0, -(match.MyElo - match.OpponentElo) / 400.0));
 
-                matchDelta = Math.Clamp(0, matchDelta - 25, 500);
-
-                if (matchDelta <= 80)
-                {
-                    weight = Math.Abs((((float)matchDelta / 80f) - 1f));
-                    weight = Math.Clamp(0.20f, weight, 1);
-                }
-                else
-                {
-                    weight = Math.Abs(((((float)matchDelta / 200f) * 0.25f) - 0.25f));
-                    weight = Math.Clamp(0.05f, weight, 0.15f);
-                }
-
-                if (match.Result == "Win")
-                {
-                    totalWinWeight += weight;
-                }
-                else if (match.Result == "Lose")
-                {
-                    totalLoseWeight += weight;
-                }
+                totalScore += score;
+                totalExpect += expected;
             }
 
-            AdjustedMatchupRating = ((totalWinWeight / (totalLoseWeight + totalWinWeight)) * 100).ToString("n2") + "%";
+            double WR = totalScore / MatchResults.Count;
+            double avgExpected = totalExpect / MatchResults.Count;
+
+            double WWR = 0.5 + lambda * (WR - avgExpected);
+
+            if (WWR < 0) WWR = 0;
+            if (WWR > 1) WWR = 1;
+
+            WWR = WWR * 100;
+            WWR = Math.Round(WWR, 2);
+
+            AdjustedMatchupRating = WWR.ToString() + "%";
         }
     }
 
