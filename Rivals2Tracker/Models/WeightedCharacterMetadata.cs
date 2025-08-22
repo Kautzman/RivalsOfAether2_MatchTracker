@@ -101,7 +101,7 @@ namespace Rivals2Tracker.Models
             }
         }
 
-        // Lambda is the strength knob for adjustment here
+        // Lambda is the strength knob for Elo adjustment here
         public void DoTheMath(double lambda = 0.8)
         {
             double totalScore = 0.0;
@@ -116,7 +116,7 @@ namespace Rivals2Tracker.Models
                     _ => throw new ArgumentException($"Unknown result: {match.Result}")
                 };
 
-                double expected = 1.0 / (1.0 + Math.Pow(10.0, -(match.MyElo - match.OpponentElo) / 400.0));
+                double expected = 1.0 / (1.0 + Math.Pow(10.0, - (match.MyElo - match.OpponentElo) / 400.0));
 
                 totalScore += score;
                 totalExpect += expected;

@@ -56,7 +56,10 @@ namespace Rivals2Tracker.Models
         public string Patch
         {
             get { return _patch; }
-            set { SetProperty(ref _patch, value); }
+            set
+            {
+                SetProperty(ref _patch, value);
+            }
         }
 
         private MatchStatus _status = MatchStatus.New;

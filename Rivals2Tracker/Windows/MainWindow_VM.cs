@@ -145,6 +145,12 @@ namespace Rivals2Tracker
                 }
 
                 SetProperty(ref _activeMatch, value);
+
+                OpponentName = ActiveMatch.Opponent.Name;
+                OpponentElo = ActiveMatch.Opponent.Elo;
+                MyElo = ActiveMatch.Me.Elo;
+
+                RaisePropertyChanged(nameof(CompletedLabelVisibility));
             }
         }
 
@@ -291,11 +297,7 @@ namespace Rivals2Tracker
                     return "No Active Match";
                 }
 
-                return ActiveMatch.StatusString;
-            }
-            set
-            {
-                if (value == "Finished")
+                if (ActiveMatch.Status == MatchStatus.Finished)
                 {
                     CompletedLabelVisibility = Visibility.Visible;
                 }
@@ -304,6 +306,10 @@ namespace Rivals2Tracker
                     CompletedLabelVisibility = Visibility.Collapsed;
                 }
 
+                return ActiveMatch.StatusString;
+            }
+            set
+            {
                 RaisePropertyChanged(nameof(CompletedLabelVisibility));
                 SetProperty(ref _activeMatchStatusString, value);
             }
@@ -437,6 +443,7 @@ namespace Rivals2Tracker
                 ActiveMatch.IsWon = false;
                 ActivityText = "Match has been set to 'Lose' and written to DB.";
                 ActiveMatch.Status = MatchStatus.Finished;
+
                 RaisePropertyChanged("IsInputLocked");
                 RaisePropertyChanged("ActiveMatchStatusString");
                 RivalsORM.AddMatch(ActiveMatch);
@@ -546,6 +553,7 @@ namespace Rivals2Tracker
         public async Task OnCaptureMatchHotKey()
         {
             await DoTheOcr();
+            SecondarySelectedImagePath = "";
         }
 
         private void GetMatches(bool isOnStart = false)
