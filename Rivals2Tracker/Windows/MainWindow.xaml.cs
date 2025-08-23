@@ -23,8 +23,6 @@ namespace Rivals2Tracker
 {
     public partial class MainWindow : kWindow
     {
-        private double originalHeight = 1300; // Store the original height
-        private bool isMinimized = false;
         private string _selectedImagePath = "/resources/charactericons/unknown.png"; // Default image
         public MainWindow()
         {
@@ -98,23 +96,20 @@ namespace Rivals2Tracker
             }
         }
 
-        // Event handler for the main button click - shows the flyout
         private void ImageSelectorButton_Click(object sender, RoutedEventArgs e)
         {
             ImageFlyout.IsOpen = true;
         }
 
-        // Event handler for flyout image button clicks
         private void FlyoutImageButton_Click(object sender, RoutedEventArgs e)
         {
             if (sender is System.Windows.Controls.Button button && button.Tag is string imagePath)
             {
-                SelectedImagePath = imagePath; // Update the binding
-                ImageFlyout.IsOpen = false; // Close the flyout
+                SelectedImagePath = imagePath;
+                ImageFlyout.IsOpen = false;
             }
         }
 
-        // INotifyPropertyChanged implementation
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

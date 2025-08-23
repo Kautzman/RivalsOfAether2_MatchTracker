@@ -3,22 +3,12 @@ using Prism.Commands;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using Rivals2Tracker.Models;
 using System.Windows;
-using System.Transactions;
-using System.Runtime.CompilerServices;
 using Rivals2Tracker.Data;
-using Rivals2Tracker.HotkeyHandler;
-using System.Windows.Forms;
 using System.Diagnostics;
-using System.Windows.Media;
-using Windows.Data.Xml.Dom;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Security.Permissions;
 
 namespace Rivals2Tracker
 {
@@ -164,7 +154,7 @@ namespace Rivals2Tracker
             }
         }
 
-        private string _myName = "Kadecgos";
+        private string _myName;
         public string MyName
         {
             get { return _myName; }
@@ -331,7 +321,7 @@ namespace Rivals2Tracker
             }
         }
 
-        private string currentPatch = "1.3.2";
+        private string currentPatch;
         public string CurrentPatch
         {
             get { return currentPatch; }
@@ -374,15 +364,13 @@ namespace Rivals2Tracker
         public DelegateCommand TestOcrCommand { get; private set; }
         public DelegateCommand ShowFlyoutCommand { get; }
         public DelegateCommand ShowSecondaryFlyoutCommand { get; }
+        public DelegateCommand ShowSettingsWindowCommand { get; private set; }
 
         public DelegateCommand<string> SelectCharacterCommand { get; set; }
         public DelegateCommand<string> SelectSecondaryCharacterCommand { get; set; }
 
         public MainWindow_VM()
         {
-            System.Diagnostics.PresentationTraceSources.DataBindingSource.Listeners.Add(new System.Diagnostics.ConsoleTraceListener());
-            System.Diagnostics.PresentationTraceSources.DataBindingSource.Switch.Level = System.Diagnostics.SourceLevels.Warning | System.Diagnostics.SourceLevels.Error;
-
             SetMatchWinCommand = new DelegateCommand(() => _ = SetMatchWin());
             SetMatchLoseCommand = new DelegateCommand(() => _ = SetMatchLose());
             SetMatchDiscardCommand = new DelegateCommand(() => _ = SetMatchDiscard());
@@ -391,8 +379,10 @@ namespace Rivals2Tracker
             ShowSecondaryFlyoutCommand = new DelegateCommand(ShowSecondaryFlyout);
             SelectCharacterCommand = new DelegateCommand<string>(SelectCharacter);
             SelectSecondaryCharacterCommand = new DelegateCommand<string>(SelectSecondaryCharacter);
+            ShowSettingsWindowCommand = new DelegateCommand(ShowSettingsWindow);
 
             SetupImages();
+            GetMetadata();
             GetMatches(true);
 
             RaisePropertyChanged("ActiveMatch");
@@ -418,18 +408,30 @@ namespace Rivals2Tracker
             };
         }
 
+        private void GetMetadata()
+        {
+            if (RivalsORM.GetIsFirstStart() == "0")
+            {
+                // Do first start stuff
+            }
+            else
+            {
+                MyName = RivalsORM.GetPlayerName();
+                CurrentPatch = RivalsORM.GetPatchValue();
+            }
+
+            RivalsORM.SetIsFirstStart();
+        }
+
         private async Task SetMatchWin()
         {
             if (ActiveMatch is not null && ActiveMatch.Status == MatchStatus.InProgress)
             {
                 ActiveMatch.IsWon = true;
-                ActivityText = "Match has been set to 'Win' and written to DB.";
+                ActivityText = "Match has been recorded as a 'Win'.";
                 ActiveMatch.Status = MatchStatus.Finished;
-                RaisePropertyChanged("IsInputLocked");
-                RaisePropertyChanged("ActiveMatchStatusString");
                 RivalsORM.AddMatch(ActiveMatch);
-                ErrorText = String.Empty;
-                GetMatches();
+                ResetMatchStatus();
                 return;
             }
 
@@ -441,14 +443,10 @@ namespace Rivals2Tracker
             if (ActiveMatch is not null && ActiveMatch.Status == MatchStatus.InProgress)
             {
                 ActiveMatch.IsWon = false;
-                ActivityText = "Match has been set to 'Lose' and written to DB.";
+                ActivityText = "Match has been recorded as a 'Loss'.";
                 ActiveMatch.Status = MatchStatus.Finished;
-
-                RaisePropertyChanged("IsInputLocked");
-                RaisePropertyChanged("ActiveMatchStatusString");
                 RivalsORM.AddMatch(ActiveMatch);
-                ErrorText = String.Empty;
-                GetMatches();
+                ResetMatchStatus();
                 return;
             }
 
@@ -460,17 +458,25 @@ namespace Rivals2Tracker
             if (ActiveMatch is not null && ActiveMatch.Status == MatchStatus.InProgress)
             {
                 ActiveMatch.IsWon = false;
-                ActivityText = "Discarded Match";
+                ActivityText = "Match has been discarded and has not been recorded.";
                 ActiveMatch.Status = MatchStatus.Invalid;
-                RaisePropertyChanged("IsInputLocked");
-                RaisePropertyChanged("ActiveMatchStatusString");
-                ErrorText = String.Empty;
-                GetMatches();
                 ActiveOpponent = new();
+                ResetMatchStatus();
                 return;
             }
 
             ActivityText = "You can't flag a match as Invalid if it's not In Progress.";
+        }
+
+        private void ResetMatchStatus()
+        {
+            ActiveMatch.Notes = "";
+            RaisePropertyChanged("IsInputLocked");
+            RaisePropertyChanged("ActiveMatchStatusString");
+            RivalsORM.AddMatch(ActiveMatch);
+            ErrorText = String.Empty;
+            GetMatches();
+            return;
         }
 
         private async Task DoTheOcr()
@@ -552,15 +558,15 @@ namespace Rivals2Tracker
 
         public async Task OnCaptureMatchHotKey()
         {
+            SecondarySelectedImagePath = "/Resources/CharacterIcons/unknown.png";
+            SelectedImagePath = "/Resources/CharacterIcons/unknown.png";
             await DoTheOcr();
-            SecondarySelectedImagePath = "";
         }
 
         private void GetMatches(bool isOnStart = false)
         {
 
             MatchResults = RivalsORM.GetAllMatches();
-            // LastSeasonResults = GetSeasonData("1.2");
             CurrentSeasonResults = GetSeasonData("1.3");
             AllSeasonResults = GetSeasonData("all");
 
@@ -657,32 +663,15 @@ namespace Rivals2Tracker
             IsSecondaryFlyoutOpen = false;
         }
 
-        // TODO: This is utter nonsense.  This mapping of image directory to characters by String.  Please just fix this...
-        // FUTURE ME:  Lmao no thats k - how about I twiddle my thumbs instead ???
-        private void OverrideOpponentCharBaseOnImage(string imagePath)
+        public void ShowSettingsWindow()
         {
-            if (ActiveMatch is not null && ActiveMatch.Status == MatchStatus.InProgress)
-            {
-                switch (imagePath)
-                {
-                    case "/Resources/CharacterIcons/absa.png": ActiveMatch.Opponent.Character = "Absa"; break;
-                    case "/Resources/CharacterIcons/clairen.png": ActiveMatch.Opponent.Character = "Clairen"; break;
-                    case "/Resources/CharacterIcons/etalus.png": ActiveMatch.Opponent.Character = "Etalus"; break;
-                    case "/Resources/CharacterIcons/fleet.png": ActiveMatch.Opponent.Character = "Fleet"; break;
-                    case "/Resources/CharacterIcons/kragg.png": ActiveMatch.Opponent.Character = "Kragg"; break;
-                    case "/Resources/CharacterIcons/loxodont.png": ActiveMatch.Opponent.Character = "Loxodont"; break;
-                    case "/Resources/CharacterIcons/maypul.png": ActiveMatch.Opponent.Character = "Maypul"; break;
-                    case "/Resources/CharacterIcons/olympia.png": ActiveMatch.Opponent.Character = "Olympia"; break;
-                    case "/Resources/CharacterIcons/orcane.png": ActiveMatch.Opponent.Character = "Orcane"; break;
-                    case "/Resources/CharacterIcons/ranno.png": ActiveMatch.Opponent.Character = "Ranno"; break;
-                    case "/Resources/CharacterIcons/wrastor.png": ActiveMatch.Opponent.Character = "Wrastor"; break;
-                    case "/Resources/CharacterIcons/yeen.png": ActiveMatch.Opponent.Character = "Forsburn"; break;
-                    case "/Resources/CharacterIcons/zetterburn.png": ActiveMatch.Opponent.Character = "Zetterburn"; break;
-                }
+            Settings settingsWindow = new Settings();
 
-                RaisePropertyChanged(nameof(ActiveMatch));
-                RaisePropertyChanged(ActiveMatch.Opponent.Character);
-            }
+            settingsWindow.Owner = Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive);
+            settingsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
+            bool? result = settingsWindow.ShowDialog();
+            GetMetadata();
         }
 
         // Stringly typed nonsense...

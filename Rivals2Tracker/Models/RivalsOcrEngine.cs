@@ -10,6 +10,7 @@ using System.Drawing.Imaging;
 using Windows.Graphics.Imaging;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
+using Windows.Globalization;
 using System.Text;
 
 namespace Rivals2Tracker.Models
@@ -30,7 +31,7 @@ namespace Rivals2Tracker.Models
             public int Left, Top, Right, Bottom;
         }
 
-        private static OcrEngine ocrEngine = OcrEngine.TryCreateFromLanguage(new Windows.Globalization.Language("en"));
+        private static OcrEngine ocrEngine = OcrEngine.TryCreateFromLanguage(new Language("en"));
 
         public static async Task<RivalsOcrResult> Capture()
         {

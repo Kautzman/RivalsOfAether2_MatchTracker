@@ -1,0 +1,49 @@
+﻿<kwin:kWindow x:Class="Rivals2Tracker.Settings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Rivals2Tracker"
+        xmlns:controls="clr-namespace:Rivals2Tracker.Resources.Controls"
+        xmlns:kwin="clr-namespace:kWindows.Core"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="600"
+        Style="{StaticResource BaseWindow}">
+    <kwin:kWindow.DataContext>
+        <local:Settings_VM />
+    </kwin:kWindow.DataContext>
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0" ResizeBorderThickness="8, 4, 8, 8" />
+    </WindowChrome.WindowChrome>
+
+    <Grid Background="{StaticResource LGR_Blue_Opacity}">
+        <Grid Height="70" Background="{StaticResource LGR_Banner}" MouseDown="EnableDrag" VerticalAlignment="Top">
+            <Label Content="Settings" FontFamily="Franklin Gothic Demi" FontSize="32" Margin="10, 10, 0, 0" Grid.ColumnSpan="3" IsHitTestVisible="False"/>
+
+            <Button x:Name="WindowClose" Style="{StaticResource WindowingButton_Close}" Click="WindowCloseClick" VerticalAlignment="Top">
+                <Image Style="{StaticResource Windowing_Image}" Source="/Rivals2Tracker;component/Resources/Icons/Windowing/Close.png" />
+            </Button>
+
+            <StackPanel VerticalAlignment="Bottom">
+                <Border BorderBrush="{StaticResource FG_Gold}" BorderThickness="0, 3, 0, 0" VerticalAlignment="Bottom" />
+                <Border BorderBrush="{StaticResource FG_DarkGold}" BorderThickness="0, 3, 0, 0" VerticalAlignment="Bottom"/>
+                <Border BorderBrush="{StaticResource FG_DarkDarkGold}" BorderThickness="0, 1, 0, 0" VerticalAlignment="Bottom"/>
+            </StackPanel>
+        </Grid>
+
+        <StackPanel Height="200" Width="400" Margin="0, 50, 0, 0">
+            <Grid>
+                <Label Content="Rivals Tag" FontFamily="Franklin Gothic Demi" FontSize="20" Width="140" HorizontalAlignment="Left" Foreground="#DEDEDE" HorizontalContentAlignment="Right"/>
+                <TextBox Text="{Binding PlayerName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="200" Margin="150, 0, 0, 0" FontSize="18" FontFamily="Franklin Gothic Demi" HorizontalAlignment="Left" Background="{StaticResource BG_DarkBlue}"  />
+            </Grid>
+            <Grid>
+                <Label Content="Current Patch" FontFamily="Franklin Gothic Demi" FontSize="20" Width="140" HorizontalAlignment="Left" Foreground="#DEDEDE" HorizontalContentAlignment="Right"/>
+                <TextBox Text="{Binding Patch, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="100" Margin="150, 0, 0, 0" FontFamily="Franklin Gothic Demi" FontSize="18" HorizontalAlignment="Left" Background="{StaticResource BG_DarkBlue}"  />
+            </Grid>
+
+            <Button Content="Save and Close" Margin="0, 10, 0, 0" Width="200" Height="35" Foreground="{StaticResource FG_BlueLabel}"
+                    FontSize="22" FontFamily="Franklin Gothic Demi Cond" BorderThickness="1" Background="{StaticResource BG_DarkBlue}"
+                    Command="{Binding SaveAndCloseCommand}"/>
+        </StackPanel>
+    </Grid>
+</kwin:kWindow>

@@ -68,17 +68,41 @@ namespace Rivals2Tracker.Models
         {
             try
             {
-                int myEloInt = Convert.ToInt32(myElo);
+                int myEloInt;
+                int opponentEloInt;
 
-                if (opponentElo.Equals("U"))
+                // Values of -1 indicate qualifying or Unranked matches, and will necessarily mean any match without a valid int value
+                if (Int32.TryParse(opponentElo, out int parsedMyValue))
+                    myEloInt = parsedMyValue;
+                else
+                    myEloInt = -1;
+
+                if (Int32.TryParse(myElo, out int parsedOppValue))
+                    opponentEloInt = parsedOppValue;
+                else
+                    opponentEloInt = -1;
+
+                if (opponentEloInt.Equals("-1") && myEloInt.Equals("-1"))
                 {
-                    MatchResults.Add(new WeightedMatchResult(myEloInt, MatchProximity.Unranked, result, patch));
+                    // If we are both qualifying, just drop the match
+                    return;
                 }
 
-                int opponentEloInt = Convert.ToInt32(opponentElo);
+                // If the opponent is qualifying, just set their elo to mine and make the delta zero
+                if (opponentEloInt.Equals("-1"))
+                {
+                    MatchResults.Add(new WeightedMatchResult(0, myEloInt, myEloInt, MatchProximity.Unranked, result, patch));
+                    return;
+                }
 
+                // Same, but the other way around
+                if (myEloInt.Equals("-1"))
+                {
+                    MatchResults.Add(new WeightedMatchResult(0, opponentEloInt, opponentEloInt, MatchProximity.Unranked, result, patch));
+                    return;
+                }
 
-                // A negative number means an upset.  -50 on a win means I beat someone with 50 more Elo.  Negative 50 on a loss means I lost to someone with less Elo
+                // A negative delta number means an upset.  -50 on a win means I beat someone with 50 more Elo.  Negative 50 on a loss means I lost to someone with less Elo
                 // Negative numbers are weighted higher as a result.
                 int delta = result == "Win" ? myEloInt - opponentEloInt : opponentEloInt - myEloInt;
 
@@ -97,7 +121,7 @@ namespace Rivals2Tracker.Models
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Ignoring Match for Elo calculations: My Elo: {myElo}, Opponentn Elo: {opponentElo}");
+                Debug.WriteLine($"Ignoring Match for Elo calculations: My Elo: {myElo}, Opponent Elo: {opponentElo}");
             }
         }
 
