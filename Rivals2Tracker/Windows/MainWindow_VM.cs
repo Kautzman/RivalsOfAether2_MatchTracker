@@ -9,6 +9,7 @@ using Rivals2Tracker.Models;
 using System.Windows;
 using Rivals2Tracker.Data;
 using System.Diagnostics;
+using Windows.ApplicationModel.VoiceCommands;
 
 namespace Rivals2Tracker
 {
@@ -92,6 +93,8 @@ namespace Rivals2Tracker
             get { return _activeMatchSeason_CharacterData; }
             set
             {
+                PlayerMatchHistoryViewVisibility = Visibility.Collapsed;
+                CharacterMatchHistoryViewVisibility = Visibility.Visible;
                 SetActiveMatchHistory(value, "season");
             }
         }
@@ -201,6 +204,20 @@ namespace Rivals2Tracker
         {
             get { return _completedLabelVisibility; }
             set { SetProperty(ref _completedLabelVisibility, value); }
+        }
+
+        private Visibility _characterMatchHistoryViewVisibility = Visibility.Collapsed;
+        public Visibility CharacterMatchHistoryViewVisibility
+        {
+            get { return _characterMatchHistoryViewVisibility; }
+            set { SetProperty(ref _characterMatchHistoryViewVisibility, value); }
+        }
+
+        private Visibility _playerMatchHistoryViewVisibility = Visibility.Collapsed;
+        public Visibility PlayerMatchHistoryViewVisibility
+        {
+            get { return _playerMatchHistoryViewVisibility; }
+            set { SetProperty(ref _playerMatchHistoryViewVisibility, value); }
         }
 
         private string _myElo;
@@ -388,7 +405,7 @@ namespace Rivals2Tracker
             RaisePropertyChanged("ActiveMatch");
         }
 
-        public void SetupImages()
+        private void SetupImages()
         {
             AvailableCharacters = new ObservableCollection<string>
             {
@@ -470,10 +487,9 @@ namespace Rivals2Tracker
 
         private void ResetMatchStatus()
         {
-            ActiveMatch.Notes = "";
+            ActiveMatchNotes = "";
             RaisePropertyChanged("IsInputLocked");
             RaisePropertyChanged("ActiveMatchStatusString");
-            RivalsORM.AddMatch(ActiveMatch);
             ErrorText = String.Empty;
             GetMatches();
             return;
@@ -481,7 +497,7 @@ namespace Rivals2Tracker
 
         private async Task DoTheOcr()
         {
-            RivalsOcrResult result = await RivalsOcrEngine.Capture(); 
+            RivalsOcrResult result = await RivalsOcrEngine.Capture();
 
             if (!result.IsValid)
             {
@@ -513,9 +529,10 @@ namespace Rivals2Tracker
             RaisePropertyChanged("ActiveMatchStatusString");
 
             GetPlayerInfo();
+            ShowPlayerMatchData();
         }
 
-        public void GetPlayerInfo()
+        private void GetPlayerInfo()
         {
             if (ActiveMatch is null)
             {
@@ -554,6 +571,12 @@ namespace Rivals2Tracker
                     RaisePropertyChanged(ActiveOpponent.NotesLabel);
                 }
             }
+        }
+
+        private void ShowPlayerMatchData()
+        {
+            PlayerMatchHistoryViewVisibility = Visibility.Visible;
+            CharacterMatchHistoryViewVisibility = Visibility.Collapsed;
         }
 
         public async Task OnCaptureMatchHotKey()
@@ -645,7 +668,7 @@ namespace Rivals2Tracker
             
             IsFlyoutOpen = false;
         }
-        public void SelectSecondaryCharacter(string character)
+        private void SelectSecondaryCharacter(string character)
         {
             if (!string.IsNullOrEmpty(character) && ActiveMatch is not null)
             {
@@ -663,7 +686,7 @@ namespace Rivals2Tracker
             IsSecondaryFlyoutOpen = false;
         }
 
-        public void ShowSettingsWindow()
+        private void ShowSettingsWindow()
         {
             Settings settingsWindow = new Settings();
 
