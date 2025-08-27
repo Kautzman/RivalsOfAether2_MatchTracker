@@ -47,6 +47,7 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.7" />
 		<PackageReference Include="Prism.Core" Version="8.1.97" />
+		<PackageReference Include="Prism.Unity" Version="8.1.97" />
 		<PackageReference Include="System.Drawing.Common" Version="9.0.8" />
 		<PackageReference Include="Tesseract" Version="5.2.0" />
 	</ItemGroup>

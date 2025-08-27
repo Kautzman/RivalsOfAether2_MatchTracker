@@ -10,6 +10,8 @@ using System.Windows;
 using Rivals2Tracker.Data;
 using System.Diagnostics;
 using Windows.ApplicationModel.VoiceCommands;
+using Prism.Events;
+using Rivals2Tracker.Resources.Events;
 
 namespace Rivals2Tracker
 {
@@ -398,6 +400,8 @@ namespace Rivals2Tracker
             SelectSecondaryCharacterCommand = new DelegateCommand<string>(SelectSecondaryCharacter);
             ShowSettingsWindowCommand = new DelegateCommand(ShowSettingsWindow);
 
+            MatchHistoryUpdateEvent.MatchSaved += UpdateMatchHistory;
+
             SetupImages();
             GetMetadata();
             GetMatches(true);
@@ -407,28 +411,14 @@ namespace Rivals2Tracker
 
         private void SetupImages()
         {
-            AvailableCharacters = new ObservableCollection<string>
-            {
-                "Forsburn",
-                "Loxodont",
-                "Clairen",
-                "Zetterburn",
-                "Wrastor",
-                "Fleet",
-                "Absa",
-                "Olympia",
-                "Maypul",
-                "Kragg",
-                "Ranno",
-                "Orcane",
-                "Etalus"
-            };
+            AvailableCharacters = new ObservableCollection<string>(GlobalData.AllCharacters);
         }
 
         private void GetMetadata()
         {
             if (RivalsORM.GetIsFirstStart() == "0")
             {
+                // TODO:  Do the first stuff or something
                 // Do first start stuff
             }
             else
@@ -639,6 +629,11 @@ namespace Rivals2Tracker
             return metadatatable;
         }
 
+        private void UpdateMatchHistory(MatchResult matchResult)
+        {
+            GetMatches();
+        }
+
         private void ShowFlyout()
         {
             IsFlyoutOpen = true;
@@ -687,14 +682,15 @@ namespace Rivals2Tracker
         }
 
         private void ShowSettingsWindow()
-        {
+        {            
             Settings settingsWindow = new Settings();
 
-            settingsWindow.Owner = Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive);
+            settingsWindow.Owner = System.Windows.Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive);
             settingsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
             bool? result = settingsWindow.ShowDialog();
             GetMetadata();
+
         }
 
         // Stringly typed nonsense...

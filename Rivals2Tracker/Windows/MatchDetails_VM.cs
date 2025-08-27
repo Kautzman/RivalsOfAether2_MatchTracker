@@ -1,0 +1,54 @@
+﻿using Prism.Commands;
+using Prism.Events;
+using Prism.Mvvm;
+using Rivals2Tracker.Data;
+using Rivals2Tracker.Models;
+using Rivals2Tracker.Resources.Events;
+using System;
+using System.Windows;
+
+namespace Rivals2Tracker
+{
+    class MatchDetails_VM : BindableBase
+    {
+        private IEventAggregator _eventAggregator;
+        public Action Close { get; set; }
+
+        private MatchResult _loadedMatch = new();
+        public MatchResult LoadedMatch
+        {
+            get { return _loadedMatch; }
+            set { SetProperty(ref _loadedMatch, value); }
+        }
+
+        public DelegateCommand SaveAndCloseCommand { get; set; }
+        public DelegateCommand DeleteMatchCommand { get; set; }
+
+        public MatchDetails_VM(MatchResult matchResult)
+        {
+            LoadedMatch = matchResult;
+            SaveAndCloseCommand = new DelegateCommand(SaveAndClose);
+            DeleteMatchCommand = new DelegateCommand(DeleteMatch);
+        }
+
+        private void SaveAndClose()
+        {
+            RivalsORM.UpdateMatch(LoadedMatch);
+            MatchHistoryUpdateEvent.PublishMatchSaved(LoadedMatch);
+            Close?.Invoke();
+        }
+
+        private void DeleteMatch()
+        {
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to delete this match?", "Delete Match", MessageBoxButton.YesNo);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                RivalsORM.DeleteMatch(LoadedMatch);
+                MessageBox.Show("Match Deleted!", "Don't be mad - it's just a game!");
+                MatchHistoryUpdateEvent.PublishMatchSaved(LoadedMatch);
+                Close?.Invoke();
+            }
+        }
+    }
+}

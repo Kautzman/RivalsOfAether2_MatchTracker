@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Security.Permissions;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -148,6 +150,55 @@ namespace Rivals2Tracker.Data
                 return "Successfully set First Start Value";
             }
         }
+
+        public static string UpdateMatch(MatchResult matchResult)
+        {
+            using (conn)
+            {
+                try
+                {
+                    conn.Open();
+
+                    SqliteCommand cmd = new SqliteCommand();
+                    cmd.Connection = conn;
+
+                    cmd.CommandText = "UPDATE Matches SET Opponent = @OppName, OppChar1 = @OppChar1, OpponentElo = @OpponentElo, MyElo = @MyElo, " +
+                        "OppChar2 = @OppChar2, OppChar3 = @OppChar3, Result = @MatchResult, Patch = @Patch, Notes = @Notes WHERE ID = @ID";
+                    cmd.Parameters.AddWithValue("@ID", matchResult.ID);
+                    cmd.Parameters.AddWithValue("@OppName", matchResult.Opponent);
+                    cmd.Parameters.AddWithValue("@OppChar1", matchResult.OppChar1);
+                    cmd.Parameters.AddWithValue("@OppChar2", matchResult.OppChar2);
+                    cmd.Parameters.AddWithValue("@OppChar3", matchResult.OppChar3);
+                    cmd.Parameters.AddWithValue("@OpponentElo", matchResult.OpponentElo);
+                    cmd.Parameters.AddWithValue("@MyElo", matchResult.MyElo);
+                    cmd.Parameters.AddWithValue("@MatchResult", matchResult.Result);
+                    cmd.Parameters.AddWithValue("@Patch", matchResult.Patch);
+                    cmd.Parameters.AddWithValue("@Notes", matchResult.Notes);
+
+                    Task<object?> rowID = cmd.ExecuteScalarAsync();
+
+                    if (rowID == null)
+                        return "Error: New Row is Null";
+
+                    if (rowID.Exception != null)
+                        return $"**Unknown Error:** {rowID.Exception.Message}";
+
+                    return $"Updated Match with ID {matchResult.ID}";
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                    return "error";
+                }
+            }
+        }
+
+        public static void DeleteMatch(MatchResult matchResult)
+        {
+            SqliteCommand command = conn.CreateCommand();
+            ExecuteQuery($"DELETE FROM Matches WHERE ID = {matchResult.ID}");      
+        }
+
         public static DataTable ExecuteQuery(string query)
         {
             DataTable table = new DataTable();

@@ -93,7 +93,7 @@
     <!-- ==================================================================================================================== -->
     <!-- Button -->
     <!-- ==================================================================================================================== -->
-    
+
     <Style x:Key="BaseButton" TargetType="{x:Type Button}">
         <Setter Property="Background" Value="{StaticResource BG_Button}" />
         <Setter Property="Foreground" Value="{StaticResource FG_Interactable}" />

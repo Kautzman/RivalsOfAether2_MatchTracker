@@ -24,7 +24,6 @@ namespace Rivals2Tracker.Models
             set { SetProperty(ref _elo, value); }
         }
 
-
         public RivalsPlayer(string playerText, string eloText)
         { 
             EloString = eloText.Trim();

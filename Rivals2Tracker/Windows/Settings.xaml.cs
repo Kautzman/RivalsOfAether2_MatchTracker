@@ -20,6 +20,7 @@ namespace Rivals2Tracker
         public Settings()
         {
             InitializeComponent();
+
             if (DataContext is Settings_VM vm)
             {
                 vm.Close = () => this.Close();

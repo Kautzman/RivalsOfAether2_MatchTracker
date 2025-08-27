@@ -1,9 +1,11 @@
-﻿using Prism.Mvvm;
+﻿using Prism.Commands;
+using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Rivals2Tracker.Models
 {
@@ -49,5 +51,22 @@ namespace Rivals2Tracker.Models
         public string Result { get; set; }
         public string Patch { get; set; }
         public string Notes { get; set; }
+
+        public DelegateCommand ShowMatchDetailsCommand { get; set; }
+
+        public MatchResult()
+        {
+            ShowMatchDetailsCommand = new DelegateCommand(ShowMatchDetails);
+        }
+
+        private void ShowMatchDetails()
+        {
+            MatchDetails matchdDetails = new MatchDetails(this);
+
+            matchdDetails.Owner = Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive);
+            matchdDetails.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
+            matchdDetails.ShowDialog();
+        }
     }
 }

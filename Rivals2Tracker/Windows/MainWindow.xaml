@@ -217,8 +217,7 @@
 
                 <Button Width="68" Content="&#xE713;" FontSize="38" FontFamily="Segoe MDL2 Assets" Height="68" HorizontalAlignment="Right" Margin="0, 10, 18, 0"
                         Foreground="{StaticResource FG_BlueLabel}" Background="{StaticResource BG_DarkBlue}" BorderBrush="{StaticResource FG_BlueLabel}"
-                        Command="{Binding ShowSettingsWindowCommand}">
-                </Button>
+                        Command="{Binding ShowSettingsWindowCommand}" />
             </Grid>
 
             <!-- Bottom Content-->

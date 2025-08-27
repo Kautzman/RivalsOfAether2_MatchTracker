@@ -1,0 +1,78 @@
+﻿<kwin:kWindow x:Class="Rivals2Tracker.MatchDetails"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Rivals2Tracker"
+        xmlns:controls="clr-namespace:Rivals2Tracker.Resources.Controls"
+        xmlns:kwin="clr-namespace:kWindows.Core"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="575" Width="650"
+        Style="{StaticResource BaseWindow}">
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0" ResizeBorderThickness="8, 4, 8, 8" /> 
+    </WindowChrome.WindowChrome>
+
+    <Grid Background="{StaticResource LGR_Blue_Opacity}">
+        <Grid Height="70" Background="{StaticResource LGR_Banner}" MouseDown="EnableDrag" VerticalAlignment="Top">
+            <Label Content="Match Details" FontFamily="Franklin Gothic Demi" FontSize="32" Margin="10, 10, 0, 0" Grid.ColumnSpan="3" IsHitTestVisible="False"/>
+
+            <Button x:Name="WindowClose" Style="{StaticResource WindowingButton_Close}" Click="WindowCloseClick" VerticalAlignment="Top">
+                <Image Style="{StaticResource Windowing_Image}" Source="/Rivals2Tracker;component/Resources/Icons/Windowing/Close.png" />
+            </Button>
+
+            <StackPanel VerticalAlignment="Bottom">
+                <Border BorderBrush="{StaticResource FG_Gold}" BorderThickness="0, 3, 0, 0" VerticalAlignment="Bottom" />
+                <Border BorderBrush="{StaticResource FG_DarkGold}" BorderThickness="0, 3, 0, 0" VerticalAlignment="Bottom"/>
+                <Border BorderBrush="{StaticResource FG_DarkDarkGold}" BorderThickness="0, 1, 0, 0" VerticalAlignment="Bottom"/>
+            </StackPanel>
+        </Grid>
+
+        <StackPanel Height="450" Width="600" Margin="0, 70, 0, 0">
+            <Grid>
+                <Label Content="My Character" FontFamily="Franklin Gothic Demi" FontSize="20" Width="240" HorizontalAlignment="Left" Foreground="#DEDEDE" HorizontalContentAlignment="Right"/>
+                <TextBox Text="{Binding LoadedMatch.MyChar, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="200" Margin="250, 0, 0, 0" FontSize="18" FontFamily="Franklin Gothic Demi" HorizontalAlignment="Left" Background="{StaticResource BG_DarkBlue}"  />
+            </Grid>
+            <Grid>
+                <Label Content="My Elo" FontFamily="Franklin Gothic Demi" FontSize="20" Width="240" HorizontalAlignment="Left" Foreground="#DEDEDE" HorizontalContentAlignment="Right"/>
+                <TextBox Text="{Binding LoadedMatch.MyElo, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="80" Margin="250, 0, 0, 0" FontSize="18" FontFamily="Franklin Gothic Demi" HorizontalAlignment="Left" Background="{StaticResource BG_DarkBlue}"  />
+            </Grid>
+            <Grid Margin="0, 15, 0, 0">
+                <Label Content="Opponent Tag" FontFamily="Franklin Gothic Demi" FontSize="20" Width="240" HorizontalAlignment="Left" Foreground="#DEDEDE" HorizontalContentAlignment="Right"/>
+                <TextBox Text="{Binding LoadedMatch.Opponent, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="200" Margin="250, 0, 0, 0" FontSize="18" FontFamily="Franklin Gothic Demi" HorizontalAlignment="Left" Background="{StaticResource BG_DarkBlue}"  />
+            </Grid>
+            <Grid>
+                <Label Content="Opponent Primary Char." FontFamily="Franklin Gothic Demi" FontSize="20" Width="240" HorizontalAlignment="Left" Foreground="#DEDEDE" HorizontalContentAlignment="Right"/>
+                <TextBox Text="{Binding LoadedMatch.OppChar1, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="200" Margin="250, 0, 0, 0" FontSize="18" FontFamily="Franklin Gothic Demi" HorizontalAlignment="Left" Background="{StaticResource BG_DarkBlue}"  />
+            </Grid>
+            <Grid>
+                <Label Content="Opponent Secondary Char." FontFamily="Franklin Gothic Demi" FontSize="20" Width="240" HorizontalAlignment="Left" Foreground="#DEDEDE" HorizontalContentAlignment="Right"/>
+                <TextBox Text="{Binding LoadedMatch.OppChar2, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="200" Margin="250, 0, 0, 0" FontSize="18" FontFamily="Franklin Gothic Demi" HorizontalAlignment="Left" Background="{StaticResource BG_DarkBlue}"  />
+            </Grid>
+            <Grid>
+                <Label Content="Opponent Elo" FontFamily="Franklin Gothic Demi" FontSize="20" Width="240" HorizontalAlignment="Left" Foreground="#DEDEDE" HorizontalContentAlignment="Right"/>
+                <TextBox Text="{Binding LoadedMatch.OpponentElo, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="80" Margin="250, 0, 0, 0" FontSize="18" FontFamily="Franklin Gothic Demi" HorizontalAlignment="Left" Background="{StaticResource BG_DarkBlue}"  />
+            </Grid>
+            <Grid Margin="0, 15, 0, 0">
+                <Label Content="Patch" FontFamily="Franklin Gothic Demi" FontSize="20" Width="240" HorizontalAlignment="Left" Foreground="#DEDEDE" HorizontalContentAlignment="Right"/>
+                <TextBox Text="{Binding LoadedMatch.Patch, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="100" Margin="250, 0, 0, 0" FontFamily="Franklin Gothic Demi" FontSize="18" HorizontalAlignment="Left" Background="{StaticResource BG_DarkBlue}"  />
+            </Grid>
+            <Grid Margin="0, 5, 0, 0">
+                <Label Content="Notes" FontFamily="Franklin Gothic Demi" FontSize="20" Width="240" HorizontalAlignment="Left" Foreground="#DEDEDE" HorizontalContentAlignment="Right"/>
+                <TextBox Text="{Binding LoadedMatch.Notes, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" VerticalContentAlignment="Top" TextWrapping="Wrap" Width="340" Height="80" Margin="250, 0, 0, 0" FontFamily="Franklin Gothic Demi" FontSize="18" HorizontalAlignment="Left" Background="{StaticResource BG_DarkBlue}"  />
+            </Grid>
+
+            <Grid Margin="0, 50, 0, 0">
+            <Button Content="Save and Close" Margin="0, 10, 20, 0" Width="200" Height="35" Foreground="{StaticResource FG_BlueLabel}"
+                FontSize="22" FontFamily="Franklin Gothic Demi Cond" BorderThickness="1" Background="{StaticResource BG_DarkBlue}"
+                Command="{Binding SaveAndCloseCommand}" HorizontalAlignment="Right"/>
+
+
+            <Button Content="Delete Match" Margin="20, 10, 0, 0" Width="170" Height="35" Foreground="{StaticResource FG_BlueLabel}"
+                    FontSize="22" FontFamily="Franklin Gothic Demi Cond" BorderThickness="1" Background="{StaticResource BG_DarkBlue}"
+                    Command="{Binding DeleteMatchCommand}" HorizontalAlignment="Left"/>
+            </Grid>
+
+        </StackPanel>
+    </Grid>
+</kwin:kWindow>
