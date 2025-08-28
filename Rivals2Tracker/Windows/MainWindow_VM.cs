@@ -159,6 +159,21 @@ namespace Rivals2Tracker
             }
         }
 
+        private string _myCharacter = "Wrastor";
+        public string MyCharacter
+        {
+            get { return _myCharacter; }
+            set
+            {
+                if (!string.IsNullOrEmpty(value) && ActiveMatch is not null)
+                {
+                    ActiveMatch.Me.Character = value;
+                }
+
+                SetProperty(ref _myCharacter, value);
+            }
+        }
+
         private string _myName;
         public string MyName
         {
@@ -346,6 +361,12 @@ namespace Rivals2Tracker
             get { return currentPatch; }
             set { SetProperty(ref currentPatch, value); }
         }
+        private string _mySelectedCharPortrait = "/Resources/CharacterIcons/unknown.png";
+        public string MySelectedCharPortrait
+        {
+            get { return _mySelectedCharPortrait; }
+            set { SetProperty(ref _mySelectedCharPortrait, value); }
+        }
 
         private string _selectedImagePath = "/Resources/CharacterIcons/unknown.png";
         public string SelectedImagePath
@@ -361,11 +382,18 @@ namespace Rivals2Tracker
             set { SetProperty(ref _secondarySelectedImagePath, value); }
         }
 
-        private bool _isFlyoutOpen = false;
-        public bool IsFlyoutOpen
+        private bool _isMyFlyoutOpen = false;
+        public bool IsMyFlyoutOpen
         {
-            get { return _isFlyoutOpen; }
-            set { SetProperty(ref _isFlyoutOpen, value); }
+            get { return _isMyFlyoutOpen; }
+            set { SetProperty(ref _isMyFlyoutOpen, value); }
+        }
+
+        private bool _isOppFlyoutOpen = false;
+        public bool IsOppFlyoutOpen
+        {
+            get { return _isOppFlyoutOpen; }
+            set { SetProperty(ref _isOppFlyoutOpen, value); }
         }
 
         private bool _isSecondaryFlyoutOpen = false;
@@ -381,10 +409,13 @@ namespace Rivals2Tracker
         public DelegateCommand SetMatchLoseCommand { get; private set; }
         public DelegateCommand SetMatchDiscardCommand { get; private set; }
         public DelegateCommand TestOcrCommand { get; private set; }
+        public DelegateCommand ShowMyFlyoutCommand { get; }
+
         public DelegateCommand ShowFlyoutCommand { get; }
         public DelegateCommand ShowSecondaryFlyoutCommand { get; }
         public DelegateCommand ShowSettingsWindowCommand { get; private set; }
 
+        public DelegateCommand<string> SelectMyCharacterCommand { get; set; }
         public DelegateCommand<string> SelectCharacterCommand { get; set; }
         public DelegateCommand<string> SelectSecondaryCharacterCommand { get; set; }
 
@@ -394,17 +425,19 @@ namespace Rivals2Tracker
             SetMatchLoseCommand = new DelegateCommand(() => _ = SetMatchLose());
             SetMatchDiscardCommand = new DelegateCommand(() => _ = SetMatchDiscard());
             TestOcrCommand = new DelegateCommand(() => _ = DoTheOcr());
+            ShowMyFlyoutCommand = new DelegateCommand(ShowMyFlyout);
             ShowFlyoutCommand = new DelegateCommand(ShowFlyout);
             ShowSecondaryFlyoutCommand = new DelegateCommand(ShowSecondaryFlyout);
-            SelectCharacterCommand = new DelegateCommand<string>(SelectCharacter);
+            SelectMyCharacterCommand = new DelegateCommand<string>(SelectMyCharacter);
+            SelectCharacterCommand = new DelegateCommand<string>(SelectOppCharacter);
             SelectSecondaryCharacterCommand = new DelegateCommand<string>(SelectSecondaryCharacter);
             ShowSettingsWindowCommand = new DelegateCommand(ShowSettingsWindow);
 
             MatchHistoryUpdateEvent.MatchSaved += UpdateMatchHistory;
 
             SetupImages();
-            GetMetadata();
-            GetMatches(true);
+            //GetMetadata();
+            //GetMatches(true);
 
             RaisePropertyChanged("ActiveMatch");
         }
@@ -412,6 +445,15 @@ namespace Rivals2Tracker
         private void SetupImages()
         {
             AvailableCharacters = new ObservableCollection<string>(GlobalData.AllCharacters);
+
+            //string defaultCharacter = RivalsORM.GetPlayerCharacter();
+            string defaultCharacter = "Wrastor";  // Debug
+            
+            if (GlobalData.CharacterPortraitDict.TryGetValue(defaultCharacter, out string imagePath))
+            {
+                MySelectedCharPortrait = imagePath;
+                MyCharacter = defaultCharacter;
+            }
         }
 
         private void GetMetadata()
@@ -509,6 +551,7 @@ namespace Rivals2Tracker
             ActiveMatch = result.Match;
             ActiveMatch.Patch = CurrentPatch;
             ActiveMatch.Status = MatchStatus.InProgress;
+            ActiveMatch.Me.Character = MyCharacter;
 
             if (GlobalData.CharacterImageDict.TryGetValue(ActiveMatch.Opponent.Character, out string imagePath))
             {
@@ -634,19 +677,43 @@ namespace Rivals2Tracker
             GetMatches();
         }
 
+        private void ShowMyFlyout()
+        {
+            IsMyFlyoutOpen = true;
+        }
+
         private void ShowFlyout()
         {
-            IsFlyoutOpen = true;
+            IsOppFlyoutOpen = true;
         }
 
         private void ShowSecondaryFlyout()
-        {
+        {   
             IsSecondaryFlyoutOpen = true;
         }
 
         // TODO: This dual-split but almost identical operation on primary and secondary is dumb.  Combine this into a better flow.
         // There is also a duplicate DataTemplate to pull out
-        private void SelectCharacter(string character)
+        private void SelectMyCharacter(string character)
+        {
+            if (!string.IsNullOrEmpty(character))
+            {
+                if (GlobalData.CharacterImageDict.TryGetValue(character, out string imagePath))
+                {
+                    MySelectedCharPortrait = imagePath;
+                    MyCharacter = character;
+                }
+            }
+            else
+            {
+                ErrorText = "Character seems to be null?  That's probably a bug";
+            }
+
+            IsMyFlyoutOpen = false;
+        }
+
+
+        private void SelectOppCharacter(string character)
         {
             if (!string.IsNullOrEmpty(character) && ActiveMatch is not null)
             {
@@ -661,7 +728,7 @@ namespace Rivals2Tracker
                 ActivityText = "No Active Match - You can't select a character without a match active";
             }
             
-            IsFlyoutOpen = false;
+            IsOppFlyoutOpen = false;
         }
         private void SelectSecondaryCharacter(string character)
         {

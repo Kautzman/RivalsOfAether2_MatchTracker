@@ -15,7 +15,7 @@ namespace Rivals2Tracker.Models
         public string Date { get; set; }
         public string Opponent { get; set; }
         public string OpponentElo { get; set; }
-        public string MyChar { get; set; } = "Wrastor";
+        public string MyChar { get; set; }
         public string MyElo { get; set; }
         public string OppChar1 { get; set; }
 

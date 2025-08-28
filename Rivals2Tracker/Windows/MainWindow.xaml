@@ -16,61 +16,7 @@
         <WindowChrome CaptionHeight="0" ResizeBorderThickness="8, 4, 8, 8" />
     </WindowChrome.WindowChrome>
     <Window.Resources>
-        <!-- Style for the flyout buttons -->
-        <Style x:Key="ImageFlyoutButtonStyle" TargetType="Button">
-            <Setter Property="Width" Value="60"/>
-            <Setter Property="Height" Value="60"/>
-            <Setter Property="Margin" Value="5"/>
-            <Setter Property="Padding" Value="0"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="BorderBrush" Value="Gray"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="BorderBrush" Value="Blue"/>
-                    <Setter Property="BorderThickness" Value="2"/>
-                    <Setter Property="Background" Value="Transparent"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
 
-        <Style x:Key="MainImageButtonStyle" TargetType="Button">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border x:Name="ImageBorder"  BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"  Background="{TemplateBinding Background}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="ImageBorder" Property="BorderBrush" Value="{StaticResource GR_Blue}"/>
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="ImageBorder" Property="BorderBrush" Value="{StaticResource GR_DarkBlue}"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!-- DataTemplate for goofy flyout -->
-        <DataTemplate x:Key="CharacterItemTemplate">
-            <Button Style="{StaticResource ImageFlyoutButtonStyle}"
-                    Command="{Binding DataContext.SelectCharacterCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                    CommandParameter="{Binding}">
-                <Image Source="{Binding Converter={StaticResource IconConverter}}" Stretch="UniformToFill"/>
-            </Button>
-        </DataTemplate>
-
-        <!-- DataTemplate for goofy flyout -->
-        <DataTemplate x:Key="SecondaryCharacterItemTemplate">
-            <Button Style="{StaticResource ImageFlyoutButtonStyle}"
-                    Command="{Binding DataContext.SelectSecondaryCharacterCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                    CommandParameter="{Binding}">
-                <Image Source="{Binding Converter={StaticResource IconConverter}}" Stretch="UniformToFill"/>
-            </Button>
-        </DataTemplate>
     </Window.Resources>
     <Grid>
         <DockPanel>
@@ -107,7 +53,7 @@
                         </Button>
 
                         <!-- Flyout Popup For Main -->
-                        <Popup Name="ImageFlyout" Grid.Row="0" PlacementTarget="{Binding ElementName=ImageSelectorButton}" Placement="Bottom" IsOpen="{Binding IsFlyoutOpen}" StaysOpen="False"
+                        <Popup Name="ImageFlyout" Grid.Row="0" PlacementTarget="{Binding ElementName=ImageSelectorButton}" Placement="Bottom" IsOpen="{Binding IsOppFlyoutOpen}" StaysOpen="False"
                             AllowsTransparency="True" PopupAnimation="Slide">
                             <Border Background="{StaticResource BG_DarkBlue}" BorderBrush="{StaticResource FG_BlueLabel}" BorderThickness="1" CornerRadius="0" Padding="0">
                                 <Border.Effect>
@@ -282,7 +228,35 @@
 
         <Border BorderBrush="{StaticResource GR_DarkBlue}" BorderThickness="4" Margin="15, 15, 0, 0" Width="128" Height="128" HorizontalAlignment="Left" VerticalAlignment="Top">
             <Border BorderBrush="{StaticResource FG_Gold}" BorderThickness="4">
-                <Image Source="pack://application:,,,/ImageResources/Portraits/wrastor_portrait.png" Panel.ZIndex="1000"/>
+                <Grid>
+                    <!--<Image Source="pack://application:,,,/ImageResources/Portraits/wrastor_portrait.png" Panel.ZIndex="1000"/>-->
+
+                    <!-- Button For Main -->
+                    <Button Name="MySelectorButton" Grid.Row="0" Width="120" Height="120" Margin="0, 0, 0, 0" HorizontalAlignment="Left" Command="{Binding ShowMyFlyoutCommand}"
+                                BorderThickness="2" BorderBrush="Transparent" Style="{StaticResource MainImageButtonStyle}" Panel.ZIndex="1000">
+                        <Button.Background>
+                            <ImageBrush ImageSource="{Binding MySelectedCharPortrait}" Stretch="UniformToFill" />
+                        </Button.Background>
+                    </Button>
+
+                    <!-- Flyout Popup For Main -->
+                    <Popup Name="MyFlyout" Grid.Row="0" PlacementTarget="{Binding ElementName=MySelectorButton}" Placement="Bottom" IsOpen="{Binding IsMyFlyoutOpen}" StaysOpen="False"
+                            AllowsTransparency="True" PopupAnimation="Slide">
+                        <Border Background="{StaticResource BG_DarkBlue}" BorderBrush="{StaticResource FG_BlueLabel}" BorderThickness="1" CornerRadius="0" Padding="0">
+                            <Border.Effect>
+                                <DropShadowEffect Color="Black" Direction="315" ShadowDepth="5" Opacity="0.3"/>
+                            </Border.Effect>
+
+                            <ItemsControl ItemsSource="{Binding AvailableCharacters}" ItemTemplate="{StaticResource MyCharacterItemTemplate}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Width="280" Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </Border>
+                    </Popup>
+                </Grid>
             </Border>
         </Border>
 

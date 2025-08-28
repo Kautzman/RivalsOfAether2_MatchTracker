@@ -22,12 +22,15 @@ namespace Rivals2Tracker
         }
 
         public DelegateCommand SaveAndCloseCommand { get; set; }
+        public DelegateCommand CancelCommand { get; set; }
+
         public DelegateCommand DeleteMatchCommand { get; set; }
 
         public MatchDetails_VM(MatchResult matchResult)
         {
             LoadedMatch = matchResult;
             SaveAndCloseCommand = new DelegateCommand(SaveAndClose);
+            CancelCommand = new DelegateCommand(Cancel);
             DeleteMatchCommand = new DelegateCommand(DeleteMatch);
         }
 
@@ -35,6 +38,10 @@ namespace Rivals2Tracker
         {
             RivalsORM.UpdateMatch(LoadedMatch);
             MatchHistoryUpdateEvent.PublishMatchSaved(LoadedMatch);
+            Close?.Invoke();
+        }
+        private void Cancel()
+        {
             Close?.Invoke();
         }
 

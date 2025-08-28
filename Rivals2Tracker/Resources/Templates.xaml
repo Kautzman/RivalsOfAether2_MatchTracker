@@ -208,4 +208,31 @@
             </StackPanel>
         </Grid>
     </DataTemplate>
+
+    <!-- DataTemplate for goofy flyout -->
+    <DataTemplate x:Key="MyCharacterItemTemplate">
+        <Button Style="{StaticResource ImageFlyoutButtonStyle}"
+                   Command="{Binding DataContext.SelectMyCharacterCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                   CommandParameter="{Binding}">
+            <Image Source="{Binding Converter={StaticResource IconConverter}}" Stretch="UniformToFill"/>
+        </Button>
+    </DataTemplate>
+
+    <!-- DataTemplate for goofy flyout -->
+    <DataTemplate x:Key="CharacterItemTemplate">
+        <Button Style="{StaticResource ImageFlyoutButtonStyle}"
+                   Command="{Binding DataContext.SelectCharacterCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                   CommandParameter="{Binding}">
+            <Image Source="{Binding Converter={StaticResource IconConverter}}" Stretch="UniformToFill"/>
+        </Button>
+    </DataTemplate>
+
+    <!-- DataTemplate for goofy flyout -->
+    <DataTemplate x:Key="SecondaryCharacterItemTemplate">
+        <Button Style="{StaticResource ImageFlyoutButtonStyle}"
+                   Command="{Binding DataContext.SelectSecondaryCharacterCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                   CommandParameter="{Binding}">
+            <Image Source="{Binding Converter={StaticResource IconConverter}}" Stretch="UniformToFill" />
+        </Button>
+    </DataTemplate>
 </ResourceDictionary>

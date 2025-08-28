@@ -61,18 +61,20 @@
                 <Label Content="Notes" FontFamily="Franklin Gothic Demi" FontSize="20" Width="240" HorizontalAlignment="Left" Foreground="#DEDEDE" HorizontalContentAlignment="Right"/>
                 <TextBox Text="{Binding LoadedMatch.Notes, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" VerticalContentAlignment="Top" TextWrapping="Wrap" Width="340" Height="80" Margin="250, 0, 0, 0" FontFamily="Franklin Gothic Demi" FontSize="18" HorizontalAlignment="Left" Background="{StaticResource BG_DarkBlue}"  />
             </Grid>
+        </StackPanel>
 
-            <Grid Margin="0, 50, 0, 0">
-            <Button Content="Save and Close" Margin="0, 10, 20, 0" Width="200" Height="35" Foreground="{StaticResource FG_BlueLabel}"
+        <Grid Margin="0, 50, 0, 20" VerticalAlignment="Bottom">
+            <Button Content="Save" Margin="0, 10, 150, 0" Width="120" Height="35" Foreground="{StaticResource FG_BlueLabel}"
                 FontSize="22" FontFamily="Franklin Gothic Demi Cond" BorderThickness="1" Background="{StaticResource BG_DarkBlue}"
                 Command="{Binding SaveAndCloseCommand}" HorizontalAlignment="Right"/>
 
+            <Button Content="Cancel" Margin="0, 10, 20, 0" Width="120" Height="35" Foreground="{StaticResource FG_BlueLabel}"
+                FontSize="22" FontFamily="Franklin Gothic Demi Cond" BorderThickness="1" Background="{StaticResource BG_DarkBlue}"
+                Command="{Binding CancelCommand}" HorizontalAlignment="Right"/>
 
             <Button Content="Delete Match" Margin="20, 10, 0, 0" Width="170" Height="35" Foreground="{StaticResource FG_BlueLabel}"
                     FontSize="22" FontFamily="Franklin Gothic Demi Cond" BorderThickness="1" Background="{StaticResource BG_DarkBlue}"
                     Command="{Binding DeleteMatchCommand}" HorizontalAlignment="Left"/>
-            </Grid>
-
-        </StackPanel>
+        </Grid>
     </Grid>
 </kwin:kWindow>

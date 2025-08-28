@@ -1,0 +1,8 @@
+MatchResult.MyChar was hard-set to Wrastor
+	? Make a column in the DB for 'my character'
+	+ Store it in ActiveMatch.Me.Character
+	+ Write it on match complete
+	+ Read it back on match history
+	+ Add column to meta data to store last saved character
+
+Make characters not 'stringly' typed?  Maybe?
