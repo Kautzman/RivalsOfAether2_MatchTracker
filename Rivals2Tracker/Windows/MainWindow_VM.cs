@@ -436,8 +436,8 @@ namespace Rivals2Tracker
             MatchHistoryUpdateEvent.MatchSaved += UpdateMatchHistory;
 
             SetupImages();
-            //GetMetadata();
-            //GetMatches(true);
+            GetMetadata();
+            GetMatches(true);
 
             RaisePropertyChanged("ActiveMatch");
         }
@@ -446,8 +446,8 @@ namespace Rivals2Tracker
         {
             AvailableCharacters = new ObservableCollection<string>(GlobalData.AllCharacters);
 
-            //string defaultCharacter = RivalsORM.GetPlayerCharacter();
-            string defaultCharacter = "Wrastor";  // Debug
+            string defaultCharacter = RivalsORM.GetPlayerCharacter();
+            // string defaultCharacter = "Wrastor";  // Debug
             
             if (GlobalData.CharacterPortraitDict.TryGetValue(defaultCharacter, out string imagePath))
             {
