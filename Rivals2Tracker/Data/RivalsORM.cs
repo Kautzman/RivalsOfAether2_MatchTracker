@@ -97,7 +97,7 @@ namespace Rivals2Tracker.Data
             return ExecuteQueryForValue("SELECT IsFirstStart FROM Metadata LIMIT 1");
         }
 
-        public static string SetPlayerCharacter(string newValue)
+        public static string SetMetaDataValue(string field, string newValue)
         {
             using (conn)
             {
@@ -106,74 +106,15 @@ namespace Rivals2Tracker.Data
                 SqliteCommand cmd = new SqliteCommand();
                 cmd.Connection = conn;
 
-                cmd.CommandText = $"UPDATE Metadata SET PlayerCharacter = '{newValue}' WHERE ID = '1'";
-
+{
+                    cmd.CommandText = $"UPDATE Metadata SET {field} = '{newValue}' WHERE ID = '1'";
+}
                 Task<object?> rowID = cmd.ExecuteScalarAsync();
 
                 if (rowID == null)
                     return "Error: New Row is Null";
 
                 return "Successfully set Player Character Value";
-            }
-        }
-
-        public static string SetPlayerName(string newValue)
-        {
-            using (conn)
-            {
-                conn.Open();
-
-                SqliteCommand cmd = new SqliteCommand();
-                cmd.Connection = conn;
-
-                cmd.CommandText = $"UPDATE Metadata SET PlayerName = '{newValue}' WHERE ID = '1'";
-
-                Task<object?> rowID = cmd.ExecuteScalarAsync();
-
-                if (rowID == null)
-                    return "Error: New Row is Null";
-
-                return "Successfully set Player Name Value";
-            }
-        }
-
-        public static string SetPatchValue(string newValue)
-        {
-            using (conn)
-            {
-                conn.Open();
-
-                SqliteCommand cmd = new SqliteCommand();
-                cmd.Connection = conn;
-
-                cmd.CommandText = $"UPDATE Metadata SET Patch = '{newValue}' WHERE ID = '1'";
-
-                Task<object?> rowID = cmd.ExecuteScalarAsync();
-
-                if (rowID == null)
-                    return "Error: New Row is Null";
-
-                return "Successfully set Patch Value";
-            }
-        }
-
-        public static string SetIsFirstStart()
-        {
-            using (conn)
-            {
-                conn.Open();
-
-                SqliteCommand cmd = new SqliteCommand();
-                cmd.Connection = conn;
-
-                cmd.CommandText = "UPDATE Metadata SET IsFirstStart = 1";
-
-                Task<object?> rowID = cmd.ExecuteScalarAsync();
-
-                if (rowID == null)
-                    return "Error: New Row is Null";
-
-                return "Successfully set First Start Value";
             }
         }
 
