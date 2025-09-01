@@ -50,8 +50,8 @@ namespace Rivals2Tracker
 
         private void SaveAndClose()
         {
-            RivalsORM.SetPatchValue(Patch);
-            RivalsORM.SetPlayerName(PlayerName);
+            RivalsORM.SetMetaDataValue("Patch", Patch);
+            RivalsORM.SetMetaDataValue("PlayerName", PlayerName);
             Close?.Invoke();
         }
     }

@@ -51,19 +51,19 @@ namespace Rivals2Tracker.Data
         // TODO:  Update resources to point to portraits, not icons
         public static Dictionary<string, string> CharacterPortraitDict = new Dictionary<string, string>
         {
-            { "Absa", "/Resources/CharacterIcons/absa.png" },
-            { "Clairen", "/Resources/CharacterIcons/clairen.png" },
-            { "Etalus", "/Resources/CharacterIcons/etalus.png" },
-            { "Fleet", "/Resources/CharacterIcons/fleet.png" },
-            { "Kragg",  "/Resources/CharacterIcons/kragg.png" },
-            { "Loxodont", "/Resources/CharacterIcons/loxodont.png" },
-            { "Maypul", "/Resources/CharacterIcons/maypul.png" },
-            { "Olympia", "/Resources/CharacterIcons/olympia.png" },
-            { "Orcane", "/Resources/CharacterIcons/orcane.png" },
-            { "Ranno", "/Resources/CharacterIcons/ranno.png" },
-            { "Wrastor", "/Resources/CharacterIcons/wrastor.png" },
-            { "Forsburn", "/Resources/CharacterIcons/yeen.png" },
-            { "Zetterburn", "/Resources/CharacterIcons/zetterburn.png" }
+            { "Absa", "/ImageResources/Portraits/absa_portrait.png" },
+            { "Clairen", "/ImageResources/Portraits/clairen_portrait.png" },
+            { "Etalus", "/ImageResources/Portraits/etalus_portrait.png" },
+            { "Fleet", "/ImageResources/Portraits/fleet_portrait.png" },
+            { "Kragg",  "/ImageResources/Portraits/kragg_portrait.png" },
+            { "Loxodont", "/ImageResources/Portraits/loxodont_portrait.png" },
+            { "Maypul", "/ImageResources/Portraits/maypul_portrait.png" },
+            { "Olympia", "/ImageResources/Portraits/olympia_portrait.png" },
+            { "Orcane", "/ImageResources/Portraits/orcane_portrait.png" },
+            { "Ranno", "/ImageResources/Portraits/ranno_portrait.png" },
+            { "Wrastor", "/ImageResources/Portraits/wrastor_portrait.png" },
+            { "Forsburn", "/ImageResources/Portraits/forsburn_portrait.png" },
+            { "Zetterburn", "/ImageResources/Portraits/zetterburn_portrait.png" }
         };
 
         public static bool IsCurrentSeason(string patch)

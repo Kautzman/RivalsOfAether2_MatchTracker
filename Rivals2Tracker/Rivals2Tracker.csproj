@@ -13,7 +13,20 @@
   <ItemGroup>
     <None Remove="Fonts\after_disaster.ttf" />
     <None Remove="ImageResources\embossLogo2.png" />
+    <None Remove="ImageResources\Portraits\absa_portrait.png" />
+    <None Remove="ImageResources\Portraits\clairen_portrait.png" />
+    <None Remove="ImageResources\Portraits\etalus_portrait.png" />
+    <None Remove="ImageResources\Portraits\fleet_portrait.png" />
+    <None Remove="ImageResources\Portraits\forsburn_portrait.png" />
+    <None Remove="ImageResources\Portraits\kragg_portrait.png" />
+    <None Remove="ImageResources\Portraits\loxodont_portrait.png" />
+    <None Remove="ImageResources\Portraits\maypul_portrait.png" />
+    <None Remove="ImageResources\Portraits\olympia_portrait.png" />
+    <None Remove="ImageResources\Portraits\orcane_portrait.png" />
+    <None Remove="ImageResources\Portraits\ranno_portrait.png" />
     <None Remove="ImageResources\Portraits\wrastor_portrait.png" />
+    <None Remove="ImageResources\Portraits\wrastor_portrait_lovers.png" />
+    <None Remove="ImageResources\Portraits\zetterburn_portrait.png" />
     <None Remove="Resources\CharacterIcons\absa.png" />
     <None Remove="Resources\CharacterIcons\clairen.png" />
     <None Remove="Resources\CharacterIcons\etalus.png" />
@@ -33,6 +46,20 @@
     <None Remove="Resources\Icons\Windowing\Minimize.png" />
     <None Remove="Resources\Icons\Windowing\WindowOne.png" />
     <None Remove="Resources\Icons\Windowing\WindowTwo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="ImageResources\Portraits\kragg_portrait.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="ImageResources\Portraits\loxodont_portrait.png" />
+    <Resource Include="ImageResources\Portraits\maypul_portrait.png" />
+    <Resource Include="ImageResources\Portraits\olympia_portrait.png" />
+    <Resource Include="ImageResources\Portraits\orcane_portrait.png" />
+    <Resource Include="ImageResources\Portraits\ranno_portrait.png" />
+    <Resource Include="ImageResources\Portraits\wrastor_portrait_lovers.png" />
+    <Resource Include="ImageResources\Portraits\zetterburn_portrait.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -57,6 +84,11 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="ImageResources\embossLogo2.png" />
+    <Resource Include="ImageResources\Portraits\absa_portrait.png" />
+    <Resource Include="ImageResources\Portraits\clairen_portrait.png" />
+    <Resource Include="ImageResources\Portraits\etalus_portrait.png" />
+    <Resource Include="ImageResources\Portraits\fleet_portrait.png" />
+    <Resource Include="ImageResources\Portraits\forsburn_portrait.png" />
     <Resource Include="ImageResources\Portraits\wrastor_portrait.png" />
     <Resource Include="Resources\CharacterIcons\absa.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -4,6 +4,7 @@
                     xmlns:converters="clr-namespace:Rivals2Tracker.Resources.Converters">
 
     <converters:IconConverter x:Key="IconConverter" />
+    <converters:PortraitConverter x:Key="PortraitConverter" />
     <converters:WinLoseColorConverter x:Key="WinLoseColorConverter" />
     <converters:WinRatioToBackgroundConverter x:Key="WinRatioToColor" />
 
@@ -214,7 +215,7 @@
         <Button Style="{StaticResource ImageFlyoutButtonStyle}"
                    Command="{Binding DataContext.SelectMyCharacterCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                    CommandParameter="{Binding}">
-            <Image Source="{Binding Converter={StaticResource IconConverter}}" Stretch="UniformToFill"/>
+            <Image Source="{Binding Converter={StaticResource PortraitConverter}}" Stretch="UniformToFill"/>
         </Button>
     </DataTemplate>
 

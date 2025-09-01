@@ -224,6 +224,7 @@
         <Setter Property="Foreground" Value="{StaticResource FG_BlueLabel}" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="Height" Value="25" />
+        <Setter Property="Opacity" Value="10" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
 
         <Setter Property="Template">
@@ -241,6 +242,7 @@
                         </Trigger>-->
                         <Trigger Property="IsFocused" Value="True">
                             <Setter TargetName="Bd" Property="Background" Value="{StaticResource FG_BlueLabel}"/>
+                            <Setter Property="Opacity" Value="100" />
                             <Setter Property="Foreground" Value="{StaticResource BG_DarkBlue}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>

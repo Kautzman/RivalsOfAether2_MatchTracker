@@ -132,11 +132,11 @@ namespace Rivals2Tracker
 
                 if ((value as RivalsMatch).Notes.Length == 0)
                 {
-                    NotesVisibility = Visibility.Visible;
+                    IsNotesPhVisible = Visibility.Visible;
                 }
                 else
                 {
-                    NotesVisibility = Visibility.Collapsed;
+                    IsNotesPhVisible = Visibility.Collapsed;
                 }
 
                 SetProperty(ref _activeMatch, value);
@@ -190,7 +190,8 @@ namespace Rivals2Tracker
                 {
                     LocalPlayerNameVisibility = Visibility.Collapsed;
                 }
-                
+
+                RaisePropertyChanged(nameof(IsMyTagPhVisible));
                 SetProperty(ref _myName, value);
             }
         }
@@ -207,13 +208,6 @@ namespace Rivals2Tracker
         {
             get { return _localPlayerNameVisibility; }
             set { SetProperty(ref _localPlayerNameVisibility, value); }
-        }
-
-        private Visibility _notesVisibility = Visibility.Visible;
-        public Visibility NotesVisibility
-        {
-            get { return _notesVisibility; }
-            set { SetProperty(ref _notesVisibility, value); }
         }
 
         private Visibility _completedLabelVisibility = Visibility.Collapsed;
@@ -237,6 +231,49 @@ namespace Rivals2Tracker
             set { SetProperty(ref _playerMatchHistoryViewVisibility, value); }
         }
 
+        private Visibility _IsOpponentTagPhVisible = Visibility.Visible;
+        public Visibility IsOpponentTagPhVisible
+        {
+            get
+            {
+                return String.IsNullOrEmpty(OpponentName) ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
+
+        private Visibility _isOpponentEloPhVisible = Visibility.Visible;
+        public Visibility IsOpponentEloPhVisible
+        {
+            get
+            {
+                return String.IsNullOrEmpty(OpponentElo) ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
+
+        private Visibility _IsMyTagPhVisible = Visibility.Visible;
+        public Visibility IsMyTagPhVisible
+        {
+            get
+            {
+                return String.IsNullOrEmpty(MyName) ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
+
+        private Visibility _isMyEloPhVisible = Visibility.Visible;
+        public Visibility IsMyEloPhVisible
+        {
+            get
+            {
+                return String.IsNullOrEmpty(MyElo) ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
+
+        private Visibility _isNotesPhVisible = Visibility.Visible;
+        public Visibility IsNotesPhVisible
+        {
+            get { return _isNotesPhVisible; }
+            set { SetProperty(ref _isNotesPhVisible, value); }
+        }
+
         private string _myElo;
         public string MyElo
         {
@@ -248,6 +285,7 @@ namespace Rivals2Tracker
                     ActiveMatch.Me.Elo = value;
                 }
 
+                RaisePropertyChanged(nameof(IsMyEloPhVisible));
                 SetProperty(ref _myElo, value);
             }
         }
@@ -263,6 +301,7 @@ namespace Rivals2Tracker
                     ActiveMatch.Opponent.Elo = value;
                 }
 
+                RaisePropertyChanged(nameof(IsOpponentEloPhVisible));
                 SetProperty(ref _opponentElo, value);
             }
         }
@@ -278,6 +317,7 @@ namespace Rivals2Tracker
                     ActiveMatch.Opponent.Name = value;
                 }
 
+                RaisePropertyChanged(nameof(IsOpponentTagPhVisible));
                 SetProperty(ref _opponentName, value);
             }
         }
@@ -436,8 +476,8 @@ namespace Rivals2Tracker
             MatchHistoryUpdateEvent.MatchSaved += UpdateMatchHistory;
 
             SetupImages();
-            GetMetadata();
-            GetMatches(true);
+            //GetMetadata();
+            //GetMatches(true);
 
             RaisePropertyChanged("ActiveMatch");
         }
@@ -446,8 +486,8 @@ namespace Rivals2Tracker
         {
             AvailableCharacters = new ObservableCollection<string>(GlobalData.AllCharacters);
 
-            string defaultCharacter = RivalsORM.GetPlayerCharacter();
-            // string defaultCharacter = "Wrastor";  // Debug
+            // string defaultCharacter = RivalsORM.GetPlayerCharacter();
+            string defaultCharacter = "Wrastor";  // Debug
             
             if (GlobalData.CharacterPortraitDict.TryGetValue(defaultCharacter, out string imagePath))
             {
@@ -469,7 +509,7 @@ namespace Rivals2Tracker
                 CurrentPatch = RivalsORM.GetPatchValue();
             }
 
-            RivalsORM.SetIsFirstStart();
+            RivalsORM.SetMetaDataValue("IsFirstStart", "1");
         }
 
         private async Task SetMatchWin()
@@ -698,7 +738,7 @@ namespace Rivals2Tracker
         {
             if (!string.IsNullOrEmpty(character))
             {
-                if (GlobalData.CharacterImageDict.TryGetValue(character, out string imagePath))
+                if (GlobalData.CharacterPortraitDict.TryGetValue(character, out string imagePath))
                 {
                     MySelectedCharPortrait = imagePath;
                     MyCharacter = character;

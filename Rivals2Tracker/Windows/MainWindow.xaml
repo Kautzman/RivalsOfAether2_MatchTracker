@@ -36,6 +36,10 @@
                 <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Panel.ZIndex="1000">
                     <Grid Margin="145, 8, 0, 0">
 
+                        <Label Content="Set My Tag..." Visibility="{Binding IsMyTagPhVisible}" IsHitTestVisible="False" FontStyle="Italic" FontSize="16" Margin="105, 15, 0, 0" Foreground="{StaticResource FG_Control_Disabled}"/>
+                        <Label Content="Set My Elo..." Visibility="{Binding IsMyEloPhVisible}" IsHitTestVisible="False" FontStyle="Italic" FontSize="16" Margin="105, 0, 0, 23" VerticalAlignment="Bottom" Foreground="{StaticResource FG_Control_Disabled}"/>
+
+
                         <TextBox Text="{Binding MyName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="1" KeyDown="TextBox_KeyDown" MinWidth="160" FontFamily="Franklin Gothic Demi Cond" Background="Transparent" FontSize="42" Height="60" VerticalAlignment="Top" />
                         <!--<Label Content="INSERT NAME" FontFamily="Franklin Gothic Demi Cond" FontSize="36" Height="60" VerticalAlignment="Top" Foreground="{StaticResource FG_GreyLabel}" IsHitTestVisible="False" Visibility="{Binding LocalPlayerNameVisibility}"/>-->
                         <TextBox Text="{Binding MyElo, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="2" KeyDown="TextBox_KeyDown" MinWidth="160" Margin="0, 0, 0, 10" FontFamily="{StaticResource AfterDisaster}" Background="Transparent" Foreground="{StaticResource FG_WhiteLabel}" FontSize="42" Height="50" VerticalAlignment="Bottom" />
@@ -99,9 +103,14 @@
                         </Grid>
 
                         <Grid Margin="20, 0, 0, 0">
-                            <!--<Label Content="Awaiting Data..." Margin="85, 5, 0, 0" FontFamily="Franklin Gothic Demi Cond" FontSize="32" Height="60" VerticalAlignment="Top" Foreground="{StaticResource FG_GreyLabel}" IsHitTestVisible="False" Visibility="{Binding AwaitingDataVisibility}"/>-->
-                            <TextBox Text="{Binding OpponentName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="3" KeyDown="TextBox_KeyDown" MinWidth="240" Margin="105, 0, 0, 0" FontFamily="Franklin Gothic Demi Cond" Background="Transparent" FontSize="42" Height="60" VerticalAlignment="Top" />
-                            <TextBox Text="{Binding OpponentElo, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="4" KeyDown="TextBox_KeyDown" MinWidth="160" Margin="105, 0, 0, 10" FontFamily="{StaticResource AfterDisaster}" Background="Transparent" Foreground="{StaticResource FG_WhiteLabel}" FontSize="42" Height="50" VerticalAlignment="Bottom" />
+                            <!-- TODO: This whole pattern with the PH labels is nonsense.  This needs to be a usercontrol -->
+                            <Label Content="Set Opponent Tag..." Visibility="{Binding IsOpponentTagPhVisible}" IsHitTestVisible="False" FontStyle="Italic" FontSize="16" Margin="105, 15, 0, 0" Foreground="{StaticResource FG_Control_Disabled}"/>
+                            <Label Content="Set Opponent Elo..." Visibility="{Binding IsOpponentTagPhVisible}" IsHitTestVisible="False" FontStyle="Italic" FontSize="16" Margin="105, 0, 0, 23" VerticalAlignment="Bottom" Foreground="{StaticResource FG_Control_Disabled}"/>
+
+                            <TextBox Text="{Binding OpponentName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="3" KeyDown="TextBox_KeyDown" MinWidth="240"
+                                     Margin="105, 0, 0, 0" FontFamily="Franklin Gothic Demi Cond" Background="Transparent" FontSize="42" Height="60" VerticalAlignment="Top" />
+                            <TextBox Text="{Binding OpponentElo, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="4" KeyDown="TextBox_KeyDown" MinWidth="160"
+                                     Margin="105, 0, 0, 10" FontFamily="{StaticResource AfterDisaster}" Background="Transparent" Foreground="{StaticResource FG_WhiteLabel}" FontSize="42" Height="50" VerticalAlignment="Bottom" />
                         </Grid>
                     </Grid>
                 </StackPanel>
@@ -142,6 +151,8 @@
                     </StackPanel>
 
                     <!--<Label Content="Write some notes here about the match if you want" Visibility="{Binding NotesVisibility}" Height="60" Margin="0, 0, 20, 5" VerticalAlignment="Bottom" HorizontalAlignment="Right" FontSize="24" Foreground="{StaticResource FG_GreyLabel}"/>-->
+
+                    <Label Content="Set My Elo..." Visibility="{Binding IsNotesPhVisible}" IsHitTestVisible="False" FontStyle="Italic" FontSize="16" Margin="105, 0, 0, 23" VerticalAlignment="Bottom" Foreground="{StaticResource FG_Control_Disabled}"/>
 
                     <TextBox Text="{Binding ActiveMatchNotes}" TabIndex="5" KeyDown="TextBox_KeyDown" FontFamily="Franklin Gothic Demi" Width="800" Background="Transparent" FontSize="24" Height="60" Margin="0, 0, 20, 10"
                          VerticalAlignment="Bottom" HorizontalAlignment="Right" HorizontalContentAlignment="Right"/>
