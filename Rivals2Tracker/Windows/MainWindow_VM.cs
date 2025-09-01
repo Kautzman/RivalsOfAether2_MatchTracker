@@ -17,6 +17,8 @@ namespace Rivals2Tracker
 {
     class MainWindow_VM : BindableBase
     {
+
+        #region Variables
         private ObservableCollection<MatchResult> _matchResults = new();
         public ObservableCollection<MatchResult> MatchResults
         {
@@ -444,6 +446,9 @@ namespace Rivals2Tracker
         }
 
         public ObservableCollection<string> AvailableCharacters { get; set; }
+        #endregion
+
+        #region Commands
 
         public DelegateCommand SetMatchWinCommand { get; private set; }
         public DelegateCommand SetMatchLoseCommand { get; private set; }
@@ -458,6 +463,8 @@ namespace Rivals2Tracker
         public DelegateCommand<string> SelectMyCharacterCommand { get; set; }
         public DelegateCommand<string> SelectCharacterCommand { get; set; }
         public DelegateCommand<string> SelectSecondaryCharacterCommand { get; set; }
+
+        #endregion
 
         public MainWindow_VM()
         {
@@ -476,8 +483,11 @@ namespace Rivals2Tracker
             MatchHistoryUpdateEvent.MatchSaved += UpdateMatchHistory;
 
             SetupImages();
-            //GetMetadata();
-            //GetMatches(true);
+
+#if !DEBUGNODB
+            GetMetadata();
+            GetMatches(true);
+#endif
 
             RaisePropertyChanged("ActiveMatch");
         }
@@ -486,9 +496,12 @@ namespace Rivals2Tracker
         {
             AvailableCharacters = new ObservableCollection<string>(GlobalData.AllCharacters);
 
-            // string defaultCharacter = RivalsORM.GetPlayerCharacter();
-            string defaultCharacter = "Wrastor";  // Debug
-            
+#if DEBUGNODB
+            string defaultCharacter = "Wrastor";
+#else
+            string defaultCharacter = RivalsORM.GetPlayerCharacter();
+#endif
+
             if (GlobalData.CharacterPortraitDict.TryGetValue(defaultCharacter, out string imagePath))
             {
                 MySelectedCharPortrait = imagePath;
