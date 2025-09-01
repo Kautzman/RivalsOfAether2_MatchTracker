@@ -83,38 +83,9 @@ namespace Rivals2Tracker
             }
         }
 
-        public string SelectedImagePath
-        {
-            get { return _selectedImagePath; }
-            set
-            {
-                if (_selectedImagePath != value)
-                {
-                    _selectedImagePath = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
         private void ImageSelectorButton_Click(object sender, RoutedEventArgs e)
         {
             ImageFlyout.IsOpen = true;
-        }
-
-        private void FlyoutImageButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is System.Windows.Controls.Button button && button.Tag is string imagePath)
-            {
-                SelectedImagePath = imagePath;
-                ImageFlyout.IsOpen = false;
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

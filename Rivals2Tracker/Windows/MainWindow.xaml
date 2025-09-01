@@ -36,8 +36,8 @@
                 <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Panel.ZIndex="1000">
                     <Grid Margin="145, 8, 0, 0">
 
-                        <Label Content="Set My Tag..." Visibility="{Binding IsMyTagPhVisible}" IsHitTestVisible="False" FontStyle="Italic" FontSize="16" Margin="105, 15, 0, 0" Foreground="{StaticResource FG_Control_Disabled}"/>
-                        <Label Content="Set My Elo..." Visibility="{Binding IsMyEloPhVisible}" IsHitTestVisible="False" FontStyle="Italic" FontSize="16" Margin="105, 0, 0, 23" VerticalAlignment="Bottom" Foreground="{StaticResource FG_Control_Disabled}"/>
+                        <Label Content="Set My Tag..." Visibility="{Binding IsMyTagPhVisible}" IsHitTestVisible="False" FontStyle="Italic" FontSize="16" Margin="5, 15, 0, 0" Foreground="{StaticResource FG_Control_Disabled}"/>
+                        <Label Content="Set My Elo..." Visibility="{Binding IsMyEloPhVisible}" IsHitTestVisible="False" FontStyle="Italic" FontSize="16" Margin="5, 0, 0, 23" VerticalAlignment="Bottom" Foreground="{StaticResource FG_Control_Disabled}"/>
 
 
                         <TextBox Text="{Binding MyName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="1" KeyDown="TextBox_KeyDown" MinWidth="160" FontFamily="Franklin Gothic Demi Cond" Background="Transparent" FontSize="42" Height="60" VerticalAlignment="Top" />
@@ -150,9 +150,8 @@
                         <TextBox Text="{Binding CurrentPatch, UpdateSourceTrigger=PropertyChanged}" FontFamily="{StaticResource AfterDisaster}" Background="Transparent" Foreground="{StaticResource FG_WhiteLabel}" FontSize="42" Height="60" Margin="10, 6, 20, 0"/>
                     </StackPanel>
 
-                    <!--<Label Content="Write some notes here about the match if you want" Visibility="{Binding NotesVisibility}" Height="60" Margin="0, 0, 20, 5" VerticalAlignment="Bottom" HorizontalAlignment="Right" FontSize="24" Foreground="{StaticResource FG_GreyLabel}"/>-->
-
-                    <Label Content="Set My Elo..." Visibility="{Binding IsNotesPhVisible}" IsHitTestVisible="False" FontStyle="Italic" FontSize="16" Margin="105, 0, 0, 23" VerticalAlignment="Bottom" Foreground="{StaticResource FG_Control_Disabled}"/>
+                    <Label Content="Set Match Notes..." Visibility="{Binding IsNotesPhVisible}" IsHitTestVisible="False" FontStyle="Italic" FontSize="16"
+                           Margin="0, 0, 40, 23" Width="135" HorizontalContentAlignment="Right" VerticalAlignment="Bottom" HorizontalAlignment="Right" Foreground="{StaticResource FG_Control_Disabled}"/>
 
                     <TextBox Text="{Binding ActiveMatchNotes}" TabIndex="5" KeyDown="TextBox_KeyDown" FontFamily="Franklin Gothic Demi" Width="800" Background="Transparent" FontSize="24" Height="60" Margin="0, 0, 20, 10"
                          VerticalAlignment="Bottom" HorizontalAlignment="Right" HorizontalContentAlignment="Right"/>
