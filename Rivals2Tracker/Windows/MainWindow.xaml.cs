@@ -23,7 +23,10 @@ namespace Rivals2Tracker
 {
     public partial class MainWindow : kWindow
     {
-        private string _selectedImagePath = "/resources/charactericons/unknown.png"; // Default image
+
+        WindowInteropHelper helper;
+        nint hwnd;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -33,8 +36,8 @@ namespace Rivals2Tracker
         {
             base.OnSourceInitialized(e);
 
-            var helper = new WindowInteropHelper(this);
-            var hwnd = helper.Handle;
+            helper = new WindowInteropHelper(this);
+            hwnd = helper.Handle;
 
             HotKeyManager.RegisterHotKey(hwnd, 1, HotKeyManager.MOD_NONE, (uint)KeyInterop.VirtualKeyFromKey(Key.Scroll));
 
@@ -59,6 +62,19 @@ namespace Rivals2Tracker
             }
 
             return IntPtr.Zero;
+        }
+
+        private void RegisterNewHotkey(uint keycode)
+        {
+            // There is an assumption here that '1' is the index of the hotkey being tracked.  I might not even need to 'unregister' it and instead just
+            // Can overwrite it with RegsiterHotKey() again.
+
+            HotKeyManager.UnregisterHotKey(hwnd, 1);
+
+            // Somehow pass a captured key code from VM to here (uint keycode)
+            // ?? Do I need to do this in codebehind?  Seems like HotKeyManager is a singleton that's globally available.
+
+            HotKeyManager.RegisterHotKey(hwnd, 1, HotKeyManager.MOD_NONE, keycode);
         }
 
         private void OuterBorder_Loaded(object sender, RoutedEventArgs e)
