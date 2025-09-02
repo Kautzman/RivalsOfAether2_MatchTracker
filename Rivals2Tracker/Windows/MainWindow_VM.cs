@@ -33,7 +33,6 @@ namespace Rivals2Tracker
             set { SetProperty(ref _displayedCharacterResults, value); }
         }
 
-
         private MetaDataTable _currentSeasonResults = new();
         public MetaDataTable CurrentSeasonResults
         {
@@ -616,6 +615,16 @@ namespace Rivals2Tracker
 
             GetPlayerInfo();
             ShowPlayerMatchData();
+            RefreshPlaceholderVisibility();
+        }
+
+        private void RefreshPlaceholderVisibility()
+        {
+            RaisePropertyChanged(nameof(IsOpponentTagPhVisible));
+            RaisePropertyChanged(nameof(IsOpponentEloPhVisible));
+            RaisePropertyChanged(nameof(IsMyTagPhVisible));
+            RaisePropertyChanged(nameof(IsMyEloPhVisible));
+            RaisePropertyChanged(nameof(IsNotesPhVisible));
         }
 
         private void GetPlayerInfo()
