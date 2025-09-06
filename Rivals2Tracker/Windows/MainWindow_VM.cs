@@ -9,8 +9,6 @@ using Rivals2Tracker.Models;
 using System.Windows;
 using Rivals2Tracker.Data;
 using System.Diagnostics;
-using Windows.ApplicationModel.VoiceCommands;
-using Prism.Events;
 using Rivals2Tracker.Resources.Events;
 
 namespace Rivals2Tracker
@@ -728,7 +726,7 @@ namespace Rivals2Tracker
 
             foreach (CharacterMetadata character in metadatatable.CharacterData)
             {
-                character.WeightedData.DoTheMath();
+                character.WeightedData.CalculateWeightedElo();
             }
 
             return metadatatable;

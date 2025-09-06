@@ -21,13 +21,17 @@ namespace Rivals2Tracker.Resources.Converters
             string valueString = value?.ToString();
             valueString = new string(valueString.Take(5).ToArray());
 
+            if (valueString.Contains("%"))
+            {
+                valueString = valueString.Substring(0, valueString.Length - 1);
+            }
+
             if (!Double.TryParse(valueString, out double doubleValue))
             {
-                return Brushes.White;
+                return Brushes.Blue;
             }
 
             doubleValue = doubleValue / 100;
-
             doubleValue = Math.Max(0.0, Math.Min(1.0, doubleValue));
 
             if (Math.Abs(doubleValue - 0.5) < 0.0001)
@@ -37,13 +41,13 @@ namespace Rivals2Tracker.Resources.Converters
             {
                 double t = (doubleValue - 0.39) / (0.5 - 0.37);
                 t = Math.Max(0, Math.Min(1, t));
-                return LerpBrush(Color.FromRgb(255, 133, 140), Colors.White, t);
+                return LerpBrush(Color.FromRgb(255, 133, 140), Color.FromRgb(220, 220, 220), t);
             }
             else
             {
                 double t = (doubleValue - 0.5) / (0.61 - 0.5);
                 t = Math.Max(0, Math.Min(1, t));
-                return LerpBrush(Colors.White, Color.FromRgb(133, 255, 188), t);
+                return LerpBrush(Color.FromRgb(220, 220, 220), Color.FromRgb(133, 255, 188), t);
             }
         }
 

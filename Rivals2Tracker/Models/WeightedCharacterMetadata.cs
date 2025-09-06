@@ -126,7 +126,7 @@ namespace Rivals2Tracker.Models
         }
 
         // Lambda is the strength knob for Elo adjustment here
-        public void DoTheMath(double lambda = 0.8)
+        public void CalculateWeightedElo(double lambda = 0.8)
         {
             double totalScore = 0.0;
             double totalExpect = 0.0;
