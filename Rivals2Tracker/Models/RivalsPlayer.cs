@@ -21,7 +21,11 @@ namespace Rivals2Tracker.Models
         public string Elo
         {
             get { return _elo; }
-            set { SetProperty(ref _elo, value); }
+            set
+            {
+                SetProperty(ref _elo, value);
+                EloString = value;
+            }
         }
 
         public RivalsPlayer(string playerText, string eloText)

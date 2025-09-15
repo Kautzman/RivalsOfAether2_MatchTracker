@@ -45,7 +45,7 @@ namespace Rivals2Tracker.Models
 
             nint hWnd = FindWindow(null, "Rivals2  ");
             // nint hWnd = FindWindow(null, "Photos Legacy");
-            // nint hWnd = FindWindow(null, "CaptureAll-08-09-23-40-46.jpg");
+            // nint hWnd = FindWindow(null, "CaptureAll-09-01-19-56-00.jpg");
             if (hWnd == IntPtr.Zero)
             {
                 Console.WriteLine("Window not found.");
