@@ -39,17 +39,17 @@
                         <Label Content="Set My Tag..." Visibility="{Binding IsMyTagPhVisible}" IsHitTestVisible="False" FontStyle="Italic" FontSize="16" Margin="5, 15, 0, 0" Foreground="{StaticResource FG_Control_Disabled}"/>
                         <Label Content="Set My Elo..." Visibility="{Binding IsMyEloPhVisible}" IsHitTestVisible="False" FontStyle="Italic" FontSize="16" Margin="5, 0, 0, 23" VerticalAlignment="Bottom" Foreground="{StaticResource FG_Control_Disabled}"/>
 
-
-                        <TextBox Text="{Binding MyName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="1" KeyDown="TextBox_KeyDown" MinWidth="160" FontFamily="Franklin Gothic Demi Cond" Background="Transparent" FontSize="42" Height="60" VerticalAlignment="Top" />
-                        <!--<Label Content="INSERT NAME" FontFamily="Franklin Gothic Demi Cond" FontSize="36" Height="60" VerticalAlignment="Top" Foreground="{StaticResource FG_GreyLabel}" IsHitTestVisible="False" Visibility="{Binding LocalPlayerNameVisibility}"/>-->
-                        <TextBox Text="{Binding MyElo, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="2" KeyDown="TextBox_KeyDown" MinWidth="160" Margin="0, 0, 0, 10" FontFamily="{StaticResource AfterDisaster}" Background="Transparent" Foreground="{StaticResource FG_WhiteLabel}" FontSize="42" Height="50" VerticalAlignment="Bottom" />
+                        <TextBox Text="{Binding MyName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="1" KeyDown="TextBox_KeyDown" FontFamily="Franklin Gothic Demi Cond" Background="Transparent"
+                                 Height="60" VerticalAlignment="Top" Style="{StaticResource MatchInformationTextBoxes}" />
+                        <TextBox Text="{Binding MyElo, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="2" KeyDown="TextBox_KeyDown" Margin="0, 0, 0, 10" FontFamily="{StaticResource AfterDisaster}" Background="Transparent"
+                                 Foreground="{StaticResource FG_WhiteLabel}" Height="50" VerticalAlignment="Bottom" Style="{StaticResource MatchInformationTextBoxes}"/>
                     </Grid>
 
-                    <Label Content="VS" FontFamily="Franklin Gothic Demi Cond" Foreground="{StaticResource FG_WhiteLabel}" FontSize="42" Margin="30, 0, 0, 0" VerticalAlignment="Center" />
+                    <Label Content="VS" FontFamily="Franklin Gothic Demi Cond" Foreground="{StaticResource FG_WhiteLabel}" FontSize="42" Margin="10, 0, 0, 0" VerticalAlignment="Center" />
 
                     <Grid Margin="0, 8, 0, 0">
                         <!-- Button For Main -->
-                        <Button Name="ImageSelectorButton" Grid.Row="0" Width="74" Height="74" Margin="15, 20, 20, 20" HorizontalAlignment="Left" Command="{Binding ShowFlyoutCommand}"
+                        <Button Name="ImageSelectorButton" Grid.Row="0" Width="60" Height="60" Margin="15, 20, 20, 20" HorizontalAlignment="Left" Command="{Binding ShowFlyoutCommand}"
                                 BorderThickness="2" BorderBrush="Transparent" Style="{StaticResource MainImageButtonStyle}">
                             <Button.Background>
                                 <ImageBrush ImageSource="{Binding SelectedImagePath}" Stretch="UniformToFill"/>
@@ -64,18 +64,22 @@
                                     <DropShadowEffect Color="Black" Direction="315" ShadowDepth="5" Opacity="0.3"/>
                                 </Border.Effect>
 
-                                <ItemsControl ItemsSource="{Binding AvailableCharacters}" ItemTemplate="{StaticResource CharacterItemTemplate}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <WrapPanel Width="280" Orientation="Horizontal"/>
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                </ItemsControl>
+                                <StackPanel>
+                                    <Label Content="Set Opponent Main" FontSize="22" FontFamily="Franklin Gothic Demi Cond" HorizontalAlignment="Center" Foreground="{StaticResource FG_BlueLabel}"/>
+                                    <Border BorderThickness="0, 0, 0, 1" Margin="20, 0, 20, 0" BorderBrush="White"/>
+                                    <ItemsControl ItemsSource="{Binding AvailableCharacters}" ItemTemplate="{StaticResource CharacterItemTemplate}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel Width="280" Orientation="Horizontal"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                    </ItemsControl>
+                                </StackPanel>
                             </Border>
                         </Popup>
 
                         <!-- Button For Secondary -->
-                        <Grid Margin="66, 50, 0, 0">
+                        <Grid Margin="56, 50, 0, 0">
                             <Button Name="ImageSelectorButtonSecondary" Grid.Row="0" Width="36" Height="36" Margin="20" HorizontalAlignment="Left" Command="{Binding ShowSecondaryFlyoutCommand}"
                                     BorderThickness="2" BorderBrush="Transparent" Style="{StaticResource MainImageButtonStyle}">
                                 <Button.Background>
@@ -91,13 +95,17 @@
                                         <DropShadowEffect Color="Black" Direction="315" ShadowDepth="5" Opacity="0.3"/>
                                     </Border.Effect>
 
-                                    <ItemsControl ItemsSource="{Binding AvailableCharacters}" ItemTemplate="{StaticResource SecondaryCharacterItemTemplate}">
-                                        <ItemsControl.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <WrapPanel Width="280" Orientation="Horizontal"/>
-                                            </ItemsPanelTemplate>
-                                        </ItemsControl.ItemsPanel>
-                                    </ItemsControl>
+                                    <StackPanel>
+                                        <Label Content="Set Opponent Secondary" FontSize="22" FontFamily="Franklin Gothic Demi Cond" HorizontalAlignment="Center" Foreground="{StaticResource FG_BlueLabel}"/>
+                                        <Border BorderThickness="0, 0, 0, 1" Margin="20, 0, 20, 0" BorderBrush="White"/>
+                                        <ItemsControl ItemsSource="{Binding AvailableCharacters}" ItemTemplate="{StaticResource SecondaryCharacterItemTemplate}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel Width="280" Orientation="Horizontal"/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                        </ItemsControl>
+                                    </StackPanel>
                                 </Border>
                             </Popup>
                         </Grid>
@@ -107,10 +115,10 @@
                             <Label Content="Set Opponent Tag..." Visibility="{Binding IsOpponentTagPhVisible}" IsHitTestVisible="False" FontStyle="Italic" FontSize="16" Margin="105, 15, 0, 0" Foreground="{StaticResource FG_Control_Disabled}"/>
                             <Label Content="Set Opponent Elo..." Visibility="{Binding IsOpponentTagPhVisible}" IsHitTestVisible="False" FontStyle="Italic" FontSize="16" Margin="105, 0, 0, 23" VerticalAlignment="Bottom" Foreground="{StaticResource FG_Control_Disabled}"/>
 
-                            <TextBox Text="{Binding OpponentName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="3" KeyDown="TextBox_KeyDown" MinWidth="240"
-                                     Margin="105, 0, 0, 0" FontFamily="Franklin Gothic Demi Cond" Background="Transparent" FontSize="42" Height="60" VerticalAlignment="Top" />
-                            <TextBox Text="{Binding OpponentElo, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="4" KeyDown="TextBox_KeyDown" MinWidth="160"
-                                     Margin="105, 0, 0, 10" FontFamily="{StaticResource AfterDisaster}" Background="Transparent" Foreground="{StaticResource FG_WhiteLabel}" FontSize="42" Height="50" VerticalAlignment="Bottom" />
+                            <TextBox Text="{Binding OpponentName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="3" KeyDown="TextBox_KeyDown"
+                                     Margin="100, 0, 0, 0" FontFamily="Franklin Gothic Demi Cond" Background="Transparent" Height="60" VerticalAlignment="Top" Style="{StaticResource MatchInformationTextBoxes}"/>
+                            <TextBox Text="{Binding OpponentElo, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="4" KeyDown="TextBox_KeyDown"
+                                     Margin="100, 0, 0, 10" FontFamily="{StaticResource AfterDisaster}" Background="Transparent" Foreground="{StaticResource FG_WhiteLabel}" Height="50" VerticalAlignment="Bottom" Style="{StaticResource MatchInformationTextBoxes}"/>
                         </Grid>
                     </Grid>
                 </StackPanel>
@@ -124,20 +132,20 @@
                     <Border BorderBrush="{StaticResource FG_DarkDarkGold}" BorderThickness="0, 1, 0, 0" VerticalAlignment="Bottom"/>
                 </StackPanel>
 
-                <Border Width="450" Height="80" BorderBrush="{StaticResource FG_DarkGold}" BorderThickness="2" Background="{StaticResource BG_DarkBlue}" HorizontalAlignment="Center" VerticalAlignment="Bottom"
-                               CornerRadius="25" Margin="0, 0, 0, -30">
+                <Border BorderBrush="{StaticResource FG_DarkGold}" BorderThickness="2" Background="{StaticResource BG_DarkBlue}" HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                               CornerRadius="25" Margin="0, 0, 0, -30" Style="{StaticResource MatchResultButtonsBorder}">
                     <Border BorderBrush="{StaticResource FG_Gold}" BorderThickness="3" Background="{StaticResource BG_DarkBlue}" HorizontalAlignment="Center" VerticalAlignment="Bottom"
                                CornerRadius="20" Margin="0">
                         <Border BorderBrush="{StaticResource FG_Gold}" BorderThickness="1" Background="Transparent" HorizontalAlignment="Center" VerticalAlignment="Bottom"
                                CornerRadius="15" Margin="0" Loaded="OuterBorder_Loaded">
-                            <Grid Width="450" Height="80">
+                            <Grid Style="{StaticResource MatchResultButtonsGrid}">
                                 <StackPanel Orientation="Horizontal">
-                                    <Button Content="WIN" Width="150" Height="80" FontSize="32" FontFamily="Franklin Gothic Demi Cond" BorderThickness="0" Background="{StaticResource BG_DarkBlue}"
-                                            Foreground="{StaticResource FG_BlueLabel}" Padding="0, 0, 0, 12" Command="{Binding SetMatchWinCommand}"/>
-                                    <Button Content="LOSE" Width="150" Height="80" FontSize="32" FontFamily="Franklin Gothic Demi Cond" BorderThickness="3, 0, 3, 0" Background="{StaticResource BG_DarkBlue}"
-                                            Foreground="{StaticResource FG_BlueLabel}" Padding="0, 0, 0, 12" Command="{Binding SetMatchLoseCommand}"/>
-                                    <Button Content="CANCEL" Width="150" Height="80" FontSize="28" FontFamily="Franklin Gothic Demi Cond" BorderThickness="0" Background="{StaticResource BG_DarkBlue}"
-                                            Foreground="{StaticResource FG_BlueLabel}" VerticalContentAlignment="Center" Padding="0, 0, 15, 12" Command="{Binding SetMatchDiscardCommand}"/>
+                                    <Button Content="WIN" FontFamily="Franklin Gothic Demi Cond" BorderThickness="0" Background="{StaticResource BG_DarkBlue}"
+                                            Foreground="{StaticResource FG_BlueLabel}" Padding="0, 0, 0, 12" Command="{Binding SetMatchWinCommand}" Style="{StaticResource MatchResultButton}"/>
+                                    <Button Content="LOSE" FontFamily="Franklin Gothic Demi Cond" BorderThickness="3, 0, 3, 0" Background="{StaticResource BG_DarkBlue}"
+                                            Foreground="{StaticResource FG_BlueLabel}" Padding="0, 0, 0, 12" Command="{Binding SetMatchLoseCommand}" Style="{StaticResource MatchResultButton}"/>
+                                    <Button Content="CANCEL" FontFamily="Franklin Gothic Demi Cond" BorderThickness="0" Background="{StaticResource BG_DarkBlue}"
+                                            Foreground="{StaticResource FG_BlueLabel}" VerticalContentAlignment="Center" Padding="0, 0, 15, 12" Command="{Binding SetMatchDiscardCommand}" Style="{StaticResource MatchResultButtonSmallText}"/>
                                 </StackPanel>
                             </Grid>
                         </Border>
@@ -147,14 +155,15 @@
                 <Grid HorizontalAlignment="Right" Margin="0, 0, 100, 0">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right">
                         <Label Content="Patch:" FontFamily="Franklin Gothic Demi" KeyDown="TextBox_KeyDown" FontStyle="Italic" Foreground="{StaticResource FG_BlueLabel}" FontSize="48" Margin="30, 0, 0, 0"  />
-                        <TextBox Text="{Binding CurrentPatch, UpdateSourceTrigger=PropertyChanged}" FontFamily="{StaticResource AfterDisaster}" Background="Transparent" Foreground="{StaticResource FG_WhiteLabel}" FontSize="42" Height="60" Margin="10, 6, 20, 0"/>
+                        <TextBox Text="{Binding CurrentPatch, UpdateSourceTrigger=PropertyChanged}" FontFamily="{StaticResource AfterDisaster}" Background="Transparent"
+                                 Foreground="{StaticResource FG_WhiteLabel}" FontSize="42" Height="60" Margin="10, 6, 20, 0" IsReadOnly="True" IsHitTestVisible="False"/>
                     </StackPanel>
 
                     <Label Content="Set Match Notes..." Visibility="{Binding IsNotesPhVisible}" IsHitTestVisible="False" FontStyle="Italic" FontSize="16"
                            Margin="0, 0, 40, 23" Width="135" HorizontalContentAlignment="Right" VerticalAlignment="Bottom" HorizontalAlignment="Right" Foreground="{StaticResource FG_Control_Disabled}"/>
 
-                    <TextBox Text="{Binding ActiveMatchNotes}" TabIndex="5" KeyDown="TextBox_KeyDown" FontFamily="Franklin Gothic Demi" Width="800" Background="Transparent" FontSize="24" Height="60" Margin="0, 0, 20, 10"
-                         VerticalAlignment="Bottom" HorizontalAlignment="Right" HorizontalContentAlignment="Right"/>
+                    <TextBox Text="{Binding ActiveMatchNotes}" TabIndex="5" KeyDown="TextBox_KeyDown" FontFamily="Franklin Gothic Demi" Background="Transparent" Height="60" Margin="0, 0, 20, 10"
+                         VerticalAlignment="Bottom" HorizontalAlignment="Right" HorizontalContentAlignment="Right" Style="{StaticResource MatchInformationNotesTextBox}"/>
                 </Grid>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
@@ -182,8 +191,9 @@
 
                 <Label Content="Recent Matches" FontFamily="Franklin Gothic Demi" FontSize="32" Margin="50, 25, 0, 0" Grid.ColumnSpan="3"/>
 
-                <ListView ItemsSource="{Binding MatchResults}" ItemTemplate="{StaticResource MatchResultsFancy}" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Top"
-                          BorderThickness="0" Margin="10,70,0,0">
+                <!-- Recent Matches -->
+                <ListView ItemsSource="{Binding MatchResults}" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Top"
+                          BorderThickness="0" Margin="10, 70, 0, 50" Style="{StaticResource RecentMatchesTemplateStyle}">
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem" BasedOn="{StaticResource CustomListViewItemStyle}">
                             <Setter Property="Padding" Value="0, 2, 15, 0" />
@@ -191,12 +201,13 @@
                     </ListView.ItemContainerStyle>
                 </ListView>
 
-                <Grid Margin="963, 70, 0, 45" Background="Transparent" Grid.ColumnSpan="3">
+                <!-- Meta Results and Character Badges -->
+                <Grid Background="Transparent" Grid.ColumnSpan="3" Style="{StaticResource MetaResultsGrid}">
                     <controls:ToggleSwitch x:Name="ResultTypeToggle" HorizontalAlignment="Left" VerticalAlignment="Top" OffContent="Seasonal"
-                        OnContent="Lifetime" IsOn="{Binding ShowLifetimeResults, Mode=TwoWay}" Margin="203, 0, 0, 0" />
+                        OnContent="Lifetime" IsOn="{Binding ShowLifetimeResults, Mode=TwoWay}" Style="{StaticResource MetaResultsToggle}"/>
 
-                    <ListView ItemsSource="{Binding DisplayedCharacterResults.CharacterData}" ItemTemplate="{StaticResource MetaResultTemplateFancy}" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Top"
-                            BorderThickness="0" Margin="0, 50, 0, 0" SelectedItem="{Binding ActiveMatchSeason_CharacterData}">
+                    <ListView Name="MetaResultsListView" ItemsSource="{Binding DisplayedCharacterResults.CharacterData}" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Top"
+                            BorderThickness="0" Margin="0, 50, 0, 0" SelectedItem="{Binding ActiveMatchSeason_CharacterData}" Style="{StaticResource MetaResultsTemplateStyle}">
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <UniformGrid Columns="3" />
@@ -210,8 +221,9 @@
                     </ListView>
                 </Grid>
 
-                <ListView ItemsSource="{Binding ActiveMatchHistory.MatchResults}" ItemTemplate="{StaticResource MatchResultsFancy}" Background="Transparent" HorizontalAlignment="Right" VerticalAlignment="Top"
-                          BorderThickness="0" Margin="0,70,10,0" Grid.Column="2" Visibility="{Binding CharacterMatchHistoryViewVisibility}">
+                <!-- Per Character Matches / Active Match Notes -->
+                <ListView ItemsSource="{Binding ActiveMatchHistory.MatchResults}" Background="Transparent" HorizontalAlignment="Right" VerticalAlignment="Top"
+                          BorderThickness="0" Margin="0, 70, 10, 50" Grid.Column="2" Visibility="{Binding CharacterMatchHistoryViewVisibility}" Style="{StaticResource RecentMatchesTemplateStyle}">
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem" BasedOn="{StaticResource CustomListViewItemStyle}">
                             <Setter Property="Padding" Value="0, 2, 15, 0" />
@@ -221,7 +233,7 @@
 
                 <Grid HorizontalAlignment="Right" Width="700" Visibility="{Binding PlayerMatchHistoryViewVisibility}">
                     <Grid Margin="10, 20, 0, 0">
-                        <Label Content="Vs" FontFamily="Franklin Gothic Demi" FontSize="32" Margin="50, 25, 0, 0" Grid.ColumnSpan="3"/>
+                        <Label Content="Vs" FontFamily="Franklin Gothic Demi" FontSize="28" Margin="50, 25, 0, 0" Grid.ColumnSpan="3"/>
                         <Label Content="{Binding ActiveMatch.Opponent.Name}" FontFamily="Franklin Gothic Demi" FontSize="32" Margin="95, 25, 0, 0" Grid.ColumnSpan="3" Foreground="{StaticResource FG_BlueLabel}" />
 
                         <StackPanel Margin="78, 25, 50, 0" Orientation="Horizontal" HorizontalAlignment="Right">

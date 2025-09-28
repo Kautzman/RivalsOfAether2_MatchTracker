@@ -1,8 +1,10 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:HyperbiusEdit"
+                    xmlns:converters="clr-namespace:Rivals2Tracker.Resources.Converters"
                     xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero">
 
+    <converters:WidthToRangeConverter x:Key="WidthToRangeConverter" />
+    
     <!-- ==================================================================================================================== -->
     <!-- Fonts -->
     <!-- ==================================================================================================================== -->

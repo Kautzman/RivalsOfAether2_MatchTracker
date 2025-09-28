@@ -7,7 +7,7 @@
         xmlns:controls="clr-namespace:Rivals2Tracker.Resources.Controls"
         xmlns:kwin="clr-namespace:kWindows.Core"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="600"
+        Title="MainWindow" Height="550" Width="600"
         Style="{StaticResource BaseWindow}">
     <kwin:kWindow.DataContext>
         <local:Settings_VM />
@@ -19,6 +19,7 @@
     <Grid Background="{StaticResource LGR_Blue_Opacity}">
         <Grid Height="70" Background="{StaticResource LGR_Banner}" MouseDown="EnableDrag" VerticalAlignment="Top">
             <Label Content="Settings" FontFamily="Franklin Gothic Demi" FontSize="32" Margin="10, 10, 0, 0" Grid.ColumnSpan="3" IsHitTestVisible="False"/>
+            <Label Content="Slipstream v0.9.0 - Beta" FontSize="20" Margin="10, 10, 0, 0" Foreground="#c0c0f0" Grid.ColumnSpan="3" HorizontalAlignment="Center" IsHitTestVisible="False"/>
 
             <Button x:Name="WindowClose" Style="{StaticResource WindowingButton_Close}" Click="WindowCloseClick" VerticalAlignment="Top">
                 <Image Style="{StaticResource Windowing_Image}" Source="/Rivals2Tracker;component/Resources/Icons/Windowing/Close.png" />
@@ -31,14 +32,28 @@
             </StackPanel>
         </Grid>
 
-        <StackPanel Height="200" Width="400" Margin="0, 50, 0, 0">
+        <StackPanel Height="350" Width="450" Margin="0, 50, 0, 0">
             <Grid>
-                <Label Content="Rivals Tag" FontFamily="Franklin Gothic Demi" FontSize="20" Width="140" HorizontalAlignment="Left" Foreground="#DEDEDE" HorizontalContentAlignment="Right"/>
-                <TextBox Text="{Binding PlayerName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="200" Margin="150, 0, 0, 0" FontSize="18" FontFamily="Franklin Gothic Demi" HorizontalAlignment="Left" Background="{StaticResource BG_DarkBlue}"  />
+                <Label Content="Rivals Tag" FontFamily="Franklin Gothic Demi" FontSize="20" Width="190" HorizontalAlignment="Left" Foreground="#DEDEDE" HorizontalContentAlignment="Right"/>
+                <TextBox Text="{Binding PlayerName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="200" Margin="200, 0, 0, 0" FontSize="18" FontFamily="Franklin Gothic Demi" HorizontalAlignment="Left" Background="{StaticResource BG_DarkBlue}"  />
             </Grid>
             <Grid>
-                <Label Content="Current Patch" FontFamily="Franklin Gothic Demi" FontSize="20" Width="140" HorizontalAlignment="Left" Foreground="#DEDEDE" HorizontalContentAlignment="Right"/>
-                <TextBox Text="{Binding Patch, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="100" Margin="150, 0, 0, 0" FontFamily="Franklin Gothic Demi" FontSize="18" HorizontalAlignment="Left" Background="{StaticResource BG_DarkBlue}"  />
+                <TextBlock FontSize="16" Foreground="#d0d0d0">*This should be entered as it appears on the Stage Select screen<LineBreak/> if you have several characters in your tag it may be truncated.<LineBreak/>  Enter it here as it appears exactly in that screen</TextBlock>
+            </Grid>
+            <Grid Margin="0, 20, 0, 0">
+                <Label Content="Current Patch" FontFamily="Franklin Gothic Demi" FontSize="20" Width="190" HorizontalAlignment="Left" Foreground="#DEDEDE" HorizontalContentAlignment="Right"/>
+                <TextBox Text="{Binding Patch, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="100" Margin="200, 0, 0, 0" FontFamily="Franklin Gothic Demi" FontSize="18" HorizontalAlignment="Left" Background="{StaticResource BG_DarkBlue}"  />
+            </Grid>
+            <Grid Margin="0, 0, 0, 0">
+                <Label Content="Game Resolution" FontFamily="Franklin Gothic Demi" FontSize="20" Width="190" HorizontalAlignment="Left" Foreground="#DEDEDE" HorizontalContentAlignment="Right"/>
+            </Grid>
+            <Grid Margin="0, -28, 0, 0">
+                <StackPanel Margin="200, 0, 0, 0">
+                    <RadioButton GroupName="Resolution" Content=" 1920 x 1080 (1080p)" FontSize="18"/>
+                    <RadioButton GroupName="Resolution" Content=" 2560 x 1440 (1440p)" FontSize="18"/>
+                    <RadioButton GroupName="Resolution" Content=" 3820 x 2160 (4k)" FontSize="18"/>
+                    <RadioButton GroupName="Resolution" Content=" Auto (Not Recommended)" FontSize="18"/>
+                </StackPanel>
             </Grid>
 
             <Button Content="Save and Close" Margin="0, 10, 0, 0" Width="200" Height="35" Foreground="{StaticResource FG_BlueLabel}"

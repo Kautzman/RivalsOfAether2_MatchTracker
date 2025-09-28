@@ -68,7 +68,7 @@
 
   <ItemGroup>
     <Folder Include="kWindows\" />
-    <Folder Include="Style\" />
+    <Folder Include="Resources\TemplateSelectors\" />
   </ItemGroup>
 
 	<ItemGroup>

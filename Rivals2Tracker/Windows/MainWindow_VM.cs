@@ -129,15 +129,6 @@ namespace Rivals2Tracker
                     LocalPlayerNameVisibility = Visibility.Collapsed;
                 }
 
-                if ((value as RivalsMatch).Notes.Length == 0)
-                {
-                    IsNotesPhVisible = Visibility.Visible;
-                }
-                else
-                {
-                    IsNotesPhVisible = Visibility.Collapsed;
-                }
-
                 SetProperty(ref _activeMatch, value);
 
                 OpponentName = ActiveMatch.Opponent.Name;
@@ -269,8 +260,10 @@ namespace Rivals2Tracker
         private Visibility _isNotesPhVisible = Visibility.Visible;
         public Visibility IsNotesPhVisible
         {
-            get { return _isNotesPhVisible; }
-            set { SetProperty(ref _isNotesPhVisible, value); }
+            get
+            {
+                return String.IsNullOrEmpty(ActiveMatchNotes) ? Visibility.Visible : Visibility.Collapsed;
+            }
         }
 
         private string _myElo;
@@ -333,6 +326,8 @@ namespace Rivals2Tracker
                 }
 
                 SetProperty(ref _activeMatchNotes, value);
+                RaisePropertyChanged(nameof(IsNotesPhVisible));
+
             }
         }
 
