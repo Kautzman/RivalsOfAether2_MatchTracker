@@ -23,13 +23,16 @@ namespace Rivals2Tracker
             {
                 GlobalData.HotKeyCode = RivalsORM.GetMatchHotKey();
                 GlobalData.ModifierCode = RivalsORM.GetMatchHotKeyModifier();
+                GlobalData.IsPlayAudio = RivalsORM.GetPlayAudioValue() == 1;
+                GlobalData.IsSaveCaptures = RivalsORM.GetSaveCapturesValue() == 1;
             }
             catch(Exception ex)
             {
                 Debug.WriteLine("[ERROR] Failed to retrieve Hotkey or the Hotkey modifer code -- setting to default (Scroll Lock)");
                 GlobalData.HotKeyCode = 145; // Scroll Lock
-                GlobalData.ModifierCode = 0; // Nothing
+                GlobalData.ModifierCode = 0;
             }
+            AudioService.Initialize();
             InitializeComponent();
         }
 

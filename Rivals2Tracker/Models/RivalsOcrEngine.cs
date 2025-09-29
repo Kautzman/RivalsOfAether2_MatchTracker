@@ -61,10 +61,10 @@ namespace Rivals2Tracker.Models
             sw.Restart();
 
             // Old Hard-set system
-            //Rectangle player1Crop = new Rectangle(625, 1300, 237, 84);
-            //Rectangle player1EloCrop = new Rectangle(926, 1281, 80, 41);
-            //Rectangle player2Crop = new Rectangle(1715, 1300, 237, 84);
-            //Rectangle player2EloCrop = new Rectangle(2015, 1281, 80, 41);
+            // Rectangle player1Crop = new Rectangle(625, 1300, 237, 84);
+            // Rectangle player1EloCrop = new Rectangle(926, 1281, 80, 41);
+            // Rectangle player2Crop = new Rectangle(1715, 1300, 237, 84);
+            // Rectangle player2EloCrop = new Rectangle(2015, 1281, 80, 41);
 
             nint hWnd = FindWindow(null, "Rivals2  ");
             // nint hWnd = FindWindow(null, "Photos Legacy");
@@ -98,13 +98,16 @@ namespace Rivals2Tracker.Models
             Bitmap player1elobmp = bmp.Clone(player1EloCrop, bmp.PixelFormat);
             Bitmap player2elobmp = bmp.Clone(player2EloCrop, bmp.PixelFormat);
 
-            if (GlobalData.SaveCaptures)
+            if (GlobalData.IsSaveCaptures)
             {
+                string subDirectory = "OCRCaptures";
+                Directory.CreateDirectory(subDirectory);
+
                 bmp.Save(filename, ImageFormat.Jpeg);
-                player1bmp.Save($"p1-{filename}", ImageFormat.Jpeg);
-                player2bmp.Save($"p2-{filename}", ImageFormat.Jpeg);
-                player1elobmp.Save($"p1elo-{filename}", ImageFormat.Jpeg);
-                player2elobmp.Save($"p2elo-{filename}", ImageFormat.Jpeg);
+                player1bmp.Save(Path.Combine(subDirectory, $"p1-{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
+                player2bmp.Save(Path.Combine(subDirectory, $"p2-{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
+                player1elobmp.Save(Path.Combine(subDirectory, $"p1elo-{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
+                player2elobmp.Save(Path.Combine(subDirectory, $"p2elo-{Path.GetFileName(filename)}"), ImageFormat.Jpeg); 
             }
 
             SoftwareBitmap p1sbmp = await ConvertToSoftwareBitmap(player1bmp);

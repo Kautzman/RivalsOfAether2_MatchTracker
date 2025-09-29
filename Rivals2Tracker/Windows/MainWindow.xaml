@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Rivals2Tracker"
         xmlns:controls="clr-namespace:Rivals2Tracker.Resources.Controls"
+        xmlns:behaviors="clr-namespace:Rivals2Tracker.Resources.Behaviors"
         xmlns:kwin="clr-namespace:kWindows.Core"
         mc:Ignorable="d"
         Title="MainWindow" Height="1400" Width="2560"
@@ -16,7 +17,12 @@
         <WindowChrome CaptionHeight="0" ResizeBorderThickness="8, 4, 8, 8" />
     </WindowChrome.WindowChrome>
     <Window.Resources>
-
+        <Storyboard x:Key="ErrorTextFade">
+            <ColorAnimation 
+                Storyboard.TargetProperty="(Label.Foreground).(SolidColorBrush.Color)"
+                To="{StaticResource FG_C_ErrorFaded}"
+                Duration="0:0:3" />
+        </Storyboard>
     </Window.Resources>
     <Grid>
         <DockPanel>
@@ -116,7 +122,8 @@
                             <Label Content="Set Opponent Elo..." Visibility="{Binding IsOpponentTagPhVisible}" IsHitTestVisible="False" FontStyle="Italic" FontSize="16" Margin="105, 0, 0, 23" VerticalAlignment="Bottom" Foreground="{StaticResource FG_Control_Disabled}"/>
 
                             <TextBox Text="{Binding OpponentName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="3" KeyDown="TextBox_KeyDown"
-                                     Margin="100, 0, 0, 0" FontFamily="Franklin Gothic Demi Cond" Background="Transparent" Height="60" VerticalAlignment="Top" Style="{StaticResource MatchInformationTextBoxes}"/>
+                                     Margin="100, 0, 0, 0" FontFamily="Franklin Gothic Demi Cond" Background="Transparent" Height="60" VerticalAlignment="Top" Style="{StaticResource MatchInformationTextBoxes}" />
+
                             <TextBox Text="{Binding OpponentElo, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="4" KeyDown="TextBox_KeyDown"
                                      Margin="100, 0, 0, 10" FontFamily="{StaticResource AfterDisaster}" Background="Transparent" Foreground="{StaticResource FG_WhiteLabel}" Height="50" VerticalAlignment="Bottom" FontSize="42" Style="{StaticResource MatchInformationTextBoxes}"/>
                         </Grid>
@@ -124,7 +131,9 @@
                 </StackPanel>
 
                 <Label Content="{Binding ActiveMatchStatusString, UpdateSourceTrigger=PropertyChanged}" Name="FocusDump" Focusable="True" FontFamily="Franklin Gothic Demi" Foreground="{StaticResource FG_WhiteLabel}" FontSize="32" Margin="0, 5, 0, 0" VerticalAlignment="Top" HorizontalAlignment="Center" />
-                <Label Content="{Binding ActivityText, UpdateSourceTrigger=PropertyChanged}" FontFamily="Franklin Gothic Demi" Foreground="{StaticResource FG_Gold}" FontSize="18" Margin="0, 45, 0, 0" VerticalAlignment="Top" HorizontalAlignment="Center" />
+                <Label Content="{Binding ActivityText, UpdateSourceTrigger=PropertyChanged}" FontFamily="Franklin Gothic Demi" FontSize="18" Margin="0, 45, 0, 0" VerticalAlignment="Top" HorizontalAlignment="Center" behaviors:ActivityFadeBehavior.EnableTextFadeActivity="true">
+                    
+                </Label>
 
                 <StackPanel VerticalAlignment="Bottom">
                     <Border BorderBrush="{StaticResource FG_Gold}" BorderThickness="0, 3, 0, 0" VerticalAlignment="Bottom" />
@@ -147,9 +156,9 @@
                                     <Button  FontFamily="Franklin Gothic Demi Cond" BorderThickness="0" Background="{StaticResource BG_DarkBlue}"
                                             Foreground="{StaticResource FG_BlueLabel}" Padding="0, 0, 15, 12" Command="{Binding SetMatchDiscardCommand}" Style="{StaticResource MatchResultButtonSmallText}">
                                         <Button.Content>
-                                            <Label Content="{Binding CancelNewMatchButtonString}" Width="90" HorizontalContentAlignment="Center" FontSize="26">
+                                            <Label Content="{Binding CancelNewMatchButtonString}" Width="90" HorizontalContentAlignment="Center">
                                                 <Label.Style>
-                                                    <Style TargetType="Label" BasedOn="{StaticResource BaseLabel}">
+                                                    <Style TargetType="Label" BasedOn="{StaticResource CancelStartMatchLabel}">
                                                         <Setter Property="Foreground" Value="{StaticResource FG_BlueLabel}" />
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=IsMouseOver}" Value="True">
@@ -174,7 +183,7 @@
                                  Foreground="{StaticResource FG_WhiteLabel}" FontSize="42" Height="60" Margin="10, 6, 20, 0" IsReadOnly="True" IsHitTestVisible="False"/>
                     </StackPanel>
 
-                    <Label Content="Set Match Notes..." Visibility="{Binding IsNotesPhVisible}" IsHitTestVisible="False" FontStyle="Italic" FontSize="16"
+                    <Label Content="Set Player Notes..." Visibility="{Binding IsNotesPhVisible}" IsHitTestVisible="False" FontStyle="Italic" FontSize="16"
                            Margin="0, 0, 40, 23" Width="135" HorizontalContentAlignment="Right" VerticalAlignment="Bottom" HorizontalAlignment="Right" Foreground="{StaticResource FG_Control_Disabled}"/>
 
                     <TextBox Text="{Binding ActiveMatchNotes}" TabIndex="5" KeyDown="TextBox_KeyDown" FontFamily="Franklin Gothic Demi" Background="Transparent" Height="60" Margin="0, 0, 20, 10"
@@ -204,70 +213,118 @@
             <Grid DockPanel.Dock="Bottom" Background="{StaticResource BG_DarkBlue}" Panel.ZIndex="1">
                 <Image Source="pack://application:,,,/ImageResources/embossLogo2.png" Opacity="0.06" Width="900" />
 
-                <Label Content="Recent Matches" FontFamily="Franklin Gothic Demi" FontSize="32" Margin="50, 25, 0, 0" Grid.ColumnSpan="3"/>
+                <DockPanel>
+                    <Grid DockPanel.Dock="Left">
+                        <Label Content="Recent Matches" FontFamily="Franklin Gothic Demi" FontSize="32" Margin="50, 25, 0, 0"/>
 
-                <!-- Recent Matches -->
-                <ListView ItemsSource="{Binding MatchResults}" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Top"
-                          BorderThickness="0" Margin="10, 70, 0, 50" Style="{StaticResource RecentMatchesTemplateStyle}">
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem" BasedOn="{StaticResource CustomListViewItemStyle}">
-                            <Setter Property="Padding" Value="0, 2, 15, 0" />
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                </ListView>
+                        <!-- Recent Matches -->
+                        <ListView ItemsSource="{Binding MatchResults}" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Top"
+                                  BorderThickness="0" Margin="10, 70, 0, 50" Style="{StaticResource RecentMatchesTemplateStyle}">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem" BasedOn="{StaticResource BaseListViewItem}">
+                                    <Setter Property="Padding" Value="0, 2, 15, 0" />
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                        </ListView>
+                    </Grid>
 
-                <!-- Meta Results and Character Badges -->
-                <Grid Background="Transparent" Grid.ColumnSpan="3" Style="{StaticResource MetaResultsGrid}">
-                    <controls:ToggleSwitch x:Name="ResultTypeToggle" HorizontalAlignment="Left" VerticalAlignment="Top" OffContent="Seasonal"
-                        OnContent="Lifetime" IsOn="{Binding ShowLifetimeResults, Mode=TwoWay}" Style="{StaticResource MetaResultsToggle}"/>
+                    <!-- Meta Results and Character Badges -->
+                    <Grid Style="{StaticResource MetaResultsGrid}" DockPanel.Dock="Left">
+                        <Label Content="{Binding ErrorText, UpdateSourceTrigger=PropertyChanged}" FontFamily="Franklin Gothic Demi" FontSize="18" Margin="0, -35, 0, 10" VerticalAlignment="Top"
+                               Style="{StaticResource ErrorTextLabel}" HorizontalAlignment="Left" HorizontalContentAlignment="Center" behaviors:LabelFadeBehavior.EnableTextFade="true">
+                        </Label>
+                        <Grid Margin="0, 5, 0, 0">
+                            <controls:ToggleSwitch x:Name="ResultTypeToggle" HorizontalAlignment="Left" VerticalAlignment="Top" OffContent="Seasonal"
+                                OnContent="Lifetime" IsOn="{Binding ShowLifetimeResults, Mode=TwoWay}" Style="{StaticResource MetaResultsToggle}" />
+                        </Grid>
 
-                    <ListView Name="MetaResultsListView" ItemsSource="{Binding DisplayedCharacterResults.CharacterData}" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Top"
-                            BorderThickness="0" Margin="0, 50, 0, 0" SelectedItem="{Binding ActiveMatchSeason_CharacterData}" Style="{StaticResource MetaResultsTemplateStyle}">
-                        <ListView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <UniformGrid Columns="3" />
-                            </ItemsPanelTemplate>
-                        </ListView.ItemsPanel>
-                        <ListView.ItemContainerStyle>
-                            <Style TargetType="ListViewItem" BasedOn="{StaticResource CustomListViewItemStyle}">
+                        <ListView Name="MetaResultsListView" ItemsSource="{Binding DisplayedCharacterResults.CharacterData}" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Top"
+                                BorderThickness="0" Margin="0, 50, 0, 0" SelectedItem="{Binding ActiveMatchSeason_CharacterData}" Style="{StaticResource MetaResultsTemplateStyle}">
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Columns="3" />
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem" BasedOn="{StaticResource BaseListViewItem}">
 
-                            </Style>
-                        </ListView.ItemContainerStyle>
-                    </ListView>
-                </Grid>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                        </ListView>
+                    </Grid>
 
-                <!-- Per Character Matches / Active Match Notes -->
-                <ListView ItemsSource="{Binding ActiveMatchHistory.MatchResults}" Background="Transparent" HorizontalAlignment="Right" VerticalAlignment="Top"
-                          BorderThickness="0" Margin="0, 70, 10, 50" Grid.Column="2" Visibility="{Binding CharacterMatchHistoryViewVisibility}" Style="{StaticResource RecentMatchesTemplateStyle}">
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem" BasedOn="{StaticResource CustomListViewItemStyle}">
-                            <Setter Property="Padding" Value="0, 2, 15, 0" />
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                </ListView>
-
-                <Grid HorizontalAlignment="Right" Width="700" Visibility="{Binding PlayerMatchHistoryViewVisibility}">
-                    <Grid Margin="10, 20, 0, 0">
-                        <Label Content="Vs" FontFamily="Franklin Gothic Demi" FontSize="28" Margin="50, 25, 0, 0" Grid.ColumnSpan="3"/>
-                        <Label Content="{Binding ActiveMatch.Opponent.Name}" FontFamily="Franklin Gothic Demi" FontSize="32" Margin="95, 25, 0, 0" Grid.ColumnSpan="3" Foreground="{StaticResource FG_BlueLabel}" />
-
-                        <StackPanel Margin="78, 25, 50, 0" Orientation="Horizontal" HorizontalAlignment="Right">
-                            <Label Content="{Binding ActiveOpponent.WinsSeasonal}" FontFamily="Franklin Gothic Demi" FontSize="32"/>
-                            <Label Content=" - " FontFamily="Franklin Gothic Demi" FontSize="32"/>
-                            <Label Content="{Binding ActiveOpponent.LosesSeasonal}" FontFamily="Franklin Gothic Demi" FontSize="32"/>
+                    <!-- Per Character Matches / Active Match Notes -->
+                    <Grid DockPanel.Dock="Right">
+                        <Label Content="Match History" FontFamily="Franklin Gothic Demi" FontSize="32" Margin="75, 25, 0, 0"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Height="40" Margin="0, 30, 49, 0">
+                            <Button Content="Rivals" ToolTip="Show Per Rivals Match History" Height="40" FontSize="24" Width="140" FontFamily="Franklin Gothic Demi" BorderThickness="2" Style="{StaticResource RivalsButtonStyle}" Command="{Binding ToggleRivalsMatchHistoryCommand}"/>
+                            <Button Content="Players" ToolTip="Show Per Player Match History" Height="40" FontSize="24" Width="140" FontFamily="Franklin Gothic Demi" BorderThickness="2" Style="{StaticResource PlayersButtonStyle}" Command="{Binding TogglePlayersMatchHistoryCommand}"/>
                         </StackPanel>
 
-                        <Label Content="{Binding ActiveOpponent.NotesLabel, UpdateSourceTrigger=PropertyChanged}" Margin="40, 100, 40, 0" VerticalAlignment="Top"/>
+                        <Grid Visibility="{Binding RivalsMatchHistoryViewVisibility}">
+                            <ListView ItemsSource="{Binding ActiveMatchHistory.MatchResults}" Background="Transparent" HorizontalAlignment="Right" VerticalAlignment="Top"
+                                      BorderThickness="0" Margin="0, 70, 10, 50" Grid.Column="2" Style="{StaticResource RecentMatchesTemplateStyle}">
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem" BasedOn="{StaticResource BaseListViewItem}">
+                                        <Setter Property="Padding" Value="0, 2, 15, 0" />
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                            </ListView>
+                        </Grid>
+
+                        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding PlayerMatchHistoryViewVisibility}" Margin="0, 70, 10, 50">
+                            <Grid Margin="10, 20, 0, 0">
+
+                                <StackPanel Orientation="Horizontal" Margin="25, 10, 0, 0">
+                                    <Button Content="&#xF78B;" FontSize="24" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource FG_WhiteLabel}" Margin="0, 10, 0, 0" VerticalAlignment="Top" 
+                                            Height="40" Width="40" Background="{StaticResource BG_DarkBlue}" Padding="3" BorderBrush="{StaticResource FG_BlueLabel}" BorderThickness="2" Command="{Binding UpdateOpponentMatchHistoryCommand}"/>
+                                    <TextBox Text="{Binding MatchHistoryOpponentTagSearch, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="5, 10, 0, 0" FontFamily="Franklin Gothic Demi Cond" Background="Transparent" Height="40" Width="240" VerticalAlignment="Top" BorderBrush="{StaticResource FG_BlueLabel}" 
+                                         BorderThickness="0, 0, 0, 2" FontSize="26" HorizontalAlignment="Left">
+                                        <TextBox.InputBindings>
+                                            <KeyBinding Key="Return" Command="{Binding UpdateOpponentMatchHistoryCommand}" />
+                                        </TextBox.InputBindings>
+                                    </TextBox>
+                                </StackPanel>
+
+                                <StackPanel Margin="350, 20, 0, 0" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+                                    <Label Content="{Binding MatchHistoryOpponent.WinsSeasonal}" FontFamily="Franklin Gothic Demi" FontSize="32"/>
+                                    <Label Content=" - " FontFamily="Franklin Gothic Demi" FontSize="32"/>
+                                    <Label Content="{Binding MatchHistoryOpponent.LosesSeasonal}" FontFamily="Franklin Gothic Demi" FontSize="32"/>
+                                </StackPanel>
+
+                                <StackPanel Margin="0, 20, 40, 0" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Height="40">
+                                    <Button Content="&#xF0E3;" ToolTip="Show Player Notes" Height="40" FontSize="24" Width="70" FontFamily="Segoe MDL2 Assets" BorderThickness="2" Style="{StaticResource PlayerNotesStyle}" Command="{Binding TogglePlayerNotesCommand}"/>
+                                    <Button Content="&#xE8FD;" ToolTip="Show Player Match Record" Height="40" FontSize="24" Width="70" FontFamily="Segoe MDL2 Assets" BorderThickness="2" Style="{StaticResource PlayerMatchHistoryStyle}" Command="{Binding TogglePlayerMatchesCommand}"/>
+                                </StackPanel>
+
+                                <Grid Margin="20, 100, 20, 0">
+                                    <!-- Player Notes-->
+                                    <Grid Visibility="{Binding PlayerNotesVisibility}">
+                                        <Label Content="{Binding MatchHistoryOpponent.NotesLabel, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" FontSize="20"/>
+                                    </Grid>
+
+                                    <!-- Player Match History-->
+                                    <Grid Visibility="{Binding PlayerMatchesVisibility}">
+                                        <ListView ItemsSource="{Binding MatchHistoryOpponentMatches.MatchResults}" Background="Transparent" HorizontalAlignment="Right" VerticalAlignment="Top"
+                                                BorderThickness="0" Margin="0, 0, 0, 50" Grid.Column="2" Style="{StaticResource RecentMatchesTemplateStyle}">
+                                            <ListView.ItemContainerStyle>
+                                                <Style TargetType="ListViewItem" BasedOn="{StaticResource BaseListViewItem}">
+                                                    <Setter Property="Padding" Value="0, 2, 15, 0" />
+                                                </Style>
+                                            </ListView.ItemContainerStyle>
+                                        </ListView>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </Grid>
                     </Grid>
-                </Grid>
+                </DockPanel>
             </Grid>
         </DockPanel>
 
         <Border BorderBrush="{StaticResource GR_DarkBlue}" BorderThickness="4" Margin="15, 15, 0, 0" Width="128" Height="128" HorizontalAlignment="Left" VerticalAlignment="Top">
             <Border BorderBrush="{StaticResource FG_Gold}" BorderThickness="4">
                 <Grid>
-                    <!--<Image Source="pack://application:,,,/ImageResources/Portraits/wrastor_portrait.png" Panel.ZIndex="1000"/>-->
-
                     <!-- Button For Main -->
                     <Button Name="MySelectorButton" Grid.Row="0" Width="120" Height="120" Margin="0, 0, 0, 0" HorizontalAlignment="Left" Command="{Binding ShowMyFlyoutCommand}"
                                 BorderThickness="2" BorderBrush="Transparent" Style="{StaticResource MainImageButtonStyle}" Panel.ZIndex="1000">
@@ -300,8 +357,5 @@
                 </Grid>
             </Border>
         </Border>
-
-        <Label Content="{Binding ErrorText, UpdateSourceTrigger=PropertyChanged}" FontFamily="Franklin Gothic Demi" Foreground="Red" FontSize="18" Margin="0, 0, 0, 10" VerticalAlignment="Bottom" HorizontalAlignment="Center" />
-       
     </Grid>
 </kwin:kWindow>

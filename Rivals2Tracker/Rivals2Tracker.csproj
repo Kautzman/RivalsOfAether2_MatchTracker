@@ -27,6 +27,7 @@
     <None Remove="ImageResources\Portraits\wrastor_portrait.png" />
     <None Remove="ImageResources\Portraits\wrastor_portrait_lovers.png" />
     <None Remove="ImageResources\Portraits\zetterburn_portrait.png" />
+    <None Remove="Resources\Audio\error.mp3" />
     <None Remove="Resources\CharacterIcons\absa.png" />
     <None Remove="Resources\CharacterIcons\clairen.png" />
     <None Remove="Resources\CharacterIcons\etalus.png" />
@@ -63,6 +64,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Resources\Audio\error.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="wrastor.ico" />
   </ItemGroup>
 
@@ -73,6 +77,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.7" />
+		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
 		<PackageReference Include="Prism.Core" Version="8.1.97" />
 		<PackageReference Include="Prism.Unity" Version="8.1.97" />
 		<PackageReference Include="System.Drawing.Common" Version="9.0.8" />

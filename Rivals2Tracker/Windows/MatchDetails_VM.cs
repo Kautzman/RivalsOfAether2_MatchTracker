@@ -5,7 +5,9 @@ using Rivals2Tracker.Data;
 using Rivals2Tracker.Models;
 using Rivals2Tracker.Resources.Events;
 using System;
+using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Documents;
 
 namespace Rivals2Tracker
 {
@@ -21,6 +23,13 @@ namespace Rivals2Tracker
             set { SetProperty(ref _loadedMatch, value); }
         }
 
+        private List<string> _selectableCharacters = new();
+        public List<string> SelectableCharacters
+        {
+            get { return _selectableCharacters; }
+            set { SetProperty(ref _selectableCharacters, value); }
+        }
+
         public DelegateCommand SaveAndCloseCommand { get; set; }
         public DelegateCommand CancelCommand { get; set; }
 
@@ -29,6 +38,7 @@ namespace Rivals2Tracker
         public MatchDetails_VM(MatchResult matchResult)
         {
             LoadedMatch = matchResult;
+            SelectableCharacters = GlobalData.AllCharacters;
             SaveAndCloseCommand = new DelegateCommand(SaveAndClose);
             CancelCommand = new DelegateCommand(Cancel);
             DeleteMatchCommand = new DelegateCommand(DeleteMatch);

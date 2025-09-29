@@ -22,21 +22,31 @@ namespace Rivals2Tracker.Data
 
         public static List<MatchResult> AllMatches = new();
 
-        public static ObservableCollection<MatchResult> GetAllMatches(string characterToGet = "None")
+        public static ObservableCollection<MatchResult> GetAllMatches(string character = "None")
         {
             DataTable table;
 
-            if (characterToGet == "None")
+            if (character == "None")
             {
                 table = ExecuteQuery("SELECT * FROM Matches ORDER BY ID DESC");
+                AllMatches = CreateCollectionFromTable<MatchResult>(table);
+                return new ObservableCollection<MatchResult>(AllMatches);
             }
             else
             {
-                table = ExecuteQuery($"SELECT * FROM Matches WHERE OppChar1 = '{characterToGet}' ORDER BY ID DESC");
+                table = ExecuteQuery($"SELECT * FROM Matches WHERE OppChar1 = '{character}' ORDER BY ID DESC");
+                return new ObservableCollection<MatchResult>(CreateCollectionFromTable<MatchResult>(table));
             }
+        }
 
-            AllMatches = CreateCollectionFromTable<MatchResult>(table);
-            return new ObservableCollection<MatchResult>(AllMatches);
+        public static ObservableCollection<MatchResult> GetAllMatchesByPlayer(string playerTag)
+        {
+            DataTable table;
+
+            table = ExecuteQuery($"SELECT * FROM Matches WHERE Opponent = '{playerTag}' ORDER BY ID DESC");
+
+            List<MatchResult> result = CreateCollectionFromTable<MatchResult>(table);
+            return new ObservableCollection<MatchResult>(result);
         }
 
         public static string AddMatch(RivalsMatch match)
@@ -107,6 +117,16 @@ namespace Rivals2Tracker.Data
         public static uint GetMatchHotKeyModifier()
         {
             return ExecuteQueryForUint("SELECT CaptureModifierCode FROM Metadata LIMIT 1");
+        }
+
+        public static int GetPlayAudioValue()
+        {
+            return ExecuteQueryForInt("SELECT PlayAudio FROM Metadata LIMIT 1");
+        }
+
+        public static int GetSaveCapturesValue()
+        {
+            return ExecuteQueryForInt("SELECT SaveCaptures FROM Metadata LIMIT 1");
         }
 
         public static void SaveHotKeyToDatabase(ModifierKeys modifiers, Key key)
@@ -224,6 +244,22 @@ namespace Rivals2Tracker.Data
                 return 0;
 
             return Convert.ToUInt32(value);
+        }
+
+        public static int ExecuteQueryForInt(string command)
+        {
+            object? value = null;
+
+            using (conn)
+            {
+                conn.Open();
+                value = new SqliteCommand(command, conn).ExecuteScalar();
+            }
+
+            if (value == null || value == DBNull.Value)
+                return 0;
+
+            return Convert.ToInt32(value);
         }
 
         public static string ExecuteQueryForValue(string command)

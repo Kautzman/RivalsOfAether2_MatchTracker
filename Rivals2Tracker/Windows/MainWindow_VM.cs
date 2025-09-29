@@ -10,6 +10,9 @@ using System.Windows;
 using Rivals2Tracker.Data;
 using System.Diagnostics;
 using Rivals2Tracker.Resources.Events;
+using System.Media;
+using Rivals2Tracker.Services;
+using Windows.Networking.Vpn;
 
 namespace Rivals2Tracker
 {
@@ -94,17 +97,8 @@ namespace Rivals2Tracker
             get { return _activeMatchSeason_CharacterData; }
             set
             {
-                PlayerMatchHistoryViewVisibility = Visibility.Collapsed;
-                CharacterMatchHistoryViewVisibility = Visibility.Visible;
+                ToggleMatchHistoryView(MatchHistoryView.Rivals);
                 SetActiveMatchHistory(value, "season");
-            }
-        }
-
-        public CharacterMetadata ActiveMatchAll_CharacterData
-        {
-            set
-            {
-                SetActiveMatchHistory(value, "all");
             }
         }
 
@@ -140,54 +134,6 @@ namespace Rivals2Tracker
             }
         }
 
-        private Opponent _activeOpponent;
-        public Opponent ActiveOpponent
-        {
-            get { return _activeOpponent; }
-            set
-            {
-                value.Tag = FilterEllipses(value.Tag);
-                SetProperty(ref _activeOpponent, value);
-            }
-        }
-
-        private string _myCharacter = "Wrastor";
-        public string MyCharacter
-        {
-            get { return _myCharacter; }
-            set
-            {
-                if (!string.IsNullOrEmpty(value) && ActiveMatch is not null)
-                {
-                    ActiveMatch.Me.Character = value;
-                }
-
-                SetProperty(ref _myCharacter, value);
-            }
-        }
-
-        private string _myName;
-        public string MyName
-        {
-            get { return _myName; }
-            set
-            {
-                GlobalData.MyName = value;
-
-                if (value.Length == 0)
-                {
-                    LocalPlayerNameVisibility = Visibility.Visible;
-                }
-                else
-                {
-                    LocalPlayerNameVisibility = Visibility.Collapsed;
-                }
-
-                RaisePropertyChanged(nameof(IsMyTagPhVisible));
-                SetProperty(ref _myName, value);
-            }
-        }
-
         private Visibility _awaitingDataVisibility = Visibility.Visible;
         public Visibility AwaitingDataVisibility
         {
@@ -209,63 +155,58 @@ namespace Rivals2Tracker
             set { SetProperty(ref _completedLabelVisibility, value); }
         }
 
-        private Visibility _characterMatchHistoryViewVisibility = Visibility.Collapsed;
-        public Visibility CharacterMatchHistoryViewVisibility
+        private Visibility _rivalsMatchHistoryViewVisibility = Visibility.Collapsed;
+        public Visibility RivalsMatchHistoryViewVisibility
         {
-            get { return _characterMatchHistoryViewVisibility; }
-            set { SetProperty(ref _characterMatchHistoryViewVisibility, value); }
+            get { return _rivalsMatchHistoryViewVisibility; }
+            set { SetProperty(ref _rivalsMatchHistoryViewVisibility, value); }
         }
 
-        private Visibility _playerMatchHistoryViewVisibility = Visibility.Collapsed;
+        private Visibility _playerMatchHistoryViewVisibility = Visibility.Visible;
         public Visibility PlayerMatchHistoryViewVisibility
         {
             get { return _playerMatchHistoryViewVisibility; }
             set { SetProperty(ref _playerMatchHistoryViewVisibility, value); }
         }
 
-        private Visibility _IsOpponentTagPhVisible = Visibility.Visible;
+        private Visibility _playerNotesVisibility = Visibility.Visible;
+        public Visibility PlayerNotesVisibility
+        {
+            get { return _playerNotesVisibility; }
+            set { SetProperty(ref _playerNotesVisibility, value); }
+        }
+
+        // Subwindow Matches
+        private Visibility _playerMatchesVisibility = Visibility.Collapsed;
+        public Visibility PlayerMatchesVisibility
+        {
+            get { return _playerMatchesVisibility; }
+            set { SetProperty(ref _playerMatchesVisibility, value); }
+        }
+
         public Visibility IsOpponentTagPhVisible
         {
-            get
-            {
-                return String.IsNullOrEmpty(OpponentName) ? Visibility.Visible : Visibility.Collapsed;
-            }
+            get => String.IsNullOrEmpty(OpponentName) && ActiveMatch.Status == MatchStatus.InProgress ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        private Visibility _isOpponentEloPhVisible = Visibility.Visible;
         public Visibility IsOpponentEloPhVisible
         {
-            get
-            {
-                return String.IsNullOrEmpty(OpponentElo) ? Visibility.Visible : Visibility.Collapsed;
-            }
+            get => String.IsNullOrEmpty(OpponentElo) && ActiveMatch.Status == MatchStatus.InProgress ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        private Visibility _IsMyTagPhVisible = Visibility.Visible;
         public Visibility IsMyTagPhVisible
         {
-            get
-            {
-                return String.IsNullOrEmpty(MyName) ? Visibility.Visible : Visibility.Collapsed;
-            }
+            get => String.IsNullOrEmpty(MyName) && ActiveMatch.Status == MatchStatus.InProgress ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        private Visibility _isMyEloPhVisible = Visibility.Visible;
         public Visibility IsMyEloPhVisible
         {
-            get
-            {
-                return String.IsNullOrEmpty(MyElo) ? Visibility.Visible : Visibility.Collapsed;
-            }
+            get => String.IsNullOrEmpty(MyElo) && ActiveMatch.Status == MatchStatus.InProgress ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        private Visibility _isNotesPhVisible = Visibility.Visible;
         public Visibility IsNotesPhVisible
         {
-            get
-            {
-                return String.IsNullOrEmpty(ActiveMatchNotes) ? Visibility.Visible : Visibility.Collapsed;
-            }
+            get => String.IsNullOrEmpty(ActiveMatchNotes) && ActiveMatch.Status == MatchStatus.InProgress ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public string CancelNewMatchButtonString
@@ -279,7 +220,86 @@ namespace Rivals2Tracker
             }
         }
 
-        private string _myElo;
+        private Opponent _activeOpponent;
+        public Opponent ActiveOpponent
+        {
+            get { return _activeOpponent; }
+            set
+            {
+                value.Tag = FilterEllipses(value.Tag);
+                SetProperty(ref _activeOpponent, value);
+            }
+        }
+
+        private Opponent _matchHistoryOpponent;
+        public Opponent MatchHistoryOpponent
+        {
+            get { return _matchHistoryOpponent; }
+            set
+            {
+                value.Tag = FilterEllipses(value.Tag);
+                SetProperty(ref _matchHistoryOpponent, value);
+            }
+        }
+
+        private string _matchHistoryOpponentTagSearch;
+        public string MatchHistoryOpponentTagSearch
+        {
+            get { return _matchHistoryOpponentTagSearch; }
+            set
+            {
+                SetProperty(ref _matchHistoryOpponentTagSearch, value);
+            }
+        }
+
+        private MatchHistoryCollection _matchHistoryOpponentMatches = new();
+        public MatchHistoryCollection MatchHistoryOpponentMatches
+        {
+            get { return _matchHistoryOpponentMatches; }
+            set
+            {
+                SetProperty(ref _matchHistoryOpponentMatches, value);
+            }
+        }
+
+        private string _myCharacter = "Wrastor";
+        public string MyCharacter
+        {
+            get { return _myCharacter; }
+            set
+            {
+                if (!string.IsNullOrEmpty(value) && ActiveMatch is not null)
+                {
+                    ActiveMatch.Me.Character = value;
+                }
+
+                SetProperty(ref _myCharacter, value);
+            }
+        }
+
+        private string _myName = String.Empty;
+        public string MyName
+        {
+            get { return _myName; }
+            set
+            {
+                GlobalData.MyName = value;
+
+                if (value.Length == 0)
+                {
+                    LocalPlayerNameVisibility = Visibility.Visible;
+                }
+                else
+                {
+                    LocalPlayerNameVisibility = Visibility.Collapsed;
+                }
+
+                RaisePropertyChanged(nameof(IsMyTagPhVisible));
+                SetProperty(ref _myName, value);
+            }
+        }
+
+        private string _myElo = String.Empty;
         public string MyElo
         {
             get { return _myElo; }
@@ -295,7 +315,7 @@ namespace Rivals2Tracker
             }
         }
 
-        private string _opponentElo;
+        private string _opponentElo = String.Empty;
         public string OpponentElo
         {
             get { return _opponentElo; }
@@ -311,7 +331,7 @@ namespace Rivals2Tracker
             }
         }
 
-        private string _opponentName;
+        private string _opponentName = String.Empty;
         public string OpponentName
         {
             get { return _opponentName; }
@@ -327,7 +347,7 @@ namespace Rivals2Tracker
             }
         }
 
-        private string _activeMatchNotes;
+        private string _activeMatchNotes = String.Empty;
         public string ActiveMatchNotes
         {
             get { return _activeMatchNotes; }
@@ -344,11 +364,19 @@ namespace Rivals2Tracker
             }
         }
 
-        private string _activityText;
+        private string _activityText = String.Empty;
         public string ActivityText
         {
             get { return _activityText; }
-            set { SetProperty(ref _activityText, value); }
+            set
+            {
+                if (value == _activityText)
+                {
+                    // Ugh, this is a stupid hack to make the ActivtyTextFade Behavior actually redraw the label on duplicate errors
+                    SetProperty(ref _activityText, String.Empty);
+                }
+                SetProperty(ref _activityText, value);
+            }
         }
 
         private string _errorText;
@@ -358,7 +386,7 @@ namespace Rivals2Tracker
             set { SetProperty(ref _errorText, value); }
         }
 
-        private string _activeMatchStatusString;
+        private string _activeMatchStatusString = "Waiting For Match...";
         public string ActiveMatchStatusString
         {
             get
@@ -461,6 +489,20 @@ namespace Rivals2Tracker
             set { SetProperty(ref _isSecondaryFlyoutOpen, value); }
         }
 
+        private bool _isShowingRivalsHistory = false; // Player Search is open by default
+        public bool IsShowingRivalsHistory
+        {
+            get { return _isShowingRivalsHistory; }
+            set { SetProperty(ref _isShowingRivalsHistory, value); }
+        }
+
+        private bool _isShowingPlayerNotes = true;
+        public bool IsShowingPlayerNotes
+        {
+            get { return _isShowingPlayerNotes; }
+            set { SetProperty(ref _isShowingPlayerNotes, value); }
+        }
+
         public ObservableCollection<string> AvailableCharacters { get; set; }
         #endregion
 
@@ -479,6 +521,11 @@ namespace Rivals2Tracker
         public DelegateCommand<string> SelectMyCharacterCommand { get; set; }
         public DelegateCommand<string> SelectCharacterCommand { get; set; }
         public DelegateCommand<string> SelectSecondaryCharacterCommand { get; set; }
+        public DelegateCommand ToggleRivalsMatchHistoryCommand { get; set; }
+        public DelegateCommand TogglePlayersMatchHistoryCommand { get; set; }
+        public DelegateCommand TogglePlayerNotesCommand { get; set; }
+        public DelegateCommand TogglePlayerMatchesCommand { get; set; }
+        public DelegateCommand UpdateOpponentMatchHistoryCommand { get; set; }
 
         #endregion
 
@@ -495,6 +542,12 @@ namespace Rivals2Tracker
             SelectCharacterCommand = new DelegateCommand<string>(SelectOppCharacter);
             SelectSecondaryCharacterCommand = new DelegateCommand<string>(SelectSecondaryCharacter);
             ShowSettingsWindowCommand = new DelegateCommand(ShowSettingsWindow);
+            UpdateOpponentMatchHistoryCommand = new DelegateCommand(GetOpponentSeasonInfo);
+            ToggleRivalsMatchHistoryCommand = new DelegateCommand(ToggleRivalsMatchHistory);
+            TogglePlayersMatchHistoryCommand = new DelegateCommand(TogglePlayersMatchHistory);
+            TogglePlayerNotesCommand = new DelegateCommand(TogglePlayerNotes);
+            TogglePlayerMatchesCommand = new DelegateCommand(TogglePlayerMatches);
+
 
             MatchHistoryUpdateEvent.MatchSaved += UpdateMatchHistory;
 
@@ -507,7 +560,7 @@ namespace Rivals2Tracker
 
             RaisePropertyChanged("ActiveMatch");
         }
-
+         
         private void SetupImages()
         {
             AvailableCharacters = new ObservableCollection<string>(GlobalData.AllCharacters);
@@ -593,6 +646,7 @@ namespace Rivals2Tracker
             ActiveMatchNotes = "";
             RaisePropertyChanged("IsInputLocked");
             RaisePropertyChanged("ActiveMatchStatusString");
+            RefreshPlaceholderVisibility();
             ErrorText = String.Empty;
             GetMatches();
             return;
@@ -609,13 +663,15 @@ namespace Rivals2Tracker
 
             if (!result.IsSalvagable)
             {
+                SystemSounds.Exclamation.Play();
                 ErrorText = "Unrecoverable Capture - Is Rivals running?";
                 return;
             }
 
             if (ActiveMatch is not null && ActiveMatch.Status == MatchStatus.InProgress)
             {
-                ActivityText = "Conclude the active match before starting a new one!";
+                SystemSounds.Exclamation.Play();
+                ErrorText = "Conclude the active match before starting a new one!";
                 return;
             }
 
@@ -623,6 +679,11 @@ namespace Rivals2Tracker
             ActiveMatch.Patch = CurrentPatch;
             ActiveMatch.Status = MatchStatus.InProgress;
             ActiveMatch.Me.Character = MyCharacter;
+
+            if (ActiveMatch.Me.EloString == String.Empty || ActiveMatch.Opponent.EloString == String.Empty)
+            {
+                AudioService.PlayError();
+            }
 
             if (GlobalData.CharacterImageDict.TryGetValue(ActiveMatch.Opponent.Character, out string imagePath))
             {
@@ -632,8 +693,9 @@ namespace Rivals2Tracker
             RaisePropertyChanged("IsInputLocked");
             RaisePropertyChanged("ActiveMatchStatusString");
 
-            GetPlayerInfo();
-            ShowPlayerMatchData();
+            GetOpponentSeasonInfo();
+            ToggleMatchHistoryView(MatchHistoryView.Players);
+            TogglePlayerInformationView(PlayerInformationView.Notes);
             RefreshPlaceholderVisibility();
         }
 
@@ -646,51 +708,77 @@ namespace Rivals2Tracker
             RaisePropertyChanged(nameof(IsNotesPhVisible));
         }
 
-        private void GetPlayerInfo()
+        private void GetOpponentSeasonInfo()
         {
-            if (ActiveMatch is null)
+            MatchHistoryOpponent = new Opponent(MatchHistoryOpponentTagSearch);
+
+            if (String.IsNullOrEmpty(MatchHistoryOpponent.Tag))
             {
-                Debug.WriteLine("Active Match was null - exiting GetPlayerInfo()");
                 return;
             }
 
-            ActiveOpponent = new(ActiveMatch.Opponent.Name ?? "??");
+            MatchHistoryOpponentMatches.MatchResults = new ObservableCollection<MatchResult>(
+                RivalsORM.AllMatches.Where(r => r.Opponent?.Equals(MatchHistoryOpponent.Tag, StringComparison.OrdinalIgnoreCase) == true).ToList());
 
-            List<MatchResult> opponentResults = MatchResults.Where(r => r.Opponent == ActiveMatch.Opponent.Name).ToList();
-
-            foreach (MatchResult match in opponentResults)
+            foreach (MatchResult match in MatchHistoryOpponentMatches.MatchResults)
             {
                 if (match.Result == "Win")
                 {
-                    ActiveOpponent.WinsTotal++;
+                    MatchHistoryOpponent.WinsTotal++;
 
                     if (IsPatchMatch(currentPatch.Substring(0, 3), match.Patch))
                     {
-                        ActiveOpponent.WinsSeasonal++;
+                        MatchHistoryOpponent.WinsSeasonal++;
                     }
                 }
                 else if (match.Result == "Lose")
                 {
-                    ActiveOpponent.LosesTotal++;
+                    MatchHistoryOpponent.LosesTotal++;
 
                     if (IsPatchMatch(currentPatch.Substring(0, 3), match.Patch))
                     {
-                        ActiveOpponent.LosesSeasonal++;
+                        MatchHistoryOpponent.LosesSeasonal++;
                     }
                 }
 
                 if (!String.IsNullOrEmpty(match.Notes))
                 {
-                    ActiveOpponent.Notes.Add(match.Notes);
-                    RaisePropertyChanged(ActiveOpponent.NotesLabel);
+                    MatchHistoryOpponent.Notes.Add(match.Notes);
+                    RaisePropertyChanged(MatchHistoryOpponent.NotesLabel);
                 }
             }
         }
 
-        private void ShowPlayerMatchData()
+        private void ToggleMatchHistoryView(MatchHistoryView viewToToggle)
         {
-            PlayerMatchHistoryViewVisibility = Visibility.Visible;
-            CharacterMatchHistoryViewVisibility = Visibility.Collapsed;
+            if (viewToToggle == MatchHistoryView.Players)
+            {
+                IsShowingPlayerNotes = true;
+                PlayerMatchHistoryViewVisibility = Visibility.Visible;
+                RivalsMatchHistoryViewVisibility = Visibility.Collapsed;
+            }
+            else if(viewToToggle == MatchHistoryView.Rivals)
+            {
+                IsShowingPlayerNotes = false;
+                PlayerMatchHistoryViewVisibility = Visibility.Collapsed;
+                RivalsMatchHistoryViewVisibility = Visibility.Visible;
+            }
+        }
+
+        private void TogglePlayerInformationView(PlayerInformationView viewToToggle)
+        {
+            if (viewToToggle == PlayerInformationView.Notes)
+            {
+                IsShowingPlayerNotes = true;
+                PlayerNotesVisibility = Visibility.Visible;
+                PlayerMatchesVisibility = Visibility.Collapsed;
+            }
+            else if (viewToToggle == PlayerInformationView.Matches)
+            {
+                IsShowingPlayerNotes = false;
+                PlayerNotesVisibility = Visibility.Collapsed;
+                PlayerMatchesVisibility = Visibility.Visible;
+            }
         }
 
         public async Task OnCaptureMatchHotKey()
@@ -715,6 +803,32 @@ namespace Rivals2Tracker
             {
                 DisplayedCharacterResults = ShowLifetimeResults ? AllSeasonResults : CurrentSeasonResults;
             }
+        }
+
+        private void ToggleRivalsMatchHistory()
+        {
+            IsShowingRivalsHistory = true;
+            ToggleMatchHistoryView(MatchHistoryView.Rivals);
+        }
+        
+        private void TogglePlayersMatchHistory()
+        {
+            IsShowingRivalsHistory = false;
+            ToggleMatchHistoryView(MatchHistoryView.Players);
+        }
+
+        private void TogglePlayerNotes()
+        {
+            IsShowingPlayerNotes = true;
+            TogglePlayerInformationView(PlayerInformationView.Notes);
+
+        }
+
+        private void TogglePlayerMatches()
+        {
+            IsShowingPlayerNotes = false;
+            TogglePlayerInformationView(PlayerInformationView.Matches);
+
         }
 
         private MetaDataTable GetSeasonData(string patch)
@@ -806,6 +920,7 @@ namespace Rivals2Tracker
             }
             else
             {
+                SystemSounds.Exclamation.Play();
                 ActivityText = "No Active Match - You can't select a character without a match active";
             }
             
@@ -823,6 +938,7 @@ namespace Rivals2Tracker
             }
             else
             {
+                SystemSounds.Exclamation.Play();
                 ActivityText = "No Active Match - You can't select a character without a match active";
             }
 

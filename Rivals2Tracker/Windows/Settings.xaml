@@ -32,7 +32,7 @@
             </StackPanel>
         </Grid>
 
-        <StackPanel Height="380" Width="450" Margin="0, 50, 0, 0">
+        <StackPanel Height="420" Width="450" Margin="0, 50, 0, 0">
             <Grid>
                 <Label Content="Rivals Tag" FontFamily="Franklin Gothic Demi" FontSize="20" Width="190" HorizontalAlignment="Left" Foreground="#DEDEDE" HorizontalContentAlignment="Right"/>
                 <TextBox Text="{Binding PlayerName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="200" Margin="200, 0, 0, 0" FontSize="18" FontFamily="Franklin Gothic Demi" HorizontalAlignment="Left" Background="{StaticResource BG_DarkBlue}"  />
@@ -54,6 +54,10 @@
                 <Label Content="{Binding BoundKeyCode}" Margin="200,0,0,0" Background="{StaticResource GR_DarkBlue}" Height="28" Foreground="{StaticResource FG_BlueLabel}" FontSize="16" FontStyle="Italic" Grid.ColumnSpan="2"/>
             </Grid>
             <Grid Margin="0, 10, 0, 0">
+                <Label Content="Enable Audio" FontFamily="Franklin Gothic Demi" FontSize="20" Width="190" HorizontalAlignment="Left" Foreground="#DEDEDE" HorizontalContentAlignment="Right"/>
+                <CheckBox Margin="200, 0, 0, 0" IsChecked="{Binding EnableAudioIsChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+            </Grid>
+            <Grid Margin="0, 0, 0, 0">
                 <Label Content="Save Capture Jpgs" FontFamily="Franklin Gothic Demi" FontSize="20" Width="190" HorizontalAlignment="Left" Foreground="#DEDEDE" HorizontalContentAlignment="Right"/>
                 <CheckBox Margin="200, 0, 0, 0" IsChecked="{Binding SaveCapturesIsChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
             </Grid>

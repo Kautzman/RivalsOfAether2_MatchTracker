@@ -7,6 +7,63 @@
     <converters:WidthToRangeConverter x:Key="WidthToRangeConverter" />
 
     <!-- TODO:  This sucks.  Maybe build a structure to describe this with a lot less boilerplate -->
+
+    <Style x:Key="CancelStartMatchLabel" TargetType="Label" BasedOn="{StaticResource BaseLabel}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window},
+                                       Path=ActualWidth,
+                                       Converter={StaticResource WidthToRangeConverter},
+                                       ConverterParameter=Small}"
+                                       Value="True">
+                <Setter Property="FontSize" Value="18" />
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window},
+                                       Path=ActualWidth,
+                                       Converter={StaticResource WidthToRangeConverter},
+                                       ConverterParameter=Medium}"
+                                       Value="True">
+                <Setter Property="FontSize" Value="26" />
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window},
+                                       Path=ActualWidth,
+                                       Converter={StaticResource WidthToRangeConverter},
+                                       ConverterParameter=Large}"
+                                       Value="True">
+                <Setter Property="FontSize" Value="26" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    
+    <Style x:Key="ErrorTextLabel" TargetType="Label" BasedOn="{StaticResource BaseLabel}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window},
+                                       Path=ActualWidth,
+                                       Converter={StaticResource WidthToRangeConverter},
+                                       ConverterParameter=Small}"
+                                       Value="True">
+                <Setter Property="Width" Value="535" />
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window},
+                                       Path=ActualWidth,
+                                       Converter={StaticResource WidthToRangeConverter},
+                                       ConverterParameter=Medium}"
+                                       Value="True">
+                <Setter Property="Width" Value="650" />
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window},
+                                       Path=ActualWidth,
+                                       Converter={StaticResource WidthToRangeConverter},
+                                       ConverterParameter=Large}"
+                                       Value="True">
+                <Setter Property="Width" Value="650" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    
     <Style x:Key="MatchInformationTextBoxes" TargetType="TextBox" BasedOn="{StaticResource TextBoxBase}">
         <Style.Triggers>
             <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window},
@@ -206,7 +263,7 @@
                                        Converter={StaticResource WidthToRangeConverter},
                                        ConverterParameter=Small}"
                                        Value="True">
-                <Setter Property="Margin" Value="690, 70, 0, 45" />
+                <Setter Property="Margin" Value="0, 70, 0, 45" />
             </DataTrigger>
 
             <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window},
@@ -214,7 +271,7 @@
                                        Converter={StaticResource WidthToRangeConverter},
                                        ConverterParameter=Medium}"
                                        Value="True">
-                <Setter Property="Margin" Value="963, 70, 0, 45" />
+                <Setter Property="Margin" Value="98, 70, 0, 45" />
             </DataTrigger>
 
             <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window},

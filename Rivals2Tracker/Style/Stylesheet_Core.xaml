@@ -213,6 +213,65 @@
         </Setter>
     </Style>
 
+    <!-- Rivals / Player search buttons -->
+    <Style x:Key="MatchHistoryButtonStyle" TargetType="Button">
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="Width" Value="135"/>
+        <Setter Property="FontFamily" Value="Franklin Gothic Demi"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="Foreground" Value="#b0b0b0"/>
+        <Setter Property="BorderBrush" Value="{StaticResource GR_Blue}"/>
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource FG_BlueLabel}" />
+                <Setter Property="Foreground" Value="{StaticResource BG_DarkBlue}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{StaticResource BG_DarkBlue}" />
+                <Setter Property="Foreground" Value="{StaticResource FG_WhiteLabel}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="PlayersButtonStyle" TargetType="Button" BasedOn="{StaticResource MatchHistoryButtonStyle}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsShowingRivalsHistory}" Value="False">
+                <Setter Property="Foreground" Value="{StaticResource FG_WhiteLabel}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource FG_BlueLabel}"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="RivalsButtonStyle" TargetType="Button" BasedOn="{StaticResource MatchHistoryButtonStyle}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsShowingRivalsHistory}" Value="True">
+                <Setter Property="Foreground" Value="{StaticResource FG_WhiteLabel}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource FG_BlueLabel}"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="PlayerNotesStyle" TargetType="Button" BasedOn="{StaticResource MatchHistoryButtonStyle}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsShowingPlayerNotes}" Value="True">
+                <Setter Property="Foreground" Value="{StaticResource FG_WhiteLabel}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource FG_BlueLabel}"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="PlayerMatchHistoryStyle" TargetType="Button" BasedOn="{StaticResource MatchHistoryButtonStyle}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsShowingPlayerNotes}" Value="False">
+                <Setter Property="Foreground" Value="{StaticResource FG_WhiteLabel}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource FG_BlueLabel}"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
     <Style TargetType="{x:Type Button}" BasedOn="{StaticResource BaseButton}" />
 
     <!-- ==================================================================================================================== -->
@@ -862,11 +921,11 @@
     <SolidColorBrush x:Key="ListView.Item.Background.Selected" Color="Transparent"/>
     <SolidColorBrush x:Key="ListView.Item.Background.Hover" Color="Transparent"/>
 
-    <ControlTemplate x:Key="CustomListViewItemTemplate" TargetType="ListViewItem">
+    <ControlTemplate x:Key="BaseListViewItemTemplate" TargetType="ListViewItem">
         <Border Name="ItemBorder" BorderThickness="2" BorderBrush="{StaticResource ListView.Item.Border.Default}"
                 Background="{StaticResource ListView.Item.Background.Default}" Padding="{TemplateBinding Padding}" Margin="1" CornerRadius="2">
             <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
         </Border>
 
         <ControlTemplate.Triggers>
@@ -895,11 +954,11 @@
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
-    <Style x:Key="CustomListViewItemStyle" TargetType="ListViewItem">
-        <Setter Property="Template" Value="{StaticResource CustomListViewItemTemplate}"/>
+    <Style x:Key="BaseListViewItem" TargetType="ListViewItem">
+        <Setter Property="Template" Value="{StaticResource BaseListViewItemTemplate}"/>
+        <Setter Property="Focusable" Value="True"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="Focusable" Value="True"/>
     </Style>
 
     <!-- ==================================================================================================================== -->
@@ -909,8 +968,8 @@
     <Style TargetType="{x:Type ComboBoxItem}">
         <Setter Property="Background" Value="{StaticResource BG_Component}" />
         <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="Height" Value="22" />
-        <Setter Property="FontSize" Value="11" />
+        <Setter Property="Height" Value="25" />
+        <Setter Property="FontSize" Value="15" />
         <Setter Property="VerticalAlignment" Value="Center" />
 
         <Setter Property="Template">
@@ -937,18 +996,18 @@
     <!-- ==================================================================================================================== -->
     
     <Style TargetType="{x:Type ComboBox}" x:Key="BaseComboBox">
-        <Setter Property="Foreground" Value="{StaticResource FG_Interactable}" />
+        <Setter Property="Foreground" Value="{StaticResource FG_WhiteLabel}" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Top" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="Height" Value="22" />
+        <Setter Property="Height" Value="27" />
         <Setter Property="BorderBrush" Value="{StaticResource Border_Toolbar}" />
 
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBox}">
-                    <Border CornerRadius="2" Background="Transparent" BorderBrush="{StaticResource Shadow_Dark}" BorderThickness="0, 0, 0, 1">
+                    <Border CornerRadius="2" Background="Transparent" BorderBrush="{StaticResource LGR_Blue}" BorderThickness="0, 0, 0, 1">
                         <Grid x:Name="templateRoot" SnapsToDevicePixels="True">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -957,11 +1016,11 @@
                             <!-- Drop Down Template-->
                             <Popup x:Name="PART_Popup" AllowsTransparency="True" Grid.ColumnSpan="2" IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Margin="1" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}" Placement="Bottom">
                                 <Themes:SystemDropShadowChrome x:Name="shadow" Color="Transparent" MaxHeight="{TemplateBinding MaxDropDownHeight}" MinWidth="{Binding ActualWidth, ElementName=templateRoot}">
-                                    <Border x:Name="DropDownBorder" BorderBrush="{StaticResource Shadow_Dark}" BorderThickness="1" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
-                                        <ScrollViewer x:Name="DropDownScrollViewer">
+                                    <Border x:Name="DropDownBorder" BorderBrush="{StaticResource BG_DarkBlue}" BorderThickness="1" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+                                        <ScrollViewer x:Name="DropDownScrollViewer" Background="{StaticResource GR_DarkBlue}">
                                             <Grid x:Name="grid" RenderOptions.ClearTypeHint="Enabled">
                                                 <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0">
-                                                    <Rectangle x:Name="OpaqueRect" Fill="{StaticResource BG_Component}" Height="{Binding ActualHeight, ElementName=DropDownBorder}" Width="{Binding ActualWidth, ElementName=DropDownBorder}"/>
+                                                    <Rectangle x:Name="OpaqueRect" Fill="{StaticResource BG_DarkBlue}" Height="{Binding ActualHeight, ElementName=DropDownBorder}" Width="{Binding ActualWidth, ElementName=DropDownBorder}"/>
                                                 </Canvas>
                                                 <ItemsPresenter x:Name="ItemsPresenter" KeyboardNavigation.DirectionalNavigation="Contained" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                                             </Grid>
@@ -982,9 +1041,9 @@
                                                     <!-- Main Container-->
                                                     <Border x:Name="templateRoot" BorderBrush="{StaticResource Border_Control}" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="True" CornerRadius="2">
                                                         <Grid>
-                                                            <Border x:Name="mainContainer" CornerRadius="2" Background="{StaticResource BG_Component}" BorderBrush="{StaticResource Shadow_Dark}" BorderThickness="0, 1, 0, 0" />
+                                                            <Border x:Name="mainContainer" CornerRadius="2" Background="{StaticResource BG_DarkBlue}" BorderBrush="{StaticResource LGR_Blue}" BorderThickness="0, 1, 0, 0" />
                                                             <Border x:Name="splitBorder" BorderBrush="Transparent" BorderThickness="1" HorizontalAlignment="Right" Margin="0" SnapsToDevicePixels="True" Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}">
-                                                                <Polygon Points="0,0  3,3, 6,0" Stroke="{StaticResource FG_Interactable}" Fill="{StaticResource FG_Interactable}" Margin="5, 7, 0, 0"/>
+                                                                <Polygon Points="0,0 5,5 10,0" Stroke="{StaticResource FG_Interactable}" Fill="{StaticResource FG_Interactable}" Margin="0, 7, 0, 0"/>
                                                             </Border>
                                                         </Grid>
                                                     </Border>
@@ -994,7 +1053,7 @@
                                                                 <Condition Binding="{Binding IsDropDownOpen, RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type ComboBox}}}" Value="True"/>
                                                                 <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type ComboBox}}}" Value="False"/>
                                                             </MultiDataTrigger.Conditions>
-                                                            <Setter Property="Background" TargetName="mainContainer" Value="{StaticResource BG_ClickedItem}"/>
+                                                            <Setter Property="Background" TargetName="mainContainer" Value="{StaticResource BG_DarkBlue}"/>
                                                         </MultiDataTrigger>
                                                         <MultiDataTrigger>
                                                             <MultiDataTrigger.Conditions>
@@ -1002,7 +1061,7 @@
                                                                 <Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="False"/>
                                                                 <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type ComboBox}}}" Value="False"/>
                                                             </MultiDataTrigger.Conditions>
-                                                            <Setter Property="BorderBrush" TargetName="templateRoot" Value="{StaticResource FG_Orange}"/>
+                                                            <Setter Property="BorderBrush" TargetName="templateRoot" Value="{StaticResource FG_BlueLabel}"/>
                                                         </MultiDataTrigger>
                                                         <MultiDataTrigger>
                                                             <MultiDataTrigger.Conditions>
@@ -1016,8 +1075,8 @@
                                                                 <Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="True"/>
                                                                 <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type ComboBox}}}" Value="True"/>
                                                             </MultiDataTrigger.Conditions>
-                                                            <Setter Property="BorderBrush" TargetName="templateRoot" Value="{StaticResource FG_Orange}"/>
-                                                            <Setter Property="Background" TargetName="templateRoot" Value="{StaticResource BG_ClickedItem}"/>
+                                                            <Setter Property="BorderBrush" TargetName="templateRoot" Value="{StaticResource FG_BlueLabel}"/>
+                                                            <Setter Property="Background" TargetName="templateRoot" Value="{StaticResource BG_DarkBlue}"/>
                                                         </MultiDataTrigger>
                                                         <MultiDataTrigger>
                                                             <MultiDataTrigger.Conditions>
@@ -1025,7 +1084,7 @@
                                                                 <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type ComboBox}}}" Value="False"/>
                                                             </MultiDataTrigger.Conditions>
                                                             <Setter Property="Background" TargetName="templateRoot" Value="{StaticResource BG_CheckBox}"/>
-                                                            <Setter Property="BorderBrush" TargetName="templateRoot" Value="{StaticResource BG_CheckBox}"/>
+                                                            <Setter Property="BorderBrush" TargetName="templateRoot" Value="{StaticResource BG_DarkBlue}"/>
                                                         </MultiDataTrigger>
                                                         <MultiDataTrigger>
                                                             <MultiDataTrigger.Conditions>
@@ -1050,10 +1109,10 @@
                             <Setter Property="Color" TargetName="shadow" Value="#71000000"/>
                         </Trigger>
                         <Trigger Property="HasItems" Value="False">
-                            <Setter Property="Height" TargetName="DropDownBorder" Value="95"/>
+                            <Setter Property="Height" TargetName="DropDownBorder" Value="195"/>
                         </Trigger>
                         <Trigger Property="IsDropDownOpen" Value="True">
-                            <Setter Property="Height" TargetName="DropDownBorder" Value="95"/>
+                            <Setter Property="Height" TargetName="DropDownBorder" Value="195"/>
                         </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>

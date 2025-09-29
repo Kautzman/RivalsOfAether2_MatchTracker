@@ -51,8 +51,19 @@ namespace Rivals2Tracker
             get { return _saveCapturesIsChecked; }
             set
             {
-                GlobalData.SaveCaptures = value;
+                GlobalData.IsSaveCaptures = value;
                 SetProperty(ref _saveCapturesIsChecked, value);
+            }
+        }
+
+        private bool _EnableAudioIsChecked;
+        public bool EnableAudioIsChecked
+        {
+            get { return _EnableAudioIsChecked; }
+            set
+            {
+                GlobalData.IsPlayAudio = value;
+                SetProperty(ref _EnableAudioIsChecked, value);
             }
         }
 
@@ -60,6 +71,8 @@ namespace Rivals2Tracker
 
         public Settings_VM()
         {
+            EnableAudioIsChecked = GlobalData.IsPlayAudio;
+            SaveCapturesIsChecked = GlobalData.IsSaveCaptures;
             BoundKeyCode = HotKeyService.GetReadableShortcutFromUints(GlobalData.ModifierCode, GlobalData.HotKeyCode);
 
             SaveAndCloseCommand = new DelegateCommand(SaveAndClose);
@@ -72,16 +85,12 @@ namespace Rivals2Tracker
             Patch = RivalsORM.GetPatchValue();
         }
 
-        private string GetCurrentKeybind()
-        {
-            Key key = KeyInterop.KeyFromVirtualKey((int)GlobalData.HotKeyCode);
-            return new KeyConverter().ConvertToString(key);
-        }
-
         private void SaveAndClose()
         {
             RivalsORM.SetMetaDataValue("Patch", Patch);
             RivalsORM.SetMetaDataValue("PlayerName", PlayerName);
+            RivalsORM.SetMetaDataValue("PlayAudio", EnableAudioIsChecked ? "1" : "0");
+            RivalsORM.SetMetaDataValue("SaveCaptures", SaveCapturesIsChecked ? "1" : "0");
             Close?.Invoke();
         }
     }

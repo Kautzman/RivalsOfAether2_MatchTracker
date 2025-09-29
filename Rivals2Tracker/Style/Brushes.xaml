@@ -2,7 +2,6 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:HyperbiusEdit">
 
-
     <!-- ==================================================================================================================== -->
     <!-- Background Brushes -->
     <!-- ==================================================================================================================== -->
@@ -65,6 +64,9 @@
     <SolidColorBrush x:Key="BG_DarkBlue" Color="#02102E" />
     <SolidColorBrush x:Key="GR_DarkBlue" Color="#121A56" />
     <SolidColorBrush x:Key="GR_Blue" Color="#252789" />
+
+    <!-- Get your shit together, WPF...-->
+    <Color x:Key="FG_C_ErrorFaded">#670015</Color>
 
     <LinearGradientBrush x:Key="LGR_Banner" StartPoint="0,0" EndPoint="0,1">
         <GradientStop Color="#05011A" Offset="0"/>

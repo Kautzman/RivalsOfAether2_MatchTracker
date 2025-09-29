@@ -14,7 +14,8 @@ namespace Rivals2Tracker.Data
         public static IntPtr MainWindowHandle { get; set; }
         public static string CurrentSeason = "1.3";
         public static string MyName = "Kadecgos";
-        public static bool SaveCaptures = false;
+        public static bool IsSaveCaptures = false;
+        public static bool IsPlayAudio = true;
         public static uint HotKeyCode = 0;
         public static uint ModifierCode = 0;
 
@@ -85,5 +86,17 @@ namespace Rivals2Tracker.Data
 
             return false;
         }
+    }
+
+    public enum MatchHistoryView
+    {
+        Rivals,
+        Players
+    }
+
+    public enum PlayerInformationView
+    {
+        Notes,
+        Matches
     }
 }
