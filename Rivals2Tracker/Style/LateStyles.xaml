@@ -38,14 +38,14 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="MatchInformationNotesTextBox" TargetType="TextBox" BasedOn="{StaticResource TextBoxBase}">
+    <Style x:Key="MatchInformationNotesTextBox" TargetType="TextBox" BasedOn="{StaticResource TextBoxWhiteFg}">
         <Style.Triggers>
             <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window},
                                        Path=ActualWidth,
                                        Converter={StaticResource WidthToRangeConverter},
                                        ConverterParameter=Small}"
                                        Value="True">
-                <Setter Property="Width" Value="560" />
+                <Setter Property="Width" Value="600" />
                 <Setter Property="FontSize" Value="22" />
             </DataTrigger>
 
@@ -131,7 +131,7 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="MatchResultButton" TargetType="Button">
+    <Style x:Key="MatchResultButton" TargetType="Button" BasedOn="{StaticResource BaseButton}">
         <Style.Triggers>
             <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window},
                                        Path=ActualWidth,
@@ -165,7 +165,7 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="MatchResultButtonSmallText" TargetType="Button">
+    <Style x:Key="MatchResultButtonSmallText" TargetType="Button" BasedOn="{StaticResource BaseButton}">
         <Style.Triggers>
             <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window},
                                        Path=ActualWidth,

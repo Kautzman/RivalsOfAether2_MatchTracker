@@ -1,34 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using kWindows.Core;
+using Rivals2Tracker.Data;
 using Rivals2Tracker.HotkeyHandler;
+using Rivals2Tracker.Services;
 
 namespace Rivals2Tracker
 {
     public partial class MainWindow : kWindow
     {
-
         WindowInteropHelper helper;
         nint hwnd;
 
         public MainWindow()
         {
+            try
+            {
+                GlobalData.HotKeyCode = RivalsORM.GetMatchHotKey();
+                GlobalData.ModifierCode = RivalsORM.GetMatchHotKeyModifier();
+            }
+            catch(Exception ex)
+            {
+                Debug.WriteLine("[ERROR] Failed to retrieve Hotkey or the Hotkey modifer code -- setting to default (Scroll Lock)");
+                GlobalData.HotKeyCode = 145; // Scroll Lock
+                GlobalData.ModifierCode = 0; // Nothing
+            }
             InitializeComponent();
         }
 
@@ -39,9 +40,11 @@ namespace Rivals2Tracker
             helper = new WindowInteropHelper(this);
             hwnd = helper.Handle;
 
-            HotKeyManager.RegisterHotKey(hwnd, 1, HotKeyManager.MOD_NONE, (uint)KeyInterop.VirtualKeyFromKey(Key.Scroll));
+            GlobalData.MainWindowHandle = hwnd;
 
-            HwndSource source = HwndSource.FromHwnd(hwnd);
+            HotKeyService.RegisterHotKey(GlobalData.ModifierCode, GlobalData.HotKeyCode);
+
+            HwndSource source = HwndSource.FromHwnd(GlobalData.MainWindowHandle);
             source.AddHook(HwndHook);
         }
 
@@ -62,19 +65,6 @@ namespace Rivals2Tracker
             }
 
             return IntPtr.Zero;
-        }
-
-        private void RegisterNewHotkey(uint keycode)
-        {
-            // There is an assumption here that '1' is the index of the hotkey being tracked.  I might not even need to 'unregister' it and instead just
-            // Can overwrite it with RegsiterHotKey() again.
-
-            HotKeyManager.UnregisterHotKey(hwnd, 1);
-
-            // Somehow pass a captured key code from VM to here (uint keycode)
-            // ?? Do I need to do this in codebehind?  Seems like HotKeyManager is a singleton that's globally available.
-
-            HotKeyManager.RegisterHotKey(hwnd, 1, HotKeyManager.MOD_NONE, keycode);
         }
 
         private void OuterBorder_Loaded(object sender, RoutedEventArgs e)

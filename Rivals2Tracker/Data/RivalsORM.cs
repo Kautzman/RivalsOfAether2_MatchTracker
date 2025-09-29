@@ -9,8 +9,10 @@ using System.Security.Permissions;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Microsoft.Data.Sqlite;
 using Rivals2Tracker.Models;
+using Rivals2Tracker.Services;
 
 namespace Rivals2Tracker.Data
 {
@@ -97,6 +99,22 @@ namespace Rivals2Tracker.Data
             return ExecuteQueryForValue("SELECT IsFirstStart FROM Metadata LIMIT 1");
         }
 
+        public static uint GetMatchHotKey()
+        {
+            return ExecuteQueryForUint("SELECT CaptureHotKeyCode FROM Metadata LIMIT 1");
+        }
+
+        public static uint GetMatchHotKeyModifier()
+        {
+            return ExecuteQueryForUint("SELECT CaptureModifierCode FROM Metadata LIMIT 1");
+        }
+
+        public static void SaveHotKeyToDatabase(ModifierKeys modifiers, Key key)
+        {
+            SetMetaDataValue("CaptureHotKeyCode", HotKeyService.ConvertKeyCodeToUint(key).ToString());
+            SetMetaDataValue("CaptureModifierCode", HotKeyService.ConvertModifierFlagsToUint(modifiers).ToString());
+        }
+
         public static string SetMetaDataValue(string field, string newValue)
         {
             using (conn)
@@ -105,10 +123,8 @@ namespace Rivals2Tracker.Data
 
                 SqliteCommand cmd = new SqliteCommand();
                 cmd.Connection = conn;
+                cmd.CommandText = $"UPDATE Metadata SET {field} = '{newValue}' WHERE ID = '1'";
 
-{
-                    cmd.CommandText = $"UPDATE Metadata SET {field} = '{newValue}' WHERE ID = '1'";
-}
                 Task<object?> rowID = cmd.ExecuteScalarAsync();
 
                 if (rowID == null)
@@ -192,6 +208,22 @@ namespace Rivals2Tracker.Data
             }
 
             return table;
+        }
+
+        public static uint ExecuteQueryForUint(string command)
+        {
+            object? value = null;
+
+            using (conn)
+            {
+                conn.Open();
+                value = new SqliteCommand(command, conn).ExecuteScalar();
+            }
+
+            if (value == null || value == DBNull.Value)
+                return 0;
+
+            return Convert.ToUInt32(value);
         }
 
         public static string ExecuteQueryForValue(string command)

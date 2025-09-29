@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Rivals2Tracker.HotkeyHandler;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime;
@@ -10,8 +11,12 @@ namespace Rivals2Tracker.Data
 {
     public static class GlobalData
     {
+        public static IntPtr MainWindowHandle { get; set; }
         public static string CurrentSeason = "1.3";
         public static string MyName = "Kadecgos";
+        public static bool SaveCaptures = false;
+        public static uint HotKeyCode = 0;
+        public static uint ModifierCode = 0;
 
         public static List<string> AllCharacters = new List<string>
         {

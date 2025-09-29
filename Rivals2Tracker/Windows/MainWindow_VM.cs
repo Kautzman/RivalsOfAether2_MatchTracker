@@ -135,6 +135,7 @@ namespace Rivals2Tracker
                 OpponentElo = ActiveMatch.Opponent.Elo;
                 MyElo = ActiveMatch.Me.Elo;
 
+                RaisePropertyChanged(nameof(CancelNewMatchButtonString));
                 RaisePropertyChanged(nameof(CompletedLabelVisibility));
             }
         }
@@ -145,6 +146,7 @@ namespace Rivals2Tracker
             get { return _activeOpponent; }
             set
             {
+                value.Tag = FilterEllipses(value.Tag);
                 SetProperty(ref _activeOpponent, value);
             }
         }
@@ -266,6 +268,17 @@ namespace Rivals2Tracker
             }
         }
 
+        public string CancelNewMatchButtonString
+        {
+            get
+            {
+                if (ActiveMatch == null)
+                    return " Start\nMatch";
+
+                return ActiveMatch.Status == MatchStatus.InProgress ? "Cancel" : " Start\nMatch";
+            }
+        }
+
         private string _myElo;
         public string MyElo
         {
@@ -352,7 +365,7 @@ namespace Rivals2Tracker
             {
                 if (ActiveMatch is null)
                 {
-                    return "No Active Match";
+                    return "Waiting For Match...";
                 }
 
                 if (ActiveMatch.Status == MatchStatus.Finished)
@@ -371,6 +384,17 @@ namespace Rivals2Tracker
                 RaisePropertyChanged(nameof(CompletedLabelVisibility));
                 SetProperty(ref _activeMatchStatusString, value);
             }
+        }
+
+        public string FilterEllipses(string rawInput)
+        {
+            rawInput = rawInput.Replace("...", ".");
+            rawInput = rawInput.Replace("..,", ".");
+            rawInput = rawInput.Replace(".,,", ".");
+            rawInput = rawInput.Replace(".,", ".");
+            rawInput = rawInput.Replace("..", ".");
+
+            return rawInput;
         }
 
         public bool IsInputLocked
@@ -463,7 +487,7 @@ namespace Rivals2Tracker
             SetMatchWinCommand = new DelegateCommand(() => _ = SetMatchWin());
             SetMatchLoseCommand = new DelegateCommand(() => _ = SetMatchLose());
             SetMatchDiscardCommand = new DelegateCommand(() => _ = SetMatchDiscard());
-            TestOcrCommand = new DelegateCommand(() => _ = DoTheOcr());
+            TestOcrCommand = new DelegateCommand(() => _ = StartNewMatchFromOCR());
             ShowMyFlyoutCommand = new DelegateCommand(ShowMyFlyout);
             ShowFlyoutCommand = new DelegateCommand(ShowFlyout);
             ShowSecondaryFlyoutCommand = new DelegateCommand(ShowSecondaryFlyout);
@@ -558,8 +582,10 @@ namespace Rivals2Tracker
                 ResetMatchStatus();
                 return;
             }
-
-            ActivityText = "You can't flag a match as Invalid if it's not In Progress.";
+            else
+            {
+                await StartNewMatchFromOCR();
+            }
         }
 
         private void ResetMatchStatus()
@@ -572,7 +598,7 @@ namespace Rivals2Tracker
             return;
         }
 
-        private async Task DoTheOcr()
+        private async Task StartNewMatchFromOCR()
         {
             RivalsOcrResult result = await RivalsOcrEngine.Capture();
 
@@ -671,7 +697,7 @@ namespace Rivals2Tracker
         {
             SecondarySelectedImagePath = "/Resources/CharacterIcons/unknown.png";
             SelectedImagePath = "/Resources/CharacterIcons/unknown.png";
-            await DoTheOcr();
+            await StartNewMatchFromOCR();
         }
 
         private void GetMatches(bool isOnStart = false)

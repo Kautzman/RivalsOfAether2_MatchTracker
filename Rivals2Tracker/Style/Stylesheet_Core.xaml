@@ -236,12 +236,6 @@
                         <ScrollViewer x:Name="PART_ContentHost" />
                     </Border>
                     <ControlTemplate.Triggers>
-                        <!--<Trigger Property="Height" Value="Auto">
-                            <Setter Property="MinHeight" Value="20"/>
-                        </Trigger>
-                        <Trigger Property="IsReadOnly" Value="True">
-                            <Setter Property="Foreground" Value="{StaticResource FG_Control_Disabled}" />
-                        </Trigger>-->
                         <Trigger Property="IsFocused" Value="True">
                             <Setter TargetName="Bd" Property="Background" Value="{StaticResource FG_BlueLabel}"/>
                             <Setter Property="Opacity" Value="100" />
@@ -251,43 +245,35 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-
-        <!--<Style.Triggers>
-            <MultiTrigger>
-                <MultiTrigger.Conditions>
-                    <Condition Property="IsMouseOver" Value="True" />
-                    <Condition Property="IsReadOnly" Value="True" />
-                </MultiTrigger.Conditions>
-                <MultiTrigger.Setters>
-                    <Setter Property="Background" Value="{StaticResource BG_Toolbar2}"/>
-                </MultiTrigger.Setters>
-            </MultiTrigger>
-        </Style.Triggers>-->
     </Style>
 
-    <!--<Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource TextBoxBase}" x:Key="ValidationTextBox">
-        <Style.Triggers>
-            <MultiDataTrigger>
-                <MultiDataTrigger.Conditions>
-                    <Condition Binding="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsFocused}" Value="True"/>
-                    <Condition Binding="{Binding Path=IsInputValid}" Value="True"/>
-                </MultiDataTrigger.Conditions>
-                <Setter Property="BorderBrush" Value="{StaticResource Combobox_SelectedItem}" />
-            </MultiDataTrigger>
-            
-            <DataTrigger Binding="{Binding Path=IsInputValid}" Value="False">
-                <Setter Property="BorderBrush" Value="{StaticResource Border_Component_Error}" />
-            </DataTrigger>
+    <Style TargetType="{x:Type TextBox}" x:Key="TextBoxWhiteFg">
+        <Setter Property="Background" Value="{StaticResource BG_Component}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Border_Component}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Foreground" Value="{StaticResource FG_WhiteLabel}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Height" Value="25" />
+        <Setter Property="Opacity" Value="10" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
 
-            <MultiDataTrigger>
-                <MultiDataTrigger.Conditions>
-                    <Condition Binding="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsFocused}" Value="True"/>
-                    <Condition Binding="{Binding Path=IsInputValid}" Value="False"/>
-                </MultiDataTrigger.Conditions>
-                <Setter Property="BorderBrush" Value="{StaticResource FG_Purple}" />
-            </MultiDataTrigger>
-        </Style.Triggers>
-    </Style>-->
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TextBoxBase}">
+                    <Border Background="{TemplateBinding Background}" x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="2">
+                        <ScrollViewer x:Name="PART_ContentHost" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsFocused" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource FG_BlueLabel}"/>
+                            <Setter Property="Opacity" Value="100" />
+                            <Setter Property="Foreground" Value="{StaticResource BG_DarkBlue}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
     <Style BasedOn="{StaticResource TextBoxBase}" TargetType="{x:Type TextBox}" />
 
@@ -296,11 +282,11 @@
     <!-- ==================================================================================================================== -->
     
     <Style TargetType="{x:Type CheckBox}" x:Key="BaseCheckBox">
-        <Setter Property="Background" Value="{StaticResource BG_CheckBox}" />
-        <Setter Property="Foreground" Value="{StaticResource FG_Interactable}" />
-        <Setter Property="BorderBrush" Value="{StaticResource Border_Control}" />
+        <Setter Property="Background" Value="{StaticResource BG_DarkBlue}" />
+        <Setter Property="Foreground" Value="{StaticResource FG_BlueLabel}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BG_DarkBlue}" />
         <Setter Property="Padding" Value="5, 0, 0, 0" />
-        <Setter Property="Height" Value="20" />
+        <Setter Property="Height" Value="25" />
         <Setter Property="FontSize" Value="11" />
 
         <Setter Property="Template">
@@ -308,8 +294,8 @@
                 <ControlTemplate TargetType="{x:Type CheckBox}">
                     <BulletDecorator Background="Transparent" SnapsToDevicePixels="true">
                         <BulletDecorator.Bullet>
-                            <Border x:Name="Border" Width="13" Height="13" CornerRadius="2" Background="{TemplateBinding Background}" BorderThickness="1" BorderBrush="{TemplateBinding BorderBrush}" Margin="0, 0, 10, 0">
-                                <Path Width="7" Height="7" x:Name="CheckMark" SnapsToDevicePixels="False" Stroke="{StaticResource FG_Interactable}" StrokeThickness="2" Data="M 0 0 L 7 7 M 0 7 L 7 0" />
+                            <Border x:Name="Border" Width="25" Height="25" CornerRadius="2" Background="{TemplateBinding Background}" BorderThickness="1" BorderBrush="{TemplateBinding BorderBrush}" Margin="0, 0, 10, 0">
+                                <Path Width="15" Height="15" x:Name="CheckMark" SnapsToDevicePixels="False" Stroke="{StaticResource FG_BlueLabel}" StrokeThickness="2" Data="M 2 8 L 6 12 L 14 2" />
                             </Border>
                         </BulletDecorator.Bullet>
                         <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
@@ -323,10 +309,10 @@
                             <Setter TargetName="CheckMark" Property="Data" Value="M 0 7 L 7 0" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource FG_Orange}" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource FG_BlueLabel}" />
                         </Trigger>
                         <Trigger Property="IsFocused" Value="True">
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource FG_Orange}" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource FG_BlueLabel}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="CheckMark" Property="Stroke" Value="{StaticResource FG_Control_Disabled}" />

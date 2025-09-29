@@ -32,31 +32,36 @@
             </StackPanel>
         </Grid>
 
-        <StackPanel Height="350" Width="450" Margin="0, 50, 0, 0">
+        <StackPanel Height="380" Width="450" Margin="0, 50, 0, 0">
             <Grid>
                 <Label Content="Rivals Tag" FontFamily="Franklin Gothic Demi" FontSize="20" Width="190" HorizontalAlignment="Left" Foreground="#DEDEDE" HorizontalContentAlignment="Right"/>
                 <TextBox Text="{Binding PlayerName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="200" Margin="200, 0, 0, 0" FontSize="18" FontFamily="Franklin Gothic Demi" HorizontalAlignment="Left" Background="{StaticResource BG_DarkBlue}"  />
             </Grid>
             <Grid>
-                <TextBlock FontSize="16" Foreground="#d0d0d0">*This should be entered as it appears on the Stage Select screen<LineBreak/> if you have several characters in your tag it may be truncated.<LineBreak/>  Enter it here as it appears exactly in that screen</TextBlock>
+                <TextBlock FontSize="16" Foreground="#d0d0d0">*This should be entered as it appears on the Stage Select screen<LineBreak/> if you have several characters in your tag it may be truncated.<LineBreak/>  Enter it here as it appears exactly on that screen</TextBlock>
             </Grid>
             <Grid Margin="0, 20, 0, 0">
                 <Label Content="Current Patch" FontFamily="Franklin Gothic Demi" FontSize="20" Width="190" HorizontalAlignment="Left" Foreground="#DEDEDE" HorizontalContentAlignment="Right"/>
                 <TextBox Text="{Binding Patch, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="100" Margin="200, 0, 0, 0" FontFamily="Franklin Gothic Demi" FontSize="18" HorizontalAlignment="Left" Background="{StaticResource BG_DarkBlue}"  />
             </Grid>
-            <Grid Margin="0, 0, 0, 0">
-                <Label Content="Game Resolution" FontFamily="Franklin Gothic Demi" FontSize="20" Width="190" HorizontalAlignment="Left" Foreground="#DEDEDE" HorizontalContentAlignment="Right"/>
+            <Grid Margin="0, 10, 0, 0">
+                <Label Content="Set Capture Keybind" FontFamily="Franklin Gothic Demi" FontSize="20" Width="190" HorizontalAlignment="Left" Foreground="#DEDEDE" HorizontalContentAlignment="Right"/>
+                <Button Margin="100, 0, 0, 0" Content="{Binding SetKeybindText}" Width="150" Height="30" Foreground="{StaticResource FG_BlueLabel}"
+                    FontSize="18" FontFamily="Franklin Gothic Demi Cond" BorderThickness="1" Background="{StaticResource BG_DarkBlue}" Click="SetHotKeyButton_Click"/>
             </Grid>
-            <Grid Margin="0, -28, 0, 0">
-                <StackPanel Margin="200, 0, 0, 0">
-                    <RadioButton GroupName="Resolution" Content=" 1920 x 1080 (1080p)" FontSize="18"/>
-                    <RadioButton GroupName="Resolution" Content=" 2560 x 1440 (1440p)" FontSize="18"/>
-                    <RadioButton GroupName="Resolution" Content=" 3820 x 2160 (4k)" FontSize="18"/>
-                    <RadioButton GroupName="Resolution" Content=" Auto (Not Recommended)" FontSize="18"/>
-                </StackPanel>
+            <Grid>
+                <Label Content="Current Keybind" FontFamily="Franklin Gothic Demi" FontSize="20" Width="190" HorizontalAlignment="Left" Foreground="#DEDEDE" HorizontalContentAlignment="Right"/>
+                <Label Content="{Binding BoundKeyCode}" Margin="200,0,0,0" Background="{StaticResource GR_DarkBlue}" Height="28" Foreground="{StaticResource FG_BlueLabel}" FontSize="16" FontStyle="Italic" Grid.ColumnSpan="2"/>
+            </Grid>
+            <Grid Margin="0, 10, 0, 0">
+                <Label Content="Save Capture Jpgs" FontFamily="Franklin Gothic Demi" FontSize="20" Width="190" HorizontalAlignment="Left" Foreground="#DEDEDE" HorizontalContentAlignment="Right"/>
+                <CheckBox Margin="200, 0, 0, 0" IsChecked="{Binding SaveCapturesIsChecked, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+            </Grid>
+            <Grid>
+                <TextBlock FontSize="16" Foreground="#d0d0d0">*Check this to save the OCR screen captures to your disk<LineBreak/> This is useful for bug reporting and troubleshooting.</TextBlock>
             </Grid>
 
-            <Button Content="Save and Close" Margin="0, 10, 0, 0" Width="200" Height="35" Foreground="{StaticResource FG_BlueLabel}"
+            <Button Content="Save and Close" Margin="0, 15, 0, 0" Width="200" Height="35" Foreground="{StaticResource FG_BlueLabel}"
                     FontSize="22" FontFamily="Franklin Gothic Demi Cond" BorderThickness="1" Background="{StaticResource BG_DarkBlue}"
                     Command="{Binding SaveAndCloseCommand}"/>
         </StackPanel>
