@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Rivals2Tracker
+namespace Slipstream
 {
    public partial class App : Application
     {

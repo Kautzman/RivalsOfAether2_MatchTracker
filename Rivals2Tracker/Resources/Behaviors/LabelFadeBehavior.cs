@@ -5,7 +5,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.ComponentModel;
 
-namespace Rivals2Tracker.Resources.Behaviors
+namespace Slipstream.Resources.Behaviors
 {
     public static class LabelFadeBehavior
     {

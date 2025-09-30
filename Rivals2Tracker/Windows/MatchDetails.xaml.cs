@@ -1,10 +1,10 @@
 ﻿using kWindows.Core;
 using Prism.Events;
 using Prism.Ioc;
-using Rivals2Tracker.Models;
+using Slipstream.Models;
 using System.ComponentModel;
 
-namespace Rivals2Tracker
+namespace Slipstream
 {
     public partial class MatchDetails : kWindow
     {

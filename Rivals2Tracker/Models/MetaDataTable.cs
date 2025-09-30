@@ -1,5 +1,5 @@
 ﻿using Prism.Mvvm;
-using Rivals2Tracker.Data;
+using Slipstream.Data;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,7 +8,7 @@ using System.Security.Cryptography.Pkcs;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Rivals2Tracker.Models
+namespace Slipstream.Models
 {
     class MetaDataTable : BindableBase
     {

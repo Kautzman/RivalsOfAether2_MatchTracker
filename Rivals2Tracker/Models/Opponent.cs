@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Preview.Notes;
 
-namespace Rivals2Tracker.Models
+namespace Slipstream.Models
 {
     class Opponent : BindableBase
     {

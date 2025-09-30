@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using Windows.Globalization;
 using System.Text;
-using Rivals2Tracker.Data;
+using Slipstream.Data;
 
-namespace Rivals2Tracker.Models
+namespace Slipstream.Models
 {
     class RivalsOcrEngine
     {

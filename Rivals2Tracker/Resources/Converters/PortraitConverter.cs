@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace Rivals2Tracker.Resources.Converters
+namespace Slipstream.Resources.Converters
 {
     public  class PortraitConverter : IValueConverter
     {

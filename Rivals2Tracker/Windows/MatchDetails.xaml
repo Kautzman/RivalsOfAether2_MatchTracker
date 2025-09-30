@@ -1,10 +1,10 @@
-﻿<kwin:kWindow x:Class="Rivals2Tracker.MatchDetails"
+﻿<kwin:kWindow x:Class="Slipstream.MatchDetails"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Rivals2Tracker"
-        xmlns:controls="clr-namespace:Rivals2Tracker.Resources.Controls"
+        xmlns:local="clr-namespace:Slipstream"
+        xmlns:controls="clr-namespace:Slipstream.Resources.Controls"
         xmlns:kwin="clr-namespace:kWindows.Core"
         mc:Ignorable="d"
         Title="MainWindow" Height="575" Width="650"
@@ -18,7 +18,7 @@
             <Label Content="Match Details" FontFamily="Franklin Gothic Demi" FontSize="32" Margin="10, 10, 0, 0" Grid.ColumnSpan="3" IsHitTestVisible="False"/>
 
             <Button x:Name="WindowClose" Style="{StaticResource WindowingButton_Close}" Click="WindowCloseClick" VerticalAlignment="Top">
-                <Image Style="{StaticResource Windowing_Image}" Source="/Rivals2Tracker;component/Resources/Icons/Windowing/Close.png" />
+                <Image Style="{StaticResource Windowing_Image}" Source="/Slipstream;component/Resources/Icons/Windowing/Close.png" />
             </Button>
 
             <StackPanel VerticalAlignment="Bottom">

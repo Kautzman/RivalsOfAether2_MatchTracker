@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Prism.Mvvm;
 
-namespace Rivals2Tracker.Models
+namespace Slipstream.Models
 {
     class CharacterMetadata : BindableBase
     {

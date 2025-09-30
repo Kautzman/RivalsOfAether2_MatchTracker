@@ -1,8 +1,8 @@
 ﻿using Prism.Events;
-using Rivals2Tracker.Models;
+using Slipstream.Models;
 using System;
 
-namespace Rivals2Tracker.Resources.Events
+namespace Slipstream.Resources.Events
 {
     class MatchHistoryUpdateEvent
     {

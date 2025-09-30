@@ -1,13 +1,14 @@
-﻿<kwin:kWindow x:Class="Rivals2Tracker.Settings"
+﻿<kwin:kWindow x:Class="Slipstream.Settings"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Rivals2Tracker"
-        xmlns:controls="clr-namespace:Rivals2Tracker.Resources.Controls"
+        xmlns:local="clr-namespace:Slipstream"
+        xmlns:controls="clr-namespace:Slipstream.Resources.Controls"
         xmlns:kwin="clr-namespace:kWindows.Core"
         mc:Ignorable="d"
-        Title="MainWindow" Height="550" Width="600"
+        Title="MainWindow" Height="600" Width="600"
+        ResizeMode="NoResize"
         Style="{StaticResource BaseWindow}">
     <kwin:kWindow.DataContext>
         <local:Settings_VM />
@@ -22,7 +23,7 @@
             <Label Content="Slipstream v0.4.0 - Beta" FontSize="20" Margin="10, 10, 0, 0" Foreground="#c0c0f0" Grid.ColumnSpan="3" HorizontalAlignment="Center" IsHitTestVisible="False"/>
 
             <Button x:Name="WindowClose" Style="{StaticResource WindowingButton_Close}" Click="WindowCloseClick" VerticalAlignment="Top">
-                <Image Style="{StaticResource Windowing_Image}" Source="/Rivals2Tracker;component/Resources/Icons/Windowing/Close.png" />
+                <Image Style="{StaticResource Windowing_Image}" Source="/Slipstream;component/Resources/Icons/Windowing/Close.png" />
             </Button>
 
             <StackPanel VerticalAlignment="Bottom">
@@ -32,7 +33,7 @@
             </StackPanel>
         </Grid>
 
-        <StackPanel Height="420" Width="450" Margin="0, 50, 0, 0">
+        <StackPanel Height="480" Width="450" Margin="0, 50, 0, 0">
             <Grid>
                 <Label Content="Rivals Tag" FontFamily="Franklin Gothic Demi" FontSize="20" Width="190" HorizontalAlignment="Left" Foreground="#DEDEDE" HorizontalContentAlignment="Right"/>
                 <TextBox Text="{Binding PlayerName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="200" Margin="200, 0, 0, 0" FontSize="18" FontFamily="Franklin Gothic Demi" HorizontalAlignment="Left" Background="{StaticResource BG_DarkBlue}"  />
@@ -65,9 +66,15 @@
                 <TextBlock FontSize="16" Foreground="#d0d0d0">*Check this to save the OCR screen captures to your disk<LineBreak/> This is useful for bug reporting and troubleshooting.</TextBlock>
             </Grid>
 
-            <Button Content="Save and Close" Margin="0, 15, 0, 0" Width="200" Height="35" Foreground="{StaticResource FG_BlueLabel}"
+            <Button Content="Show Tutorial" Margin="0, 15, 0, 0" Width="200" Height="35" Foreground="{StaticResource FG_BlueLabel}"
+                    FontSize="22" FontFamily="Franklin Gothic Demi Cond" BorderThickness="1" Background="{StaticResource BG_DarkBlue}"
+                    Command="{Binding ShowTutorialCommand}" />
+
+            <Button Content="Save and Close" Margin="0, 35, 0, 0" Width="200" Height="35" Foreground="{StaticResource FG_BlueLabel}"
                     FontSize="22" FontFamily="Franklin Gothic Demi Cond" BorderThickness="1" Background="{StaticResource BG_DarkBlue}"
                     Command="{Binding SaveAndCloseCommand}"/>
+
+
         </StackPanel>
     </Grid>
 </kwin:kWindow>

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Rivals2Tracker.Models
+namespace Slipstream.Models
 {
     class RivalsMatch : BindableBase
     {

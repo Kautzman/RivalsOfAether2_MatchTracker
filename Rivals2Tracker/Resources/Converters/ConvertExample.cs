@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace Rivals2Tracker.Converters
+namespace Slipstream.Converters
 {
     class ConvertExample : IValueConverter
     {

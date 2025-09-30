@@ -1,8 +1,8 @@
-﻿using Rivals2Tracker.Data;
+﻿using Slipstream.Data;
 using System;
 using System.Windows.Media;
 
-namespace Rivals2Tracker.Services
+namespace Slipstream.Services
 {
     public static class AudioService
     {

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Rivals2Tracker.HotkeyHandler
+namespace Slipstream.HotkeyHandler
 {
     public class HotKeyManager
     {

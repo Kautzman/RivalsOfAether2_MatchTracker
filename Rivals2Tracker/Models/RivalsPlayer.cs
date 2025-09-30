@@ -1,4 +1,4 @@
-﻿using Rivals2Tracker.Data;
+﻿using Slipstream.Data;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Prism.Mvvm;
 
-namespace Rivals2Tracker.Models
+namespace Slipstream.Models
 {
     class RivalsPlayer : BindableBase
     {

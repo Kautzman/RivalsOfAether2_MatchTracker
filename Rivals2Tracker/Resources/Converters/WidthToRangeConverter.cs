@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace Rivals2Tracker.Resources.Converters
+namespace Slipstream.Resources.Converters
 {
     public class WidthToRangeConverter : IValueConverter
     {

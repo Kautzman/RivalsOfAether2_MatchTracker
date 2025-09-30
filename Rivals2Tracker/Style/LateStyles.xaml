@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:converters="clr-namespace:Rivals2Tracker.Resources.Converters"
-                    xmlns:controls="clr-namespace:Rivals2Tracker.Resources.Controls"
+                    xmlns:converters="clr-namespace:Slipstream.Resources.Converters"
+                    xmlns:controls="clr-namespace:Slipstream.Resources.Controls"
 >
 
     <converters:WidthToRangeConverter x:Key="WidthToRangeConverter" />

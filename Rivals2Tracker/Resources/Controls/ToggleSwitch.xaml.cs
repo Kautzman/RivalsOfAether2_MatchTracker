@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace Rivals2Tracker.Resources.Controls
+namespace Slipstream.Resources.Controls
 {
     public partial class ToggleSwitch : UserControl
     {

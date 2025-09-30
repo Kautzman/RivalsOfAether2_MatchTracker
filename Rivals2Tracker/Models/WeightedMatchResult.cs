@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Rivals2Tracker.Models
+namespace Slipstream.Models
 {
     public class WeightedMatchResult
     {

@@ -1,10 +1,10 @@
-﻿using Rivals2Tracker.Data;
-using Rivals2Tracker.HotkeyHandler;
+﻿using Slipstream.Data;
+using Slipstream.HotkeyHandler;
 using System.Windows.Data;
 using System.Windows.Forms;
 using System.Windows.Input;
 
-namespace Rivals2Tracker.Services
+namespace Slipstream.Services
 {
     public static class HotKeyService
     {

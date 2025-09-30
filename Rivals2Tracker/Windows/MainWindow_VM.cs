@@ -5,17 +5,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
-using Rivals2Tracker.Models;
+using Slipstream.Models;
 using System.Windows;
-using Rivals2Tracker.Data;
+using Slipstream.Data;
 using System.Diagnostics;
-using Rivals2Tracker.Resources.Events;
+using Slipstream.Resources.Events;
 using System.Media;
-using Rivals2Tracker.Services;
+using Slipstream.Services;
 using Windows.Networking.Vpn;
 using System.Windows.Navigation;
+using kWindows.Core;
+using Slipstream.Windows;
 
-namespace Rivals2Tracker
+namespace Slipstream
 {
     class MainWindow_VM : BindableBase
     {
@@ -98,7 +100,7 @@ namespace Rivals2Tracker
             get { return _activeMatchSeason_CharacterData; }
             set
             {
-                ToggleMatchHistoryView(MatchHistoryView.Rivals);
+                ToggleRivalsMatchHistory();
                 SetActiveMatchHistory(value, "season");
             }
         }
@@ -596,11 +598,10 @@ namespace Rivals2Tracker
                 MessageBox.Show($"The match database is either malformed or missing and operation cannot continue (In Metadata and Matches). Please report this bug if possible!\n\n {ex.Message}");
                 Application.Current.Shutdown();
             }
-#endif
-
+#endif                
             RaisePropertyChanged("ActiveMatch");
         }
-         
+
         private void SetupImages()
         {
             AvailableCharacters = new ObservableCollection<string>(GlobalData.AllCharacters);
@@ -620,18 +621,21 @@ namespace Rivals2Tracker
 
         private void GetMetadata()
         {
-            if (RivalsORM.GetIsFirstStart() == "0")
+            if (RivalsORM.GetIsFirstStart() == "1")
             {
-                // TODO:  Do the first stuff or something
-                // Do first start stuff
+                FirstStart firstStart = new FirstStart();
+
+                firstStart.Owner = Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive);
+                firstStart.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
+                bool? result = firstStart.ShowDialog();
+                RivalsORM.SetMetaDataValue("IsFirstStart", "0");
             }
             else
             {
                 MyName = RivalsORM.GetPlayerName();
                 CurrentPatch = RivalsORM.GetPatchValue();
             }
-
-            RivalsORM.SetMetaDataValue("IsFirstStart", "1");
         }
 
         private async Task SetMatchWin()

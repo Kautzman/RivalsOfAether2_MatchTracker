@@ -1,17 +1,14 @@
 ﻿using Prism.Commands;
-using Rivals2Tracker.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Prism.Mvvm;
-using Rivals2Tracker.Data;
-using System.Windows.Input;
-using Rivals2Tracker.Services;
+using Slipstream.Data;
+using Slipstream.Services;
 using System.Windows.Forms;
+using Slipstream.Windows;
+using System.Windows;
 
-namespace Rivals2Tracker
+namespace Slipstream
 {
     class Settings_VM : BindableBase
     {
@@ -68,6 +65,7 @@ namespace Rivals2Tracker
         }
 
         public DelegateCommand SaveAndCloseCommand { get; private set; }
+        public DelegateCommand ShowTutorialCommand { get; private set; }
 
         public Settings_VM()
         {
@@ -76,6 +74,7 @@ namespace Rivals2Tracker
             BoundKeyCode = HotKeyService.GetReadableShortcutFromUints(GlobalData.ModifierCode, GlobalData.HotKeyCode);
 
             SaveAndCloseCommand = new DelegateCommand(SaveAndClose);
+            ShowTutorialCommand = new DelegateCommand(ShowTutorial);
             GetData();
         }
 
@@ -92,6 +91,16 @@ namespace Rivals2Tracker
             RivalsORM.SetMetaDataValue("PlayAudio", EnableAudioIsChecked ? "1" : "0");
             RivalsORM.SetMetaDataValue("SaveCaptures", SaveCapturesIsChecked ? "1" : "0");
             Close?.Invoke();
+        }
+
+        private void ShowTutorial()
+        {
+            FirstStart firstStart = new FirstStart();
+
+            firstStart.Owner = System.Windows.Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive);
+            firstStart.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
+            bool? result = firstStart.ShowDialog();
         }
     }
 }

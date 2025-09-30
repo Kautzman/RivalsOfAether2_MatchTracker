@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace Rivals2Tracker.Resources.Converters
+namespace Slipstream.Resources.Converters
 {
     class WinRatioToBackgroundConverter : IValueConverter
     {

@@ -1,15 +1,15 @@
 ﻿using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
-using Rivals2Tracker.Data;
-using Rivals2Tracker.Models;
-using Rivals2Tracker.Resources.Events;
+using Slipstream.Data;
+using Slipstream.Models;
+using Slipstream.Resources.Events;
 using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Documents;
 
-namespace Rivals2Tracker
+namespace Slipstream
 {
     class MatchDetails_VM : BindableBase
     {

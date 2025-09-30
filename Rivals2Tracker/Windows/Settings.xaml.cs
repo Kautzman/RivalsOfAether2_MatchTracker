@@ -1,12 +1,12 @@
 ﻿using kWindows.Core;
-using Rivals2Tracker.Data;
-using Rivals2Tracker.Services;
+using Slipstream.Data;
+using Slipstream.Services;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 
-namespace Rivals2Tracker
+namespace Slipstream
 {
     public partial class Settings : kWindow
     {

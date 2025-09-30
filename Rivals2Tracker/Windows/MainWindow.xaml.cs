@@ -6,11 +6,11 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using kWindows.Core;
-using Rivals2Tracker.Data;
-using Rivals2Tracker.HotkeyHandler;
-using Rivals2Tracker.Services;
+using Slipstream.Data;
+using Slipstream.HotkeyHandler;
+using Slipstream.Services;
 
-namespace Rivals2Tracker
+namespace Slipstream
 {
     public partial class MainWindow : kWindow
     {

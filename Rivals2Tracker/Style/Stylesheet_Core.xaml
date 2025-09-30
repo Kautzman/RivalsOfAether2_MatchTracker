@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:converters="clr-namespace:Rivals2Tracker.Resources.Converters"
+                    xmlns:converters="clr-namespace:Slipstream.Resources.Converters"
                     xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero">
 
     <converters:WidthToRangeConverter x:Key="WidthToRangeConverter" />
@@ -64,11 +64,11 @@
     <Style TargetType="{x:Type Image}" x:Key="Windowing_MaxMinImage" BasedOn="{StaticResource Windowing_Image}">
         <Style.Triggers>
             <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=WindowState}" Value="Normal">
-                <Setter Property="Source" Value="/Rivals2Tracker;component/Resources/Icons/Windowing/WindowOne.png"/>
+                <Setter Property="Source" Value="/Slipstream;component/Resources/Icons/Windowing/WindowOne.png"/>
             </DataTrigger>
 
             <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=WindowState}" Value="Maximized">
-                <Setter Property="Source" Value="/Rivals2Tracker;component/Resources/Icons/Windowing/WindowTwo.png"/>
+                <Setter Property="Source" Value="/Slipstream;component/Resources/Icons/Windowing/WindowTwo.png"/>
             </DataTrigger>
         </Style.Triggers>
     </Style>

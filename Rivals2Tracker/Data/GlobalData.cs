@@ -1,4 +1,4 @@
-﻿using Rivals2Tracker.HotkeyHandler;
+﻿using Slipstream.HotkeyHandler;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Media.Streaming.Adaptive;
 
-namespace Rivals2Tracker.Data
+namespace Slipstream.Data
 {
     public static class GlobalData
     {

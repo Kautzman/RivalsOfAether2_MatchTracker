@@ -9,9 +9,9 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Controls.Primitives;
 using Prism.Mvvm;
-using Rivals2Tracker.Data;
+using Slipstream.Data;
 
-namespace Rivals2Tracker.Models
+namespace Slipstream.Models
 {
     public class WeightedCharacterMetadata : BindableBase
     {

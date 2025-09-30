@@ -11,10 +11,10 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Microsoft.Data.Sqlite;
-using Rivals2Tracker.Models;
-using Rivals2Tracker.Services;
+using Slipstream.Models;
+using Slipstream.Services;
 
-namespace Rivals2Tracker.Data
+namespace Slipstream.Data
 {
     class RivalsORM
     {

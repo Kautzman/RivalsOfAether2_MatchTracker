@@ -47,6 +47,11 @@
     <None Remove="Resources\Icons\Windowing\Minimize.png" />
     <None Remove="Resources\Icons\Windowing\WindowOne.png" />
     <None Remove="Resources\Icons\Windowing\WindowTwo.png" />
+    <None Remove="Resources\tutorial1.jpg" />
+    <None Remove="Resources\tutorial2.jpg" />
+    <None Remove="Resources\tutorial3.jpg" />
+    <None Remove="Resources\tutorial4.jpg" />
+    <None Remove="Resources\tutorial5.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -117,6 +122,11 @@
     <Resource Include="Resources\Icons\Windowing\Minimize.png" />
     <Resource Include="Resources\Icons\Windowing\WindowOne.png" />
     <Resource Include="Resources\Icons\Windowing\WindowTwo.png" />
+    <Resource Include="Resources\tutorial1.jpg" />
+    <Resource Include="Resources\tutorial2.jpg" />
+    <Resource Include="Resources\tutorial3.jpg" />
+    <Resource Include="Resources\tutorial4.jpg" />
+    <Resource Include="Resources\tutorial5.jpg" />
   </ItemGroup>
 
   <ItemGroup>
