@@ -26,7 +26,7 @@ namespace Rivals2Tracker.Models
             {
                 case MatchValidityFlag.NoKad: ErrorText = "Can't match the Local Player name!"; break;
                 case MatchValidityFlag.NoElo: ErrorText = "Failed to parse Elo"; break;
-                case MatchValidityFlag.Valid: ErrorText = String.Empty; break;
+                case MatchValidityFlag.Valid: break;
                 default: ErrorText = "Unknown Error in parsing Validity Flag"; break;
             }
         }

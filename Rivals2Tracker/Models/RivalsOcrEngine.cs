@@ -49,7 +49,7 @@ namespace Rivals2Tracker.Models
 
         private const double p2e_Xoffset = 0.7871;
         private const double p2e_Yoffset = 0.8896;
-        private const double p2e_Xselection = 0.3477;
+        private const double p2e_Xselection = 0.0313;
         private const double p2e_Yselection = 0.0285;
 
 
@@ -79,6 +79,7 @@ namespace Rivals2Tracker.Models
             int width = rect.Right - rect.Left;
             int height = rect.Bottom - rect.Top;
 
+            // REMEMBER:  "Out Of Memory" in the bmp.Clone() areas means the Rectangle is out of bounds because GDI is a troll.
             Rectangle player1Crop = new Rectangle(Convert.ToInt32(width * p1c_Xoffset), Convert.ToInt32(height * p1c_Yoffset), Convert.ToInt32(width * p1c_Xselection), Convert.ToInt32(height * p1c_Yselection));
             Rectangle player1EloCrop = new Rectangle(Convert.ToInt32(width * p1e_Xoffset), Convert.ToInt32(height * p1e_Yoffset), Convert.ToInt32(width * p1e_Xselection), Convert.ToInt32(height * p1e_Yselection));
             Rectangle player2Crop = new Rectangle(Convert.ToInt32(width * p2c_Xoffset), Convert.ToInt32(height * p2c_Yoffset), Convert.ToInt32(width * p2c_Xselection), Convert.ToInt32(height * p2c_Yselection));

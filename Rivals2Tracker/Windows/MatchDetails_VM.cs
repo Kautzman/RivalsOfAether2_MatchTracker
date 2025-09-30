@@ -32,7 +32,6 @@ namespace Rivals2Tracker
 
         public DelegateCommand SaveAndCloseCommand { get; set; }
         public DelegateCommand CancelCommand { get; set; }
-
         public DelegateCommand DeleteMatchCommand { get; set; }
 
         public MatchDetails_VM(MatchResult matchResult)

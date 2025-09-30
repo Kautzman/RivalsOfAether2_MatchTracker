@@ -13,6 +13,7 @@ using Rivals2Tracker.Resources.Events;
 using System.Media;
 using Rivals2Tracker.Services;
 using Windows.Networking.Vpn;
+using System.Windows.Navigation;
 
 namespace Rivals2Tracker
 {
@@ -125,6 +126,7 @@ namespace Rivals2Tracker
 
                 SetProperty(ref _activeMatch, value);
 
+                SetMatchTextBoxReadOnly(value.Status);
                 OpponentName = ActiveMatch.Opponent.Name;
                 OpponentElo = ActiveMatch.Opponent.Elo;
                 MyElo = ActiveMatch.Me.Elo;
@@ -186,27 +188,27 @@ namespace Rivals2Tracker
 
         public Visibility IsOpponentTagPhVisible
         {
-            get => String.IsNullOrEmpty(OpponentName) && ActiveMatch.Status == MatchStatus.InProgress ? Visibility.Visible : Visibility.Collapsed;
+            get => String.IsNullOrEmpty(OpponentName) && ActiveMatch?.Status == MatchStatus.InProgress ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public Visibility IsOpponentEloPhVisible
         {
-            get => String.IsNullOrEmpty(OpponentElo) && ActiveMatch.Status == MatchStatus.InProgress ? Visibility.Visible : Visibility.Collapsed;
+            get => String.IsNullOrEmpty(OpponentElo) && ActiveMatch?.Status == MatchStatus.InProgress ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public Visibility IsMyTagPhVisible
         {
-            get => String.IsNullOrEmpty(MyName) && ActiveMatch.Status == MatchStatus.InProgress ? Visibility.Visible : Visibility.Collapsed;
+            get => String.IsNullOrEmpty(MyName) && ActiveMatch?.Status == MatchStatus.InProgress ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public Visibility IsMyEloPhVisible
         {
-            get => String.IsNullOrEmpty(MyElo) && ActiveMatch.Status == MatchStatus.InProgress ? Visibility.Visible : Visibility.Collapsed;
+            get => String.IsNullOrEmpty(MyElo) && ActiveMatch?.Status == MatchStatus.InProgress ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public Visibility IsNotesPhVisible
         {
-            get => String.IsNullOrEmpty(ActiveMatchNotes) && ActiveMatch.Status == MatchStatus.InProgress ? Visibility.Visible : Visibility.Collapsed;
+            get => String.IsNullOrEmpty(ActiveMatchNotes) && ActiveMatch?.Status == MatchStatus.InProgress ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public string CancelNewMatchButtonString
@@ -405,7 +407,14 @@ namespace Rivals2Tracker
                     CompletedLabelVisibility = Visibility.Collapsed;
                 }
 
-                return ActiveMatch.StatusString;
+                if (ActiveMatch.Status == MatchStatus.InProgress)
+                {
+                    return "Match In Progress";
+                }
+                else
+                {
+                    return "Waiting For Match...";
+                }
             }
             set
             {
@@ -503,6 +512,22 @@ namespace Rivals2Tracker
             set { SetProperty(ref _isShowingPlayerNotes, value); }
         }
 
+        private bool _isMatchTextBoxesReadOnly = true;
+        public bool IsMatchTextBoxesReadOnly
+        {
+            get { return _isMatchTextBoxesReadOnly; }
+            set
+            {
+                SetProperty(ref _isMatchTextBoxesReadOnly, value);
+                RaisePropertyChanged(nameof(IsMatchTextBoxesHitTestable));
+            }
+        }
+
+        public bool IsMatchTextBoxesHitTestable
+        {
+            get => !IsMatchTextBoxesReadOnly;
+        }
+
         public ObservableCollection<string> AvailableCharacters { get; set; }
         #endregion
 
@@ -550,12 +575,27 @@ namespace Rivals2Tracker
 
 
             MatchHistoryUpdateEvent.MatchSaved += UpdateMatchHistory;
-
-            SetupImages();
+            try
+            {
+                SetupImages();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"The match database is either malformed or missing and operation cannot continue (In SetupImages). Please report this bug if possible!\n\n {ex.Message}");
+                Application.Current.Shutdown();
+            }
 
 #if !DEBUGNODB
-            GetMetadata();
-            GetMatches(true);
+            try
+            {
+                GetMetadata();
+                GetMatches(true);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"The match database is either malformed or missing and operation cannot continue (In Metadata and Matches). Please report this bug if possible!\n\n {ex.Message}");
+                Application.Current.Shutdown();
+            }
 #endif
 
             RaisePropertyChanged("ActiveMatch");
@@ -644,10 +684,10 @@ namespace Rivals2Tracker
         private void ResetMatchStatus()
         {
             ActiveMatchNotes = "";
-            RaisePropertyChanged("IsInputLocked");
-            RaisePropertyChanged("ActiveMatchStatusString");
+            RaisePropertyChanged(nameof(CancelNewMatchButtonString));
+            RaisePropertyChanged(nameof(IsInputLocked));
+            RaisePropertyChanged(nameof(ActiveMatchStatusString));
             RefreshPlaceholderVisibility();
-            ErrorText = String.Empty;
             GetMatches();
             return;
         }
@@ -689,10 +729,11 @@ namespace Rivals2Tracker
             {
                 SelectedImagePath = imagePath;
             }
+            RaisePropertyChanged(nameof(CancelNewMatchButtonString));
+            RaisePropertyChanged(nameof(IsInputLocked));
+            RaisePropertyChanged(nameof(ActiveMatchStatusString));
 
-            RaisePropertyChanged("IsInputLocked");
-            RaisePropertyChanged("ActiveMatchStatusString");
-
+            MatchHistoryOpponentTagSearch = ActiveMatch.Opponent.Name;
             GetOpponentSeasonInfo();
             ToggleMatchHistoryView(MatchHistoryView.Players);
             TogglePlayerInformationView(PlayerInformationView.Notes);
@@ -706,6 +747,11 @@ namespace Rivals2Tracker
             RaisePropertyChanged(nameof(IsMyTagPhVisible));
             RaisePropertyChanged(nameof(IsMyEloPhVisible));
             RaisePropertyChanged(nameof(IsNotesPhVisible));
+        }
+
+        private void SetMatchTextBoxReadOnly(MatchStatus activeMatchStatus)
+        {
+            IsMatchTextBoxesReadOnly = activeMatchStatus == MatchStatus.InProgress;
         }
 
         private void GetOpponentSeasonInfo()

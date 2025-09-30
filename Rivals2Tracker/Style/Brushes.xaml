@@ -1,6 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:HyperbiusEdit">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!-- ==================================================================================================================== -->
     <!-- Background Brushes -->
@@ -96,5 +95,4 @@
         <GradientStop Color="#BBF7C765" Offset="0"/>
         <GradientStop Color="#BBDE9E47" Offset="1"/>
     </LinearGradientBrush>
-
 </ResourceDictionary>
