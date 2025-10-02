@@ -18,13 +18,19 @@ namespace Slipstream.Models
 {
     class RivalsOcrEngine
     {
-        delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
+        [DllImport("user32.dll")]
+        private static extern bool EnumWindows(EnumWindowsProc enumProc, IntPtr lParam);
+
+        [DllImport("user32.dll")]
+        private static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
 
         [DllImport("user32.dll")]
         static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
 
         [DllImport("user32.dll")]
         static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+
+        delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
 
         [StructLayout(LayoutKind.Sequential)]
         public struct RECT
@@ -60,22 +66,30 @@ namespace Slipstream.Models
             Stopwatch sw = new Stopwatch();
             sw.Restart();
 
-            // Old Hard-set system
-            // Rectangle player1Crop = new Rectangle(625, 1300, 237, 84);
-            // Rectangle player1EloCrop = new Rectangle(926, 1281, 80, 41);
-            // Rectangle player2Crop = new Rectangle(1715, 1300, 237, 84);
-            // Rectangle player2EloCrop = new Rectangle(2015, 1281, 80, 41);
+            nint hWndFound = 0;
+            // hWndFound = FindWindow(null, "Rivals2  ");
+            // hWndFound = FindWindow(null, "Photos Legacy");
+            // hWndFound = FindWindow(null, "CaptureAll-08-22-23-24-25.jpg \u200e- Photos Legacy");
 
-            nint hWnd = FindWindow(null, "Rivals2  ");
-            // nint hWnd = FindWindow(null, "Photos Legacy");
-            // nint hWnd = FindWindow(null, "CaptureAll-09-01-19-56-00.jpg");
-            if (hWnd == IntPtr.Zero)
+            EnumWindows(delegate (IntPtr hWnd, IntPtr lParam) {
+                StringBuilder sb = new StringBuilder(256);
+                GetWindowText(hWnd, sb, sb.Capacity);
+                if (sb.ToString().Contains("Photos Legacy"))
+                {
+                    hWndFound = hWnd;
+                    return false;
+                }
+                return true;
+            }, IntPtr.Zero);
+
+
+            if (hWndFound == IntPtr.Zero)
             {
                 Console.WriteLine("Window not found.");
                 return new RivalsOcrResult(false, "Failed to Find Window", false);
             }
 
-            GetWindowRect(hWnd, out RECT rect);
+            GetWindowRect(hWndFound, out RECT rect);
             int width = rect.Right - rect.Left;
             int height = rect.Bottom - rect.Top;
 

@@ -71,8 +71,8 @@
                                        Converter={StaticResource WidthToRangeConverter},
                                        ConverterParameter=Small}"
                                        Value="True">
-                <Setter Property="Width" Value="220" />
-                <Setter Property="FontSize" Value="30" />
+                <Setter Property="Width" Value="300" />
+                <Setter Property="FontSize" Value="36" />
             </DataTrigger>
 
             <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window},
@@ -80,8 +80,8 @@
                                        Converter={StaticResource WidthToRangeConverter},
                                        ConverterParameter=Medium}"
                                        Value="True">
-                <Setter Property="Width" Value="240" />
-                <Setter Property="FontSize" Value="36" />
+                <Setter Property="Width" Value="300" />
+                <Setter Property="FontSize" Value="42" />
             </DataTrigger>
 
             <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window},
@@ -133,6 +133,7 @@
                                        Converter={StaticResource WidthToRangeConverter},
                                        ConverterParameter=Small}"
                                        Value="True">
+                <Setter Property="Margin" Value="0, 0, 0, -57" />
                 <Setter Property="Width" Value="345" />
                 <Setter Property="Height" Value="60" />
             </DataTrigger>
@@ -142,6 +143,7 @@
                                        Converter={StaticResource WidthToRangeConverter},
                                        ConverterParameter=Medium}"
                                        Value="True">
+                <Setter Property="Margin" Value="0, 0, 0, -77" />
                 <Setter Property="Width" Value="450" />
                 <Setter Property="Height" Value="80" />
             </DataTrigger>
@@ -151,6 +153,7 @@
                                        Converter={StaticResource WidthToRangeConverter},
                                        ConverterParameter=Large}"
                                        Value="True">
+                <Setter Property="Margin" Value="0, 0, 0, -77" />
                 <Setter Property="Width" Value="450" />
                 <Setter Property="Height" Value="80" />
             </DataTrigger>

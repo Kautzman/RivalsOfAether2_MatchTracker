@@ -707,9 +707,9 @@ namespace Slipstream
 
             if (!result.IsSalvagable)
             {
-                SystemSounds.Exclamation.Play();
-                ErrorText = "Unrecoverable Capture - Is Rivals running?";
-                return;
+                //SystemSounds.Exclamation.Play();
+                //ErrorText = "Unrecoverable Capture - Is Rivals running?";
+                //return;
             }
 
             if (ActiveMatch is not null && ActiveMatch.Status == MatchStatus.InProgress)

@@ -47,6 +47,27 @@
     <None Remove="Resources\Icons\Windowing\Minimize.png" />
     <None Remove="Resources\Icons\Windowing\WindowOne.png" />
     <None Remove="Resources\Icons\Windowing\WindowTwo.png" />
+    <None Remove="Resources\StageIcons\AetherianForest.png" />
+    <None Remove="Resources\StageIcons\AetherianForestV.png" />
+    <None Remove="Resources\StageIcons\AirArmada.png" />
+    <None Remove="Resources\StageIcons\AirArmadaV.png" />
+    <None Remove="Resources\StageIcons\FireCapital.png" />
+    <None Remove="Resources\StageIcons\FireCapitalV.png" />
+    <None Remove="Resources\StageIcons\GodaiDelta.png" />
+    <None Remove="Resources\StageIcons\GodaiDeltaV.png" />
+    <None Remove="Resources\StageIcons\Hodojo.png" />
+    <None Remove="Resources\StageIcons\HodojoV.png" />
+    <None Remove="Resources\StageIcons\HyperboreanHarbor.png" />
+    <None Remove="Resources\StageIcons\HyperboreanHarborV.png" />
+    <None Remove="Resources\StageIcons\Julesvale.png" />
+    <None Remove="Resources\StageIcons\JulesvaleV.png" />
+    <None Remove="Resources\StageIcons\MerchantPort.png" />
+    <None Remove="Resources\StageIcons\MerchantPortV.png" />
+    <None Remove="Resources\StageIcons\RockWall.png" />
+    <None Remove="Resources\StageIcons\RockWallV.png" />
+    <None Remove="Resources\StageIcons\StageBannedOverlay.png" />
+    <None Remove="Resources\StageIcons\TempestPeak.png" />
+    <None Remove="Resources\StageIcons\TempestPeakV.png" />
     <None Remove="Resources\tutorial1.jpg" />
     <None Remove="Resources\tutorial2.jpg" />
     <None Remove="Resources\tutorial3.jpg" />
@@ -122,6 +143,69 @@
     <Resource Include="Resources\Icons\Windowing\Minimize.png" />
     <Resource Include="Resources\Icons\Windowing\WindowOne.png" />
     <Resource Include="Resources\Icons\Windowing\WindowTwo.png" />
+    <Resource Include="Resources\StageIcons\AetherianForest.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\StageIcons\AetherianForestV.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\StageIcons\AirArmada.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\StageIcons\AirArmadaV.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\StageIcons\FireCapital.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\StageIcons\FireCapitalV.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\StageIcons\GodaiDelta.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\StageIcons\GodaiDeltaV.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\StageIcons\Hodojo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\StageIcons\HodojoV.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\StageIcons\HyperboreanHarbor.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\StageIcons\HyperboreanHarborV.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\StageIcons\Julesvale.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\StageIcons\JulesvaleV.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\StageIcons\MerchantPort.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\StageIcons\MerchantPortV.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\StageIcons\RockWall.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\StageIcons\RockWallV.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\StageIcons\StageBannedOverlay.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\StageIcons\TempestPeak.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\StageIcons\TempestPeakV.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\tutorial1.jpg" />
     <Resource Include="Resources\tutorial2.jpg" />
     <Resource Include="Resources\tutorial3.jpg" />

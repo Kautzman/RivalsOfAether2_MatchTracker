@@ -1,23 +1,32 @@
-﻿using Slipstream.HotkeyHandler;
+﻿using Slipstream.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Media.Streaming.Adaptive;
+using System.Collections.ObjectModel;
 
 namespace Slipstream.Data
 {
     public static class GlobalData
     {
         public static IntPtr MainWindowHandle { get; set; }
-        public static string CurrentSeason = "1.3";
+        public static RivalsSeason CurrentSeason = RivalsSeason.Season3;
         public static string MyName = "Kadecgos";
         public static bool IsSaveCaptures = false;
         public static bool IsPlayAudio = true;
         public static uint HotKeyCode = 0;
         public static uint ModifierCode = 0;
+        public static ObservableCollection<RivalsStage> AllStages = new()
+        {
+            new RivalsStage("Aetherian Forest", "pack://application:,,,/Resources/StageIcons/AetherianForestV.png", false),
+            new RivalsStage("Godai Delta", "pack://application:,,,/Resources/StageIcons/GodaiDeltaV.png", false),
+            new RivalsStage("Hodojo", "pack://application:,,,/Resources/StageIcons/HodojoV.png", false),
+            new RivalsStage("Julesvale", "pack://application:,,,/Resources/StageIcons/JulesvaleV.png", false),
+            new RivalsStage("Merchant Port", "pack://application:,,,/Resources/StageIcons/MerchantPortV.png", false),
+            new RivalsStage("Air Armada", "pack://application:,,,/Resources/StageIcons/AirArmadaV.png", true),
+            new RivalsStage("Fire Capital", "pack://application:,,,/Resources/StageIcons/FireCapitalV.png", true),
+            new RivalsStage("Hyperborean Harbor", "pack://application:,,,/Resources/StageIcons/HyperboreanHarborV.png", true),
+            new RivalsStage("Rock Wall", "pack://application:,,,/Resources/StageIcons/RockWallV.png", true),
+            new RivalsStage("Tempest Peak", "pack://application:,,,/Resources/StageIcons/TempestPeakV.png", true),
+        };
 
         public static List<string> AllCharacters = new List<string>
         {
@@ -71,21 +80,6 @@ namespace Slipstream.Data
             { "Forsburn", "/ImageResources/Portraits/forsburn_portrait.png" },
             { "Zetterburn", "/ImageResources/Portraits/zetterburn_portrait.png" }
         };
-
-        public static bool IsCurrentSeason(string patch)
-        {
-            if (patch == "all")
-            {
-                return true;
-            }
-
-            if (patch.Substring(0, 3) == CurrentSeason)
-            {
-                return true;
-            }
-
-            return false;
-        }
     }
 
     public enum MatchHistoryView
@@ -98,5 +92,30 @@ namespace Slipstream.Data
     {
         Notes,
         Matches
+    }
+
+    public enum RivalsCharacter
+    {
+        Absa,
+        Clairen,
+        Etalus,
+        Fleet,
+        Kragg,
+        Loxodont,
+        Maypul,
+        Olympia,
+        Orcane,
+        Ranno,
+        Wrastor,
+        Zetterburn,
+        Galvan
+    }
+
+    public enum GameResult
+    {
+        Lose = 0,
+        Win = 1,
+        Draw = 2,
+        InProgress = 3
     }
 }

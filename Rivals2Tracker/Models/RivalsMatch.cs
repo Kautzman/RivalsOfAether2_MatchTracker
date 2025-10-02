@@ -1,6 +1,8 @@
 ﻿using Prism.Mvvm;
+using Slipstream.Data;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,6 +47,13 @@ namespace Slipstream.Models
             set { SetProperty(ref _me, value); }
         }
 
+        private ObservableCollection<RivalsGame> _games;
+        public ObservableCollection<RivalsGame> Games
+        {
+            get { return _games; }
+            set { SetProperty(ref _games, value); }
+        }
+
         private string _notes = String.Empty;
         public string Notes
         {
@@ -61,6 +70,17 @@ namespace Slipstream.Models
                 SetProperty(ref _patch, value);
             }
         }
+
+        private RivalsSeason _season = GlobalData.CurrentSeason;
+        public RivalsSeason Season
+        {
+            get { return _season; }
+            set
+            {
+                SetProperty(ref _season, value);
+            }
+        }
+
 
         private MatchStatus _status = MatchStatus.New;
         public MatchStatus Status
@@ -129,6 +149,19 @@ namespace Slipstream.Models
                 Me = player1;
                 Opponent = player2;
             }
+
+            BuildGames();
+        }
+
+        private void BuildGames()
+        {
+            Games = new();
+
+            for (int i = 1; i <= 3; i++)
+            {
+                RivalsGame newGame = new RivalsGame(i, Me.Character);
+                Games.Add(newGame);
+            }
         }
 
         public bool HasNoKad()
@@ -186,5 +219,12 @@ namespace Slipstream.Models
         Valid = 1,
         NoKad = 2,
         NoElo = 3
+    }
+
+    public enum RivalsSeason
+    {
+        Season3,
+        Season4,
+        Season5
     }
 }

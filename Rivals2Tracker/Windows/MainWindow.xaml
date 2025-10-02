@@ -142,38 +142,35 @@
                     <Border BorderBrush="{StaticResource FG_DarkDarkGold}" BorderThickness="0, 1, 0, 0" VerticalAlignment="Bottom"/>
                 </StackPanel>
 
-                <Border BorderBrush="{StaticResource FG_DarkGold}" BorderThickness="2" Background="{StaticResource BG_DarkBlue}" HorizontalAlignment="Center" VerticalAlignment="Bottom"
-                               CornerRadius="25" Margin="0, 0, 0, -30" Style="{StaticResource MatchResultButtonsBorder}">
-                    <Border BorderBrush="{StaticResource FG_Gold}" BorderThickness="3" Background="{StaticResource BG_DarkBlue}" HorizontalAlignment="Center" VerticalAlignment="Bottom"
-                               CornerRadius="20" Margin="0">
-                        <Border BorderBrush="{StaticResource FG_Gold}" BorderThickness="1" Background="Transparent" HorizontalAlignment="Center" VerticalAlignment="Bottom"
-                               CornerRadius="15" Margin="0" Loaded="OuterBorder_Loaded">
-                            <Grid Style="{StaticResource MatchResultButtonsGrid}">
-                                <StackPanel Orientation="Horizontal">
-                                    <Button Content="WIN" FontFamily="Franklin Gothic Demi Cond" BorderThickness="0" Background="{StaticResource BG_DarkBlue}"
+                <Border BorderBrush="{StaticResource FG_DarkDarkGold}" BorderThickness="2, 0, 2, 2" Background="{StaticResource BG_DarkBlue}" HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                               CornerRadius="5" Style="{StaticResource MatchResultButtonsBorder}">
+                    <Border BorderBrush="{StaticResource FG_Gold}" BorderThickness="2, 0, 2, 2" Background="{StaticResource BG_DarkBlue}" HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                               CornerRadius="5" Margin="0" Style="{StaticResource MatchResultButtonsBorder}">
+                        <Grid Style="{StaticResource MatchResultButtonsGrid}">
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="WIN" FontFamily="Franklin Gothic Demi Cond" BorderThickness="0" Background="#05011A"
                                             Foreground="{StaticResource FG_BlueLabel}" Padding="0, 0, 0, 12" Command="{Binding SetMatchWinCommand}" Style="{StaticResource MatchResultButton}"/>
-                                    <Button Content="LOSE" FontFamily="Franklin Gothic Demi Cond" BorderThickness="3, 0, 3, 0" Background="{StaticResource BG_DarkBlue}"
+                                <Button Content="LOSE" FontFamily="Franklin Gothic Demi Cond" BorderThickness="3, 0, 3, 0" Background="#05011A"
                                             Foreground="{StaticResource FG_BlueLabel}" Padding="0, 0, 0, 12" Command="{Binding SetMatchLoseCommand}" Style="{StaticResource MatchResultButton}"/>
-                                    <Button  FontFamily="Franklin Gothic Demi Cond" BorderThickness="0" Background="{StaticResource BG_DarkBlue}"
+                                <Button  FontFamily="Franklin Gothic Demi Cond" BorderThickness="0" Background="#05011A"
                                             Foreground="{StaticResource FG_BlueLabel}" Padding="0, 0, 15, 12" Command="{Binding SetMatchDiscardCommand}" Style="{StaticResource MatchResultButtonSmallText}">
-                                        <Button.Content>
-                                            <Label Content="{Binding CancelNewMatchButtonString}" Width="90" HorizontalContentAlignment="Center">
-                                                <Label.Style>
-                                                    <Style TargetType="Label" BasedOn="{StaticResource CancelStartMatchLabel}">
-                                                        <Setter Property="Foreground" Value="{StaticResource FG_BlueLabel}" />
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=IsMouseOver}" Value="True">
-                                                                <Setter Property="Foreground" Value="{StaticResource BG_DarkBlue}"/>
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Label.Style>
-                                            </Label>
-                                        </Button.Content>
-                                    </Button>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
+                                    <Button.Content>
+                                        <Label Content="{Binding CancelNewMatchButtonString}" Width="90" HorizontalContentAlignment="Center">
+                                            <Label.Style>
+                                                <Style TargetType="Label" BasedOn="{StaticResource CancelStartMatchLabel}">
+                                                    <Setter Property="Foreground" Value="{StaticResource FG_BlueLabel}" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=IsMouseOver}" Value="True">
+                                                            <Setter Property="Foreground" Value="{StaticResource BG_DarkBlue}"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Label.Style>
+                                        </Label>
+                                    </Button.Content>
+                                </Button>
+                            </StackPanel>
+                        </Grid>
                     </Border>
                 </Border>
 
@@ -215,7 +212,39 @@
                 <Image Source="pack://application:,,,/ImageResources/embossLogo2.png" Opacity="0.06" Width="900" />
 
                 <DockPanel>
+                    <!-- Active Match Container-->
                     <Grid DockPanel.Dock="Left" Style="{StaticResource MatchContainerStyle}">
+                        <Label Content="Active Match" FontFamily="Franklin Gothic Demi" FontSize="32" Margin="50, 25, 0, 0"/>
+
+                        <Grid Margin="0, 100, 0, 0">
+                            <Label Content="Versus" FontFamily="Franklin Gothic Demi" FontSize="120" Foreground="#05011A" HorizontalAlignment="Center" IsHitTestVisible="False" Margin="0, -20, 0, 0"/>
+                            <StackPanel>
+                                <TextBox Text="{Binding OpponentName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="3" KeyDown="TextBox_KeyDown" IsReadOnly="{Binding IsMatchTextBoxesReadOnly}" IsHitTestVisible="{Binding IsMatchTextBoxesHitTestable}"
+                                     Margin="00, 0, 0, 0" FontFamily="Franklin Gothic Demi Cond" Background="Transparent" HorizontalContentAlignment="Center" Height="60" VerticalAlignment="Top" Style="{StaticResource MatchInformationTextBoxes}" />
+
+                                <TextBox Text="{Binding OpponentElo, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="4" KeyDown="TextBox_KeyDown" IsReadOnly="{Binding IsMatchTextBoxesReadOnly}" IsHitTestVisible="{Binding IsMatchTextBoxesHitTestable}"
+                                     Margin="00, 0, 0, 10" FontFamily="{StaticResource AfterDisaster}" Background="Transparent" HorizontalContentAlignment="Center" Foreground="{StaticResource FG_WhiteLabel}" Height="50" VerticalAlignment="Bottom" FontSize="42" Style="{StaticResource MatchInformationTextBoxes}"/>
+
+                                <ListView Margin="20, 40, 10, 0" ItemTemplate="{StaticResource MatchGamesTemplate1440}" ItemsSource="{Binding ActiveMatch.Games}" Background="{StaticResource BG_DarkBlue}" BorderThickness="0">
+                                    <ListView.ItemContainerStyle>
+                                        <Style TargetType="ListViewItem" BasedOn="{StaticResource EmptyListViewItem}">
+                                            <Style.Triggers>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter Property="Background" Value="{x:Null}" />
+                                                    <Setter Property="BorderBrush" Value="{x:Null}" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ListView.ItemContainerStyle>
+                                </ListView>
+                                <Grid>
+                                    <Label Content="Match Notes" FontSize="22" Foreground="White" />
+                                    <TextBlock Height="150" Margin="20, 0, 20, 0"></TextBlock>
+                                </Grid>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                    <Grid DockPanel.Dock="Left" Style="{StaticResource MatchContainerStyle}" Visibility="Collapsed">
                         <Label Content="Recent Matches" FontFamily="Franklin Gothic Demi" FontSize="32" Margin="50, 25, 0, 0"/>
 
                         <!-- Recent Matches -->
@@ -234,13 +263,13 @@
                         <Label Content="{Binding ErrorText, UpdateSourceTrigger=PropertyChanged}" FontFamily="Franklin Gothic Demi" FontSize="18" Margin="0, -35, 0, 10" VerticalAlignment="Top"
                                Style="{StaticResource ErrorTextLabel}" HorizontalAlignment="Left" HorizontalContentAlignment="Center" behaviors:LabelFadeBehavior.EnableTextFade="true">
                         </Label>
-                        <Grid Margin="0, 5, 0, 0">
+                        <Grid Margin="0, 25, 0, 0">
                             <controls:ToggleSwitch x:Name="ResultTypeToggle" HorizontalAlignment="Left" VerticalAlignment="Top" OffContent="Seasonal"
                                 OnContent="Lifetime" IsOn="{Binding ShowLifetimeResults, Mode=TwoWay}" Style="{StaticResource MetaResultsToggle}" />
                         </Grid>
 
                         <ListView Name="MetaResultsListView" ItemsSource="{Binding DisplayedCharacterResults.CharacterData}" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Top"
-                                BorderThickness="0" Margin="0, 50, 0, 0" SelectedItem="{Binding ActiveMatchSeason_CharacterData}" Style="{StaticResource MetaResultsTemplateStyle}">
+                                BorderThickness="0" Margin="0, 70, 0, 0" SelectedItem="{Binding ActiveMatchSeason_CharacterData}" Style="{StaticResource MetaResultsTemplateStyle}">
                             <ListView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <UniformGrid Columns="3" />
