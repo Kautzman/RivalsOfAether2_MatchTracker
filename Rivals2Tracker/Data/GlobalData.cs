@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Security.Permissions;
 
 namespace Slipstream.Data
 {
@@ -14,6 +15,7 @@ namespace Slipstream.Data
         public static bool IsPlayAudio = true;
         public static uint HotKeyCode = 0;
         public static uint ModifierCode = 0;
+        public static int BestOf;
         public static ObservableCollection<RivalsStage> AllStages = new()
         {
             new RivalsStage("Aetherian Forest", "pack://application:,,,/Resources/StageIcons/AetherianForestV.png", false),

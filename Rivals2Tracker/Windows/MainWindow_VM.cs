@@ -16,7 +16,6 @@ using Windows.Networking.Vpn;
 using System.Windows.Navigation;
 using kWindows.Core;
 using Slipstream.Windows;
-using static Slipstream.Models.RivalsMatch;
 
 namespace Slipstream
 {
@@ -45,25 +44,11 @@ namespace Slipstream
             set { SetProperty(ref _currentSeasonResults, value); }
         }
 
-        private MetaDataTable _lastSeasonResults = new();
-        public MetaDataTable LastSeasonResults
-        {
-            get { return _lastSeasonResults; }
-            set { SetProperty(ref _lastSeasonResults, value); }
-        }
-
         private MetaDataTable _allSeasonResults = new();
         public MetaDataTable AllSeasonResults
         {
             get { return _allSeasonResults; }
             set { SetProperty(ref _allSeasonResults, value); }
-        }
-
-        private ObservableCollection<WeightedCharacterMetadata> _weightedMatchupData = new();
-        public ObservableCollection<WeightedCharacterMetadata> WeightedMatchupData
-        {
-            get { return _weightedMatchupData; }
-            set { SetProperty(ref _weightedMatchupData, value); }
         }
 
         private bool _showLifetimeResults = false;
@@ -137,13 +122,6 @@ namespace Slipstream
                 RaisePropertyChanged(nameof(CancelNewMatchButtonString));
                 RaisePropertyChanged(nameof(CompletedLabelVisibility));
             }
-        }
-
-        private Visibility _awaitingDataVisibility = Visibility.Visible;
-        public Visibility AwaitingDataVisibility
-        {
-            get { return _awaitingDataVisibility; }
-            set { SetProperty(ref _awaitingDataVisibility, value); }
         }
 
         private Visibility _localPlayerNameVisibility = Visibility.Collapsed;
@@ -526,6 +504,28 @@ namespace Slipstream
             }
         }
 
+        private bool _isBestOf3 = true;
+        public bool IsBestOf3
+        {
+            get { return _isBestOf3; }
+            set
+            {
+                GlobalData.BestOf = value ? 3 : GlobalData.BestOf;
+                SetProperty(ref _isBestOf3, value);
+            }
+        }
+
+        private bool _isBestOf5 = false;
+        public bool IsBestOf5
+        {
+            get { return _isBestOf5; }
+            set
+            {
+                GlobalData.BestOf = value ? 5 : GlobalData.BestOf;
+                SetProperty(ref _isBestOf5, value);
+            }
+        }
+
         public bool IsMatchTextBoxesHitTestable
         {
             get => !IsMatchTextBoxesReadOnly;
@@ -578,6 +578,7 @@ namespace Slipstream
             TogglePlayerNotesCommand = new DelegateCommand(TogglePlayerNotes);
             TogglePlayerMatchesCommand = new DelegateCommand(TogglePlayerMatches);
 
+            GlobalData.BestOf = 3;
 
             MatchHistoryUpdateEvent.MatchSaved += UpdateMatchHistory;
             try
@@ -735,7 +736,7 @@ namespace Slipstream
 
             if (ActiveMatch is not null && ActiveMatch.Status == MatchStatus.InProgress)
             {
-                SystemSounds.Exclamation.Play();
+                // SystemSounds.Exclamation.Play();
                 ErrorText = "Conclude the active match before starting a new one!";
                 return;
             }

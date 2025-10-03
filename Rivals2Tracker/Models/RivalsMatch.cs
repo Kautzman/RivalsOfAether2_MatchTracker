@@ -159,7 +159,7 @@ namespace Slipstream.Models
         {
             Games = new();
 
-            for (int i = 1; i <= 5; i++)
+            for (int i = 1; i <= GlobalData.BestOf; i++)
             {
                 RivalsGame newGame = new RivalsGame(i, Me.Character, Opponent.Character);
                 Games.Add(newGame);

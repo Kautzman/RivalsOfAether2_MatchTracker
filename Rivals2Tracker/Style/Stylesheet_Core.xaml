@@ -418,21 +418,21 @@
     <!-- ==================================================================================================================== -->
 
     <Style TargetType="{x:Type RadioButton}" x:Key="RadioButtonBase">
-        <Setter Property="Foreground" Value="{StaticResource FG_Interactable}" />
-        <Setter Property="BorderBrush" Value="{StaticResource Border_Control}" />
-        <Setter Property="Background" Value="{StaticResource BG_CheckBox}" />
+        <Setter Property="Foreground" Value="{StaticResource FG_WhiteLabel}" />
+        <Setter Property="BorderBrush" Value="{StaticResource FG_BlueLabel}" />
+        <Setter Property="Background" Value="{StaticResource GR_Blue}" />
 
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type RadioButton}">
                     <BulletDecorator Background="Transparent">
                         <BulletDecorator.Bullet>
-                            <Grid Height="13" Width="13">
-                                <Border Name="RadioOuter" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="2" />
-                                <Border CornerRadius="0" Margin="4" Name="RadioMark" Background="{StaticResource FG_Interactable}" Visibility="Hidden" />
+                            <Grid Height="20" Width="20">
+                                <Border Name="RadioOuter" Background="{StaticResource BG_DarkBlue}" BorderBrush="{StaticResource FG_BlueLabel}" BorderThickness="1" CornerRadius="0" />
+                                <Border CornerRadius="0" Margin="5" Name="RadioMark" Background="{StaticResource FG_BlueLabel}" Visibility="Hidden" />
                             </Grid>
                         </BulletDecorator.Bullet>
-                        <TextBlock Name="TextContent" Margin="3,1,0,0" Foreground="{TemplateBinding Foreground}">
+                        <TextBlock Name="TextContent" Margin="7,0,0,0" Foreground="{TemplateBinding Foreground}">
                             <ContentPresenter VerticalAlignment="Center" />
                         </TextBlock>
                     </BulletDecorator>

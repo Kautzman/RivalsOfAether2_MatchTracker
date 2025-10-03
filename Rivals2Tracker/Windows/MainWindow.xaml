@@ -93,13 +93,18 @@
 
                 <Grid HorizontalAlignment="Right" Margin="0, 0, 100, 0">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right">
-                        <Label Content="Patch:" FontFamily="Franklin Gothic Demi" KeyDown="TextBox_KeyDown" FontStyle="Italic" Foreground="{StaticResource FG_BlueLabel}" FontSize="48" Margin="30, 0, 0, 0"  />
+                        <Label Content="Patch:" FontFamily="Franklin Gothic Demi" KeyDown="TextBox_KeyDown" FontStyle="Italic" Foreground="{StaticResource FG_BlueLabel}" FontSize="38" Margin="30, 6, 0, 0"  />
                         <TextBox Text="{Binding CurrentPatch, UpdateSourceTrigger=PropertyChanged}" FontFamily="{StaticResource AfterDisaster}" Background="Transparent"
-                                 Foreground="{StaticResource FG_WhiteLabel}" FontSize="42" Height="60" Margin="10, 6, 20, 0" IsReadOnly="True" IsHitTestVisible="False"/>
+                                 Foreground="{StaticResource FG_WhiteLabel}" FontSize="38" Height="60" Margin="10, 6, 20, 0" IsReadOnly="True" IsHitTestVisible="False"/>
                     </StackPanel>
                 </Grid>
 
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
+                <StackPanel Margin="0, 60, 206, 0">
+                    <RadioButton GroupName="BestOf" Content="Best of 3" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="25" FontSize="18" IsChecked="{Binding IsBestOf3}"/>
+                    <RadioButton GroupName="BestOf" Content="Best of 5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="25" FontSize="18" IsChecked="{Binding IsBestOf5}"/>
+                </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
                     <Button x:Name="WindowMinimize" Style="{StaticResource WindowingButton}" Click="WindowMiminizeClick">
                         <Image Style="{StaticResource Windowing_Image}" Source="/Slipstream;component/Resources/Icons/Windowing/Minimize.png" />
                     </Button>
