@@ -36,14 +36,28 @@
             <!-- Top Bar-->
             <Grid DockPanel.Dock="Top" Background="{StaticResource LGR_Banner}" Height="130" MouseDown="EnableDrag" Panel.ZIndex="1000">
                 <Grid Margin="145, 8, 0, 0" Panel.ZIndex="1000" HorizontalAlignment="Left" >
+                    <StackPanel Orientation="Horizontal">
+                        <Grid>
+                            <TextBox Text="{Binding MyName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="1" KeyDown="TextBox_KeyDown" FontFamily="Franklin Gothic Demi Cond" Background="Transparent" 
+                                    Height="60" VerticalAlignment="Top" Style="{StaticResource MatchInformationTextBoxes}"
+                                     behaviors:TextboxWatermark.Watermark="My Tag" behaviors:TextboxWatermark.WatermarkVisibility="{Binding ActiveMatch, Converter={StaticResource MatchStatusToVisibilityConverter}}"/>
+                            <TextBox Text="{Binding MyElo, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="2" KeyDown="TextBox_KeyDown" Margin="0, 0, 0, 10" FontFamily="{StaticResource AfterDisaster}" Background="Transparent"
+                                    Foreground="{StaticResource FG_WhiteLabel}" Height="50" VerticalAlignment="Bottom" FontSize="42" Style="{StaticResource MatchInformationTextBoxes}" IsReadOnly="{Binding IsMatchTextBoxesReadOnly}"
+                                     IsHitTestVisible="{Binding IsMatchTextBoxesHitTestable}" behaviors:TextboxWatermark.Watermark="My Elo" behaviors:TextboxWatermark.WatermarkVisibility="{Binding ActiveMatch, Converter={StaticResource MatchStatusToVisibilityConverter}}"/>
+                        </Grid>
 
-                    <Label Content="Set My Tag..." Visibility="{Binding IsMyTagPhVisible}" IsHitTestVisible="False" FontStyle="Italic" FontSize="16" Margin="5, 15, 0, 0" Foreground="{StaticResource FG_Control_Disabled}"/>
-                    <Label Content="Set My Elo..." Visibility="{Binding IsMyEloPhVisible}" IsHitTestVisible="False" FontStyle="Italic" FontSize="16" Margin="5, 0, 0, 23" VerticalAlignment="Bottom" Foreground="{StaticResource FG_Control_Disabled}" />
+                        <Label Content="Vs" FontSize="28" VerticalAlignment="Center" HorizontalAlignment="Center" Width="60" FontFamily="Franklin Gothic Demi Cond" Visibility="{Binding ActiveMatch, Converter={StaticResource MatchStatusToVisibilityConverter}}"/>
 
-                    <TextBox Text="{Binding MyName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="1" KeyDown="TextBox_KeyDown" FontFamily="Franklin Gothic Demi Cond" Background="Transparent"
-                                Height="60" VerticalAlignment="Top" Style="{StaticResource MatchInformationTextBoxes}" />
-                    <TextBox Text="{Binding MyElo, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="2" KeyDown="TextBox_KeyDown" Margin="0, 0, 0, 10" FontFamily="{StaticResource AfterDisaster}" Background="Transparent"
-                                Foreground="{StaticResource FG_WhiteLabel}" Height="50" VerticalAlignment="Bottom" FontSize="42" Style="{StaticResource MatchInformationTextBoxes}" IsReadOnly="{Binding IsMatchTextBoxesReadOnly}" IsHitTestVisible="{Binding IsMatchTextBoxesHitTestable}"/>
+                        <Grid>
+                            <TextBox Text="{Binding OpponentName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="3" KeyDown="TextBox_KeyDown" IsReadOnly="{Binding IsMatchTextBoxesReadOnly}" IsHitTestVisible="{Binding IsMatchTextBoxesHitTestable}"
+                                            Margin="00, 0, 0, 0" FontFamily="Franklin Gothic Demi Cond" Background="Transparent" Height="60" VerticalAlignment="Top"
+                                     Style="{StaticResource MatchInformationTextBoxes}" behaviors:TextboxWatermark.Watermark="Opponent Tag" behaviors:TextboxWatermark.WatermarkVisibility="{Binding ActiveMatch, Converter={StaticResource MatchStatusToVisibilityConverter}}" />
+
+                            <TextBox Text="{Binding OpponentElo, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="4" KeyDown="TextBox_KeyDown" IsReadOnly="{Binding IsMatchTextBoxesReadOnly}" IsHitTestVisible="{Binding IsMatchTextBoxesHitTestable}"
+                                             Margin="00, 0, 0, 10" FontFamily="{StaticResource AfterDisaster}" Background="Transparent" Foreground="{StaticResource FG_WhiteLabel}" Height="50" VerticalAlignment="Bottom" FontSize="42" Style="{StaticResource MatchInformationTextBoxes}"
+                                             behaviors:TextboxWatermark.Watermark="Opponent Elo" behaviors:TextboxWatermark.WatermarkVisibility="{Binding ActiveMatch, Converter={StaticResource MatchStatusToVisibilityConverter}}"/>
+                        </Grid>
+                    </StackPanel>
                 </Grid>
 
                 <Label Content="{Binding ActiveMatchStatusString, UpdateSourceTrigger=PropertyChanged}" Name="FocusDump" Focusable="True" FontFamily="Franklin Gothic Demi" Foreground="{StaticResource FG_WhiteLabel}" FontSize="32" Margin="0, 5, 0, 0" VerticalAlignment="Top" HorizontalAlignment="Center" />
@@ -62,15 +76,15 @@
                     <Border BorderBrush="{StaticResource FG_Gold}" BorderThickness="2, 0, 2, 2" Background="{StaticResource BG_DarkBlue}" HorizontalAlignment="Center" VerticalAlignment="Bottom"
                                CornerRadius="5" Margin="0" Style="{StaticResource MatchResultButtonsBorder}">
                         <Grid Style="{StaticResource MatchResultButtonsGrid}">
-                            <Button Content="Start Match" FontFamily="Franklin Gothic Demi Cond" FontSize="38" Foreground="{StaticResource FG_BlueLabel}" Style="{StaticResource MatchResultButton}"
-                                    Background="#05011A" Width="450" Command="{Binding StartMatchCommand}"/>
+                            <Button Content="Start Match" FontFamily="Franklin Gothic Demi Cond" FontSize="38" Foreground="{StaticResource FG_BlueLabel}" Style="{StaticResource MatchStartButton}"
+                                    Background="#05011A" Command="{Binding StartMatchCommand}"/>
                             <StackPanel Orientation="Horizontal" Visibility="{Binding ActiveMatch, Converter={StaticResource MatchStatusToVisibilityConverter}}">
                                 <Button Content="WIN" FontFamily="Franklin Gothic Demi Cond" BorderThickness="0" Background="#05011A"
-                                            Foreground="{StaticResource FG_BlueLabel}" Padding="0, 0, 0, 12" Command="{Binding SetMatchWinCommand}" Style="{StaticResource MatchResultButton}"/>
+                                            Foreground="{StaticResource FG_BlueLabel}" Command="{Binding SetMatchWinCommand}" Style="{StaticResource MatchResultButton}"/>
                                 <Button Content="LOSE" FontFamily="Franklin Gothic Demi Cond" BorderThickness="3, 0, 3, 0" Background="#05011A"
-                                            Foreground="{StaticResource FG_BlueLabel}" Padding="0, 0, 0, 12" Command="{Binding SetMatchLoseCommand}" Style="{StaticResource MatchResultButton}"/>
+                                            Foreground="{StaticResource FG_BlueLabel}" Command="{Binding SetMatchLoseCommand}" Style="{StaticResource MatchResultButton}"/>
                                 <Button FontFamily="Franklin Gothic Demi Cond" BorderThickness="0" Background="#05011A" Content="CANCEL"
-                                            Foreground="{StaticResource FG_BlueLabel}" Padding="0, 0, 0, 12" Command="{Binding SetMatchDiscardCommand}" Style="{StaticResource MatchResultButton}">
+                                            Foreground="{StaticResource FG_BlueLabel}" Command="{Binding SetMatchDiscardCommand}" Style="{StaticResource MatchResultButton}">
                                 </Button>
                             </StackPanel>
                         </Grid>
@@ -114,15 +128,14 @@
                         <Label Content="Active Match" FontFamily="Franklin Gothic Demi" FontSize="32" Margin="50, 25, 0, 0"/>
 
                         <Grid Margin="0, 70, 0, 0">
-                            <Label Content="Versus" FontFamily="Franklin Gothic Demi" FontSize="120" Foreground="#05011A" HorizontalAlignment="Center" IsHitTestVisible="False" Margin="0, -20, 0, 0"/>
                             <StackPanel>
-                                <TextBox Text="{Binding OpponentName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="3" KeyDown="TextBox_KeyDown" IsReadOnly="{Binding IsMatchTextBoxesReadOnly}" IsHitTestVisible="{Binding IsMatchTextBoxesHitTestable}"
+                                <!--<TextBox Text="{Binding OpponentName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="3" KeyDown="TextBox_KeyDown" IsReadOnly="{Binding IsMatchTextBoxesReadOnly}" IsHitTestVisible="{Binding IsMatchTextBoxesHitTestable}"
                                     Margin="00, 0, 0, 0" FontFamily="Franklin Gothic Demi Cond" Background="Transparent" HorizontalContentAlignment="Center" Height="60" VerticalAlignment="Top" Style="{StaticResource MatchInformationTextBoxes}" behaviors:TextboxWatermark.Watermark="Opponent Tag" />
 
                                 <TextBox Text="{Binding OpponentElo, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="4" KeyDown="TextBox_KeyDown" IsReadOnly="{Binding IsMatchTextBoxesReadOnly}" IsHitTestVisible="{Binding IsMatchTextBoxesHitTestable}" behaviors:TextboxWatermark.Watermark="Opponent Elo" 
-                                     Margin="00, 0, 0, 10" FontFamily="{StaticResource AfterDisaster}" Background="Transparent" HorizontalContentAlignment="Center" Foreground="{StaticResource FG_WhiteLabel}" Height="50" VerticalAlignment="Bottom" FontSize="42" Style="{StaticResource MatchInformationTextBoxes}"/>
+                                     Margin="00, 0, 0, 10" FontFamily="{StaticResource AfterDisaster}" Background="Transparent" HorizontalContentAlignment="Center" Foreground="{StaticResource FG_WhiteLabel}" Height="50" VerticalAlignment="Bottom" FontSize="42" Style="{StaticResource MatchInformationTextBoxes}"/>-->
 
-                                <ListView Margin="20, 20, 10, 0" ItemTemplate="{StaticResource MatchGamesTemplate1440}" ItemsSource="{Binding ActiveMatch.Games}" Background="{StaticResource BG_DarkBlue}" BorderThickness="0">
+                                <ListView Margin="0, 10, 10, 0" Style="{StaticResource MatchContainerTemplateStyle}" ItemsSource="{Binding ActiveMatch.Games}" Background="Transparent" BorderThickness="0">
                                     <ListView.ItemContainerStyle>
                                         <Style TargetType="ListViewItem" BasedOn="{StaticResource EmptyListViewItem}">
                                             <Style.Triggers>

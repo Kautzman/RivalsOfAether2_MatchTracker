@@ -170,7 +170,7 @@
         </Grid>
     </DataTemplate>
 
-    <DataTemplate x:Key="TiltedStageList" DataType="{x:Type data:RivalsStage}">
+    <DataTemplate x:Key="TiltedStageList1440" DataType="{x:Type data:RivalsStage}">
         <Grid>
             <Grid.InputBindings>
                 <!--<MouseBinding Gesture="RightClick" Command="{Binding ToggleBanStageCommand}" />
@@ -236,16 +236,81 @@
         </Grid>
     </DataTemplate>
 
-    <DataTemplate x:Key="MatchGamesTemplate1440" DataType="{x:Type data:RivalsGame}">
-        <Grid Height="190">
-            <TextBlock Margin="36, 20, 0, 0" Text="{Binding GameNumber, StringFormat='Game {0}'}" FontFamily="Franklin Gothic Demi Cond"
+    <DataTemplate x:Key="TiltedStageList1080" DataType="{x:Type data:RivalsStage}">
+        <Grid>
+            <Grid.InputBindings>
+                <!--<MouseBinding Gesture="RightClick" Command="{Binding ToggleBanStageCommand}" />
+                <MouseBinding Gesture="LeftClick" Command="{Binding ToggleSelectStageCommand}" />-->
+            </Grid.InputBindings>
+
+            <!-- This is way faster than MouseBinding - Use this instead -->
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseLeftButtonDown">
+                    <i:InvokeCommandAction Command="{Binding ToggleSelectStageCommand}" />
+                </i:EventTrigger>
+                <i:EventTrigger EventName="MouseRightButtonDown">
+                    <i:InvokeCommandAction Command="{Binding ToggleBanStageCommand}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+
+            <!-- Outer Border -->
+            <Path Stroke="Black" StrokeThickness="1" Fill="Gray">
+                <Path.Data>
+                    <PathGeometry>
+                        <PathFigure StartPoint="12,0" IsClosed="True">
+                            <LineSegment Point="63,0" />
+                            <LineSegment Point="53,70" />
+                            <LineSegment Point="0,70" />
+                        </PathFigure>
+                    </PathGeometry>
+                </Path.Data>
+            </Path>
+
+            <!-- Stage Image -->
+            <Image Source="{Binding StagePicture}" ToolTip="{Binding StageName}" Width="63" Height="75" Stretch="UniformToFill" Cursor="Hand">
+                <Image.Clip>
+                    <PathGeometry>
+                        <PathFigure StartPoint="12,0" IsClosed="True">
+                            <LineSegment Point="63,0" />
+                            <LineSegment Point="53,70" />
+                            <LineSegment Point="0,70" />
+                        </PathFigure>
+                    </PathGeometry>
+                </Image.Clip>
+            </Image>
+
+            <!-- "Banned" Image -->
+            <Image Width="65" Height="75" Margin="0, -1 0, 0" Source="/Resources/StageIcons/StageBannedOverlay.png" 
+               Visibility="{Binding IsBanned, Converter={StaticResource BoolToVisibilityConverter}}"
+               IsHitTestVisible="False">
+                <Image.Clip>
+                    <PathGeometry>
+                        <PathFigure StartPoint="12,0" IsClosed="True">
+                            <LineSegment Point="63,0" />
+                            <LineSegment Point="53,70" />
+                            <LineSegment Point="0,70" />
+                        </PathFigure>
+                    </PathGeometry>
+                </Image.Clip>
+            </Image>
+
+            <Border BorderBrush="#FFA93C" Margin="-14, 0, 0, -5" BorderThickness="0, 3, 0, 0" Width="50" Visibility="{Binding IsSelected, Converter={StaticResource BoolToVisibilityConverter}}" IsHitTestVisible="False" VerticalAlignment="Bottom"/>
+        </Grid>
+    </DataTemplate>
+
+    <!-- 
+        ACTIVE MATCH - 1080
+    -->
+    <DataTemplate x:Key="MatchGamesTemplate1080" DataType="{x:Type data:RivalsGame}">
+        <Grid Height="150" Width="675">
+            <TextBlock Margin="36, 15, 0, 0" Text="{Binding GameNumber, StringFormat='Game {0}'}" FontFamily="Franklin Gothic Demi Cond"
                 Foreground="White" FontSize="28" />
             <Grid>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0, 5, 0, 0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0, 10, 20, 0">
                     <!-- Character Select Buttons -->
                     <Grid Margin="0, 0, 0, 0" VerticalAlignment="Top" HorizontalAlignment="Center"> 
                         <!-- My Button-->
-                        <Button Name="MyCharacterRoot" Grid.Row="0" Width="60" Height="60" HorizontalAlignment="Left" Command="{Binding ShowMyFlyoutCommand}"
+                        <Button Name="MyCharacterRoot" Grid.Row="0" Width="46" Height="46" HorizontalAlignment="Left" Command="{Binding ShowMyFlyoutCommand}"
                                     BorderThickness="2" BorderBrush="Transparent" Style="{StaticResource MainImageButtonStyle}">
                             <Button.Background>
                                 <ImageBrush ImageSource="{Binding MySelectedImagePath}" Stretch="UniformToFill"/>
@@ -275,11 +340,11 @@
                             </Border>
                         </Popup>
                     </Grid>
-                    <Label Content="VS" Margin="10, 0, 0, 0" FontSize="28" Foreground="White"/>
+                    <Label Content="VS" Margin="10, 0, 0, 0" FontSize="22" Foreground="White"/>
                     <Grid Margin="0, 0, 0, 0" VerticalAlignment="Top" HorizontalAlignment="Center">
                         <!-- Opp Button -->
 
-                        <Button Name="MyOppRoot" Grid.Row="0" Width="60" Height="60" Margin="10, 0, 0, 0" HorizontalAlignment="Left" Command="{Binding ShowOppFlyoutCommand}"
+                        <Button Name="MyOppRoot" Grid.Row="0" Width="46" Height="46" Margin="10, 0, 0, 0" HorizontalAlignment="Left" Command="{Binding ShowOppFlyoutCommand}"
                                     BorderThickness="2" BorderBrush="Transparent" Style="{StaticResource MainImageButtonStyle}">
                             <Button.Background>
                                 <ImageBrush ImageSource="{Binding OppSelectedImagePath}" Stretch="UniformToFill"/>
@@ -312,14 +377,130 @@
                 </StackPanel>
 
                 <Grid>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0, 12, 30, 0">
+                        <Button Content="Win" ToolTip="Set Game to 'Won'" Height="40" FontSize="24" Width="100" FontFamily="Franklin Gothic Demi" BorderThickness="2" Style="{StaticResource GameWinButtonStyle}" Command="{Binding SetGameWonCommand}"/>
+                        <Button Content="Lose" ToolTip="Set Game to 'Lost'" Height="40" FontSize="24" Width="100" FontFamily="Franklin Gothic Demi" BorderThickness="2" Style="{StaticResource GameLoseButtonStyle}" Command="{Binding SetGameLostCommand}"/>
+                    </StackPanel>
+                </Grid>
+
+                <ListView ItemsSource="{Binding AllStages}" ItemTemplate="{StaticResource TiltedStageList1080}" Height="112"  BorderThickness="0" Background="Transparent" SelectionMode="Single"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" AlternationCount="100" VerticalAlignment="Top" Margin="0, 50, 0, 0">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem" BasedOn="{StaticResource EmptyListViewItem}">
+                            <Setter Property="Padding" Value="0"/>
+                            <Setter Property="Margin" Value="-4, 0, 0, 0"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Style.Triggers>
+                                <!-- For the 6th item (index 5) -->
+                                <Trigger Property="ItemsControl.AlternationIndex" Value="5">
+                                    <Setter Property="Margin" Value="15, 0, 0, 0"/>
+                                    <!-- add extra space on left -->
+                                </Trigger>
+
+                                <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                                    <Setter Property="Margin" Value="5, 0, 0, 0"/>
+                                    <!-- add extra space on left -->
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                </ListView>
+            </Grid>
+        </Grid>
+    </DataTemplate>
+
+    <!-- 
+        ACTIVE MATCH - 1440
+    -->
+    <DataTemplate x:Key="MatchGamesTemplate1440" DataType="{x:Type data:RivalsGame}">
+        <Grid Height="190">
+            <TextBlock Margin="36, 20, 0, 0" Text="{Binding GameNumber, StringFormat='Game {0}'}" FontFamily="Franklin Gothic Demi Cond"
+            Foreground="White" FontSize="28" />
+            <Grid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0, 5, 0, 0">
+                    <!-- Character Select Buttons -->
+                    <Grid Margin="0, 0, 0, 0" VerticalAlignment="Top" HorizontalAlignment="Center">
+                        <!-- My Button-->
+                        <Button Name="MyCharacterRoot" Grid.Row="0" Width="60" Height="60" HorizontalAlignment="Left" Command="{Binding ShowMyFlyoutCommand}"
+                                BorderThickness="2" BorderBrush="Transparent" Style="{StaticResource MainImageButtonStyle}">
+                            <Button.Background>
+                                <ImageBrush ImageSource="{Binding MySelectedImagePath}" Stretch="UniformToFill"/>
+                            </Button.Background>
+                        </Button>
+
+                        <!-- My Flyout -->
+
+                        <Popup Name="ImageFlyoutMN" Grid.Row="0" PlacementTarget="{Binding ElementName=MyCharacterRoot}" Placement="Bottom" IsOpen="{Binding IsMyFlyoutOpen}" StaysOpen="False"
+                            AllowsTransparency="True" PopupAnimation="Slide">
+                            <Border Background="{StaticResource BG_DarkBlue}" BorderBrush="{StaticResource FG_BlueLabel}" BorderThickness="1" CornerRadius="0" Padding="0">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="Black" Direction="315" ShadowDepth="5" Opacity="0.3"/>
+                                </Border.Effect>
+
+                                <StackPanel>
+                                    <Label Content="My Character" FontSize="22" FontFamily="Franklin Gothic Demi Cond" HorizontalAlignment="Center" Foreground="{StaticResource FG_BlueLabel}"/>
+                                    <Border BorderThickness="0, 0, 0, 1" Margin="20, 0, 20, 0" BorderBrush="White"/>
+                                    <ItemsControl ItemsSource="{Binding AvailableCharacters}" ItemTemplate="{StaticResource MyCharacterItemTemplateNew}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel Width="280" Orientation="Horizontal"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Border>
+                        </Popup>
+                    </Grid>
+                    <Label Content="VS" Margin="10, 0, 0, 0" FontSize="28" Foreground="White"/>
+                    <Grid Margin="0, 0, 0, 0" VerticalAlignment="Top" HorizontalAlignment="Center">
+                        <!-- Opp Button -->
+
+                        <Button Name="MyOppRoot" Grid.Row="0" Width="60" Height="60" Margin="10, 0, 0, 0" HorizontalAlignment="Left" Command="{Binding ShowOppFlyoutCommand}"
+                                BorderThickness="2" BorderBrush="Transparent" Style="{StaticResource MainImageButtonStyle}">
+                            <Button.Background>
+                                <ImageBrush ImageSource="{Binding OppSelectedImagePath}" Stretch="UniformToFill"/>
+                            </Button.Background>
+                        </Button>
+
+                        <!-- Opp Flyout -->
+
+                        <Popup Name="ImageFlyoutON" Grid.Row="0" PlacementTarget="{Binding ElementName=MyOppRoot}" Placement="Bottom" IsOpen="{Binding IsOppFlyoutOpen}" StaysOpen="False"
+                            AllowsTransparency="True" PopupAnimation="Slide">
+                            <Border Background="{StaticResource BG_DarkBlue}" BorderBrush="{StaticResource FG_BlueLabel}" BorderThickness="1" CornerRadius="0" Padding="0">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="Black" Direction="315" ShadowDepth="5" Opacity="0.3"/>
+                                </Border.Effect>
+
+                                <StackPanel>
+                                    <Label Content="Opponent Character" FontSize="22" FontFamily="Franklin Gothic Demi Cond" HorizontalAlignment="Center" Foreground="{StaticResource FG_BlueLabel}"/>
+                                    <Border BorderThickness="0, 0, 0, 1" Margin="20, 0, 20, 0" BorderBrush="White"/>
+                                    <ItemsControl ItemsSource="{Binding AvailableCharacters}" ItemTemplate="{StaticResource OppCharacterItemTemplateNew}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel Width="280" Orientation="Horizontal"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Border>
+                        </Popup>
+                    </Grid>
+                </StackPanel>
+
+                <Grid>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0, 12, 10, 0">
                         <Button Content="Win" ToolTip="Set Game to 'Won'" Height="40" FontSize="24" Width="100" FontFamily="Franklin Gothic Demi" BorderThickness="2" Style="{StaticResource GameWinButtonStyle}" Command="{Binding SetGameWonCommand}"/>
                         <Button Content="Lose" ToolTip="Set Game to 'Lost'" Height="40" FontSize="24" Width="100" FontFamily="Franklin Gothic Demi" BorderThickness="2" Style="{StaticResource GameLoseButtonStyle}" Command="{Binding SetGameLostCommand}"/>
                     </StackPanel>
                 </Grid>
 
-                <ListView ItemsSource="{Binding AllStages}" ItemTemplate="{StaticResource TiltedStageList}" Width="820" Height="112"  BorderThickness="0" Background="Transparent" SelectionMode="Single"
-                          ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" AlternationCount="100" VerticalAlignment="Top" Margin="0, 70, 0, 0">
+                <ListView ItemsSource="{Binding AllStages}" ItemTemplate="{StaticResource TiltedStageList1440}" Width="820" Height="112"  BorderThickness="0" Background="Transparent" SelectionMode="Single"
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" AlternationCount="100" VerticalAlignment="Top" Margin="0, 70, 0, 0">
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem" BasedOn="{StaticResource EmptyListViewItem}">
                             <Setter Property="Padding" Value="0"/>

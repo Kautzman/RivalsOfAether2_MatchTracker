@@ -699,6 +699,8 @@ namespace Slipstream
                 ActiveMatch.Status = MatchStatus.Invalid;
                 ActiveOpponent = new();
                 ResetMatchStatus();
+                OpponentName = String.Empty;
+                OpponentElo = String.Empty;
                 return;
             }
         }
@@ -774,7 +776,7 @@ namespace Slipstream
 
         private void SetMatchTextBoxReadOnly(MatchStatus activeMatchStatus)
         {
-            IsMatchTextBoxesReadOnly = activeMatchStatus == MatchStatus.InProgress;
+            IsMatchTextBoxesReadOnly = activeMatchStatus != MatchStatus.InProgress;
         }
 
         private void GetOpponentSeasonInfo()

@@ -13,6 +13,13 @@ namespace Slipstream.Resources.Behaviors
                 typeof(TextboxWatermark),
                 new PropertyMetadata(null, OnWatermarkChanged));
 
+        public static readonly DependencyProperty WatermarkVisibilityProperty =
+            DependencyProperty.RegisterAttached(
+                "WatermarkVisibility",
+                typeof(Visibility),
+                typeof(TextboxWatermark),
+                new PropertyMetadata(Visibility.Collapsed, OnWatermarkVisibilityChanged));
+
         public static string GetWatermark(DependencyObject obj)
         {
             return (string)obj.GetValue(WatermarkProperty);
@@ -34,14 +41,33 @@ namespace Slipstream.Resources.Behaviors
             }
         }
 
+        public static Visibility GetWatermarkVisibility(DependencyObject obj)
+        {
+            return (Visibility)obj.GetValue(WatermarkVisibilityProperty);
+        }
+
+        public static void SetWatermarkVisibility(DependencyObject obj, Visibility value)
+        {
+            obj.SetValue(WatermarkVisibilityProperty, value);
+        }
+
+        private static void OnWatermarkVisibilityChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is TextBox textBox)
+            {
+                UpdateWatermark(textBox, null);
+            }
+        }
+
         private static void UpdateWatermark(object sender, RoutedEventArgs e)
         {
             TextBox? textBox = sender as TextBox;
             if (textBox == null) return;
 
             string watermark = GetWatermark(textBox);
+            Visibility visibility = GetWatermarkVisibility(textBox);
 
-            if (string.IsNullOrEmpty(textBox.Text) && !textBox.IsFocused)
+            if (string.IsNullOrEmpty(textBox.Text) && !textBox.IsFocused && visibility == Visibility.Visible)
             {
                 textBox.Background = CreateWatermarkBrush(watermark);
             }
@@ -56,12 +82,12 @@ namespace Slipstream.Resources.Behaviors
             return new VisualBrush
             {
                 Stretch = Stretch.None,
-                AlignmentX = AlignmentX.Center,
+                AlignmentX = AlignmentX.Left,
                 Visual = new TextBlock
                 {
                     Text = watermarkText,
-                    Foreground = Brushes.Gray   ,
-                    Margin = new Thickness(5, 0, 0, 0),
+                    Foreground = Brushes.Gray,
+                    Margin = new Thickness(15, 0, 0, 0),
                     FontFamily = new FontFamily("Segoe UI"),
                     FontSize = 22,
                     FontStyle = FontStyles.Italic
