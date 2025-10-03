@@ -91,10 +91,5 @@ namespace Slipstream
                 FocusDump.Focus();
             }
         }
-
-        private void ImageSelectorButton_Click(object sender, RoutedEventArgs e)
-        {
-            ImageFlyout.IsOpen = true;
-        }
     }
 }

@@ -57,15 +57,15 @@ namespace Slipstream.Resources.Behaviors
         {
             var foregroundColorAnimation = new ColorAnimation
             {
-                From = Color.FromRgb(255, 180, 180),
-                To = Color.FromRgb(2, 16, 46),
-                Duration = new Duration(TimeSpan.FromSeconds(30))
+                From = Color.FromArgb(255, 255, 180, 180),
+                To = Color.FromArgb(0, 0, 0, 0),
+                Duration = new Duration(TimeSpan.FromSeconds(40))
             };
 
             var backgroundColorAnimation = new ColorAnimation
             {
-                From = Color.FromRgb(255, 0, 0),
-                To = Color.FromRgb(2, 16, 46),
+                From = Color.FromArgb(255, 255, 0, 0),
+                To = Color.FromArgb(0, 0, 0, 0),
                 Duration = new Duration(TimeSpan.FromSeconds(3))
             };
 
@@ -128,8 +128,8 @@ namespace Slipstream.Resources.Behaviors
 
             var backgroundColorAnimation = new ColorAnimation
             {
-                From = Color.FromRgb(255, 0, 0),
-                To = Color.FromRgb(2, 16, 46),
+                From = Color.FromArgb(255, 255, 0, 0),
+                To = Color.FromArgb(0, 0, 0, 0),
                 Duration = new Duration(TimeSpan.FromSeconds(3))
             };
 

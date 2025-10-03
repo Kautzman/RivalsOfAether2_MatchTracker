@@ -1,7 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:data="clr-namespace:Slipstream.Models"
-                    xmlns:converters="clr-namespace:Slipstream.Resources.Converters" xmlns:i="http://schemas.microsoft.com/xaml/behaviors">
+                    xmlns:converters="clr-namespace:Slipstream.Resources.Converters"
+                    xmlns:i="http://schemas.microsoft.com/xaml/behaviors">
 
     <converters:IconConverter x:Key="IconConverter" />
     <converters:PortraitConverter x:Key="PortraitConverter" />
@@ -9,6 +10,9 @@
     <converters:WinRatioToBackgroundConverter x:Key="WinRatioToColor" />
     <converters:WidthToRangeConverter x:Key="WidthToRangeConverter" />
     <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    <converters:SelectedToStrokeConverter x:Key="SelectedToStrokeConverter" />
+    <converters:SelectedToBorderConverter x:Key="SelectedToBorderConverter" />
+
 
     <DataTemplate x:Key="RecentMatches1080" DataType="{x:Type data:MatchResult}">
         <Grid Height="70" Width="620" Background="{StaticResource LGR_Blue}" Opacity="0.8">
@@ -227,6 +231,8 @@
                     </PathGeometry>
                 </Image.Clip>
             </Image>
+
+            <Border BorderBrush="#FFA93C" Margin="-20, 0, 0, 0" BorderThickness="0, 3, 0, 0" Width="50" Visibility="{Binding IsSelected, Converter={StaticResource BoolToVisibilityConverter}}" IsHitTestVisible="False" VerticalAlignment="Bottom"/>
         </Grid>
     </DataTemplate>
 
@@ -312,12 +318,12 @@
                     </StackPanel>
                 </Grid>
 
-                <ListView ItemsSource="{Binding AllStages}" ItemTemplate="{StaticResource TiltedStageList}" Width="820" Height="112"  BorderThickness="0" Background="Transparent"
+                <ListView ItemsSource="{Binding AllStages}" ItemTemplate="{StaticResource TiltedStageList}" Width="820" Height="112"  BorderThickness="0" Background="Transparent" SelectionMode="Single"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" AlternationCount="100" VerticalAlignment="Top" Margin="0, 70, 0, 0">
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem" BasedOn="{StaticResource EmptyListViewItem}">
                             <Setter Property="Padding" Value="0"/>
-                            <Setter Property="Margin" Value="0"/>
+                            <Setter Property="Margin" Value="0, 0, 0, 0"/>
                             <Setter Property="BorderThickness" Value="0"/>
                             <Style.Triggers>
                                 <!-- For the 6th item (index 5) -->

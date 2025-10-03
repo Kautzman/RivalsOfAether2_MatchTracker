@@ -16,6 +16,7 @@ using Windows.Networking.Vpn;
 using System.Windows.Navigation;
 using kWindows.Core;
 using Slipstream.Windows;
+using static Slipstream.Models.RivalsMatch;
 
 namespace Slipstream
 {
@@ -535,6 +536,7 @@ namespace Slipstream
 
         #region Commands
 
+        public DelegateCommand StartMatchCommand { get; private set; }
         public DelegateCommand SetMatchWinCommand { get; private set; }
         public DelegateCommand SetMatchLoseCommand { get; private set; }
         public DelegateCommand SetMatchDiscardCommand { get; private set; }
@@ -558,6 +560,7 @@ namespace Slipstream
 
         public MainWindow_VM()
         {
+            StartMatchCommand = new DelegateCommand(() => _ = StartMatch());
             SetMatchWinCommand = new DelegateCommand(() => _ = SetMatchWin());
             SetMatchLoseCommand = new DelegateCommand(() => _ = SetMatchLose());
             SetMatchDiscardCommand = new DelegateCommand(() => _ = SetMatchDiscard());
@@ -638,16 +641,28 @@ namespace Slipstream
             }
         }
 
+        private async Task StartMatch()
+        {
+            await StartNewMatchFromOCR();
+        }
+
         private async Task SetMatchWin()
         {
             if (ActiveMatch is not null && ActiveMatch.Status == MatchStatus.InProgress)
             {
-                ActiveMatch.IsWon = true;
-                ActivityText = "Match has been recorded as a 'Win'.";
-                ActiveMatch.Status = MatchStatus.Finished;
-                RivalsORM.AddMatch(ActiveMatch);
-                ResetMatchStatus();
-                return;
+                if (ActiveMatch.CanBeFlaggedWin())
+                {
+                    ActiveMatch.IsWon = true;
+                    ActivityText = "Match has been recorded as a 'Win'.";
+                    ActiveMatch.Status = MatchStatus.Finished;
+                    RivalsORM.AddMatch(ActiveMatch);
+                    ResetMatchStatus();
+                    return;
+                }
+                else
+                {
+                    ErrorText = "Can't flag a Match as 'Lost' unless you've lost more games than you've won";
+                }
             }
 
             ActivityText = "Match is not active or not valid";
@@ -657,12 +672,19 @@ namespace Slipstream
         {
             if (ActiveMatch is not null && ActiveMatch.Status == MatchStatus.InProgress)
             {
-                ActiveMatch.IsWon = false;
-                ActivityText = "Match has been recorded as a 'Loss'.";
-                ActiveMatch.Status = MatchStatus.Finished;
-                RivalsORM.AddMatch(ActiveMatch);
-                ResetMatchStatus();
-                return;
+                if (ActiveMatch.CanBeFlaggedLoss())
+                {
+                    ActiveMatch.IsWon = false;
+                    ActivityText = "Match has been recorded as a 'Loss'.";
+                    ActiveMatch.Status = MatchStatus.Finished;
+                    RivalsORM.AddMatch(ActiveMatch);
+                    ResetMatchStatus();
+                    return;
+                }
+                else
+                {
+                    ErrorText = "Can't flag a Match as 'Lost' unless you've lost more games than you've won";
+                }
             }
 
             ActivityText = "Match is not active or not valid";
@@ -679,15 +701,12 @@ namespace Slipstream
                 ResetMatchStatus();
                 return;
             }
-            else
-            {
-                await StartNewMatchFromOCR();
-            }
         }
 
         private void ResetMatchStatus()
         {
             ActiveMatchNotes = "";
+            RaisePropertyChanged(nameof(ActiveMatch));
             RaisePropertyChanged(nameof(CancelNewMatchButtonString));
             RaisePropertyChanged(nameof(IsInputLocked));
             RaisePropertyChanged(nameof(ActiveMatchStatusString));

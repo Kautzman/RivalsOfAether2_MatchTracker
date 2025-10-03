@@ -1,14 +1,8 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
 using Slipstream.Data;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Media;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Data;
 
 namespace Slipstream.Models
 {
@@ -16,8 +10,20 @@ namespace Slipstream.Models
     {
         public int GameNumber { get; set; }
         // public RivalsCharacter MyCharacter { get; set; }
-        public string MyCharacter { get; set; }
-        public string OppCharacter { get; set; }
+
+        private string _myCharacter;
+        public string MyCharacter
+        {
+            get { return _myCharacter; }
+            set { SetProperty(ref _myCharacter, value); }
+        }
+
+        private string _oppCharacter;
+        public string OppCharacter
+        {
+            get { return _oppCharacter; }
+            set { SetProperty(ref _oppCharacter, value); }
+        }
 
 
         private string _mySelectedImagePath = "/Resources/CharacterIcons/unknown.png";
@@ -62,7 +68,6 @@ namespace Slipstream.Models
         public ObservableCollection<RivalsStage> BannedStages { get; set; } = new ObservableCollection<RivalsStage>();
         public RivalsStage SelectedStage { get; set; }
 
-
         public DelegateCommand ShowMyFlyoutCommand { get; }
         public DelegateCommand ShowOppFlyoutCommand { get; }
         public DelegateCommand<string> SetMyCharacterCommand { get; }
@@ -71,14 +76,16 @@ namespace Slipstream.Models
         public DelegateCommand SetGameWonCommand { get; }
 
 
-        public RivalsGame(int gameNumber, string myCharacter)
+        public RivalsGame(int gameNumber, string myCharacter, string oppCharacter)
         {
             GameNumber = gameNumber;
-            MyCharacter = myCharacter;
+            SelectMyCharacter(myCharacter);
+            SelectOppCharacter(oppCharacter);
 
             foreach (RivalsStage stage in GlobalData.AllStages)
             {
                 RivalsStage newStage = new RivalsStage(stage.StageName, stage.StagePicture, stage.IsCounterpick);
+                newStage.SetParentGame(this);
 
                 if (GameNumber == 1)
                 {
@@ -133,6 +140,18 @@ namespace Slipstream.Models
 
             IsOppFlyoutOpen = false;
         }
+
+        public void ClearStageSelection()
+        {
+            foreach (RivalsStage stage in AllStages)
+            {
+                if (stage.IsSelected)
+                {
+                    stage.IsSelected = false;                
+                }
+            }
+        }
+
 
         private void ShowMyFlyout()
         {

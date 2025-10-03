@@ -80,6 +80,20 @@ namespace Slipstream.Data
             { "Forsburn", "/ImageResources/Portraits/forsburn_portrait.png" },
             { "Zetterburn", "/ImageResources/Portraits/zetterburn_portrait.png" }
         };
+
+        public static Dictionary<int, string> StageIndex = new Dictionary<int, string>
+        {
+            { 1, "Aetherian Forest" },
+            { 2, "Godei Delta" },
+            { 3, "Hodojo" },
+            { 4, "Julesvale" },
+            { 5, "Merchant Port" },
+            { 6, "Air Armada" },
+            { 7, "Fire Capital" },
+            { 8, "Hyperborean Harbor" },
+            { 9, "Rock Wall" },
+            { 10, "Tempest Peak"}
+        };
     }
 
     public enum MatchHistoryView

@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace Slipstream.Models
 {
-    class RivalsMatch : BindableBase
+    public class RivalsMatch : BindableBase
     {
 
         private string _id = "-1";
@@ -18,6 +18,20 @@ namespace Slipstream.Models
         {
             get { return _id; }
             set { SetProperty(ref _id, value); }
+        }
+
+        private RivalsPlayer _me;
+        public RivalsPlayer Me
+        {
+            get { return _me; }
+            set { SetProperty(ref _me, value); }
+        }
+
+        private RivalsPlayer _opponent;
+        public RivalsPlayer Opponent
+        {
+            get { return _opponent; }
+            set { SetProperty(ref _opponent, value); }
         }
 
         private RivalsPlayer _player1;
@@ -32,19 +46,6 @@ namespace Slipstream.Models
         {
             get { return _player2; }
             set { SetProperty(ref _player2, value); }
-        }
-
-        private RivalsPlayer _opponent;
-        public RivalsPlayer Opponent
-        {
-            get { return _opponent; }
-            set { SetProperty(ref _opponent, value); }
-        }
-        private RivalsPlayer _me;
-        public RivalsPlayer Me
-        {
-            get { return _me; }
-            set { SetProperty(ref _me, value); }
         }
 
         private ObservableCollection<RivalsGame> _games;
@@ -81,8 +82,7 @@ namespace Slipstream.Models
             }
         }
 
-
-        private MatchStatus _status = MatchStatus.New;
+        private MatchStatus _status = MatchStatus.InProgress;
         public MatchStatus Status
         {
             get { return _status; }
@@ -129,6 +129,8 @@ namespace Slipstream.Models
             }
         }
 
+        public Dictionary<string, int> CharactersPlayed = new();
+
         public RivalsMatch(RivalsPlayer player1, RivalsPlayer player2)
         {
             Player1 = player1;
@@ -159,7 +161,7 @@ namespace Slipstream.Models
 
             for (int i = 1; i <= 3; i++)
             {
-                RivalsGame newGame = new RivalsGame(i, Me.Character);
+                RivalsGame newGame = new RivalsGame(i, Me.Character, Opponent.Character);
                 Games.Add(newGame);
             }
         }
@@ -203,6 +205,41 @@ namespace Slipstream.Models
 
             validityFlag = MatchValidityFlag.Valid;
             return true;
+        }
+
+        public bool CanBeFlaggedWin()
+        {
+            int wins = Games.Where(g => g.Result == GameResult.Win).Count();
+            int losses = Games.Where(g => g.Result == GameResult.Lose).Count();
+
+            if (wins > losses)
+            {
+                return true;
+            }
+
+            return false;
+        }
+        public bool CanBeFlaggedLoss()
+        {
+            int wins = Games.Where(g => g.Result == GameResult.Win).Count();
+            int losses = Games.Where(g => g.Result == GameResult.Lose).Count();
+
+            if (losses > wins)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public void DetermineMatchCharacters()
+        {
+            CharactersPlayed = new();
+
+            foreach (RivalsGame game in Games)
+            {
+                CharactersPlayed[game.OppCharacter] = CharactersPlayed.GetValueOrDefault(game.OppCharacter, 0) + 1;
+            }
         }
     }
 

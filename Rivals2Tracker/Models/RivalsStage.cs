@@ -28,6 +28,8 @@ namespace Slipstream.Models
             set => SetProperty(ref _isSelected, value);
         }
 
+        public RivalsGame ParentGame { get; set; }
+
         public DelegateCommand ToggleBanStageCommand { get; set; }
         public DelegateCommand ToggleSelectStageCommand { get; set; }
 
@@ -42,6 +44,11 @@ namespace Slipstream.Models
             ToggleSelectStageCommand = new DelegateCommand(ToggleSelectStage);
         }
 
+        public void SetParentGame(RivalsGame parentGame)
+        {
+            ParentGame = parentGame;
+        }
+
         private void ToggleBanStage()
         {
             IsBanned = !IsBanned;
@@ -50,6 +57,14 @@ namespace Slipstream.Models
 
         private void ToggleSelectStage()
         {
+            if (IsSelected)
+            {
+                IsSelected = false;
+                return;
+            }
+
+
+            ParentGame.ClearStageSelection();
             IsSelected = !IsSelected;
             IsBanned = false;
         }

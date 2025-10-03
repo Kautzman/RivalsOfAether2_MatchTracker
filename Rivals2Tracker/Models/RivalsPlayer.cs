@@ -9,7 +9,7 @@ using Prism.Mvvm;
 
 namespace Slipstream.Models
 {
-    class RivalsPlayer : BindableBase
+    public class RivalsPlayer : BindableBase
     {
         public string Name { get; set; } = String.Empty;
         public string Character { get; set; } = String.Empty;

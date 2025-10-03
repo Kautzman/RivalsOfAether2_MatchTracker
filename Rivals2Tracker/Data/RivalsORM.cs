@@ -51,11 +51,25 @@ namespace Slipstream.Data
 
         public static string AddMatch(RivalsMatch match)
         {
+            string oppMain = string.Empty;
+            string oppAlt = string.Empty;
+
             if (match.HasNoKad())
             {
                 match.Opponent.FormatManualData();
                 match.Me.FormatManualData();
             }
+
+            match.DetermineMatchCharacters();
+
+            // Order characters in the match by played amount - get index of them to determine main or alt.
+            List<KeyValuePair<string, int>> orderedCharacters = match.CharactersPlayed.OrderByDescending(c => c.Value).ToList();
+
+            oppMain = orderedCharacters[0].Key;
+
+            if (orderedCharacters[1].Key != null)
+                oppAlt = orderedCharacters[1].Key;
+
 
             using (conn)
             {
@@ -86,9 +100,79 @@ namespace Slipstream.Data
                 if (rowID.Exception != null)
                     return $"**Unknown Error:** {rowID.Exception.Message}";
 
+                AddGames(match.Games, (long)rowID.Result);
+
                 return $"Added new Match {match.Me.Elo} vs {match.Opponent.Character} / {match.Opponent.EloString} result: {match.MatchResult}";
             }
         }
+
+        public static void AddGames(ObservableCollection<RivalsGame> games, long matchID)
+        {
+            foreach (RivalsGame game in games)
+            {
+                if (game.Result != GameResult.Win || game.Result != GameResult.Lose)
+                    continue;
+
+                using (conn)
+                {
+                    conn.Open();
+
+                    SqliteCommand cmd = new SqliteCommand();
+                    cmd.Connection = conn;
+
+                    cmd.CommandText = "INSERT INTO Games (MatchID, GameNumber, PickedStage, MyCharacter, OppCharacter, Result) " +
+                         "VALUES (@MatchID, @GameNumber, @PickedStage, @MyCharacter, @OppCharacter, @Result); SELECT last_insert_rowid();";
+                    cmd.Parameters.AddWithValue("@MatchID", matchID);
+                    cmd.Parameters.AddWithValue("@GameNumber", game.GameNumber);
+                    cmd.Parameters.AddWithValue("@PickedStage", game.SelectedStage);
+                    cmd.Parameters.AddWithValue("@MyCharacter", game.MyCharacter);
+                    cmd.Parameters.AddWithValue("@OppCharacter", game.OppCharacter);
+                    cmd.Parameters.AddWithValue("@Result", game.Result);
+
+                    Task<object?> rowID = cmd.ExecuteScalarAsync();
+
+                    if (rowID == null)
+                        Debug.WriteLine("Error: New Row is Null");
+
+                    if (rowID.Exception != null)
+                        Debug.WriteLine($"**Unknown Error:** {rowID.Exception.Message}");
+
+                    AddBannedStages(game.BannedStages, (long)rowID.Result);
+                }
+            }
+        }
+
+        public static void AddBannedStages(ObservableCollection<RivalsStage> bannedStages, long gameID)
+        {
+            foreach (RivalsStage stage in bannedStages)
+            {
+                if (gameID == 1)
+                    continue; // We don't mark bans for game one
+
+                using (conn)
+                {
+                    conn.Open();
+
+                    SqliteCommand cmd = new SqliteCommand();
+                    cmd.Connection = conn;
+
+                    cmd.CommandText = "INSERT INTO Games (GameID, BannedStage, PickedStage, MyCharacter, OppCharacter) " +
+                         "VALUES (@GameID, @BannedStage, @PickedStage, @MyCharacter, @OppCharacter); SELECT last_insert_rowid();";
+                    cmd.Parameters.AddWithValue("@GameID", gameID);
+                    cmd.Parameters.AddWithValue("@BannedStage", stage.StageName);
+
+
+                    Task<object?> rowID = cmd.ExecuteScalarAsync();
+
+                    if (rowID == null)
+                        Debug.WriteLine("Error: New Row is Null");
+
+                    if (rowID.Exception != null)
+                        Debug.WriteLine($"**Unknown Error:** {rowID.Exception.Message}");
+                }
+            }
+        }
+
         public static string GetPlayerCharacter()
         {
             return ExecuteQueryForValue("SELECT PlayerCharacter FROM Metadata LIMIT 1");

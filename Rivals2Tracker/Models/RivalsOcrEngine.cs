@@ -71,10 +71,11 @@ namespace Slipstream.Models
             // hWndFound = FindWindow(null, "Photos Legacy");
             // hWndFound = FindWindow(null, "CaptureAll-08-22-23-24-25.jpg \u200e- Photos Legacy");
 
+            // DO NOT USE PHOTOS LEGACY -- The handler is stupid and doesn't work. Use new Photos
             EnumWindows(delegate (IntPtr hWnd, IntPtr lParam) {
                 StringBuilder sb = new StringBuilder(256);
                 GetWindowText(hWnd, sb, sb.Capacity);
-                if (sb.ToString().Contains("Photos Legacy"))
+                if (sb.ToString().Contains("CaptureAll"))
                 {
                     hWndFound = hWnd;
                     return false;
