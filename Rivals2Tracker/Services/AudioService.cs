@@ -19,6 +19,7 @@ namespace Slipstream.Services
         {
             if (GlobalData.IsPlayAudio)
             {
+                mediaPlayer.Position = TimeSpan.Zero;
                 mediaPlayer.Play();
             }
         }

@@ -161,12 +161,35 @@ namespace Slipstream.Models
 
             for (int i = 1; i <= GlobalData.BestOf; i++)
             {
-                RivalsGame newGame = new RivalsGame(i, Me.Character, Opponent.Character);
+                GameResult defaultGameState = GameResult.Unplayed;
+
+                if (i < 3 || (i == 3 && GlobalData.BestOf == 5))
+                {
+                    defaultGameState = GameResult.InProgress;
+                }
+
+                RivalsGame newGame = new RivalsGame(i, Me.Character, Opponent.Character, defaultGameState);
                 Games.Add(newGame);
             }
         }
 
-        public bool HasNoKad()
+        public bool AreCharactersSet()
+        {
+            foreach (RivalsGame game in Games)
+            {
+                if (game.ResultIsValid())
+                {
+                    if (String.IsNullOrEmpty(game.MyCharacter) || String.IsNullOrEmpty(game.OppCharacter ))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        public bool LocalPlayerNameNotMatched()
         {
             if (Player1.IsLocalPlayer() || Player2.IsLocalPlayer())
             {
@@ -214,6 +237,16 @@ namespace Slipstream.Models
 
             if (wins > losses)
             {
+                if (wins == 1)
+                {
+                    DialogResult result = MessageBox.Show("There aren't enough games to played for this set without a forfeit - are you sure you want to record it as a 'Win'?", "Record Partial Match", MessageBoxButtons.YesNo);
+
+                    if (result == DialogResult.Yes)
+                    {
+                        return true;
+                    }
+                }
+
                 return true;
             }
 
@@ -226,10 +259,33 @@ namespace Slipstream.Models
 
             if (losses > wins)
             {
+                if (losses == 1)
+                {
+                    DialogResult result = MessageBox.Show("There aren't enough games to played for this set without a forfeit - are you sure you want to record it as a 'Loss'?", "Record Partial Match", MessageBoxButtons.YesNo);
+
+                    if (result == DialogResult.Yes)
+                    {
+                        return true;
+                    }
+                }
+
                 return true;
             }
 
             return false;
+        }
+
+        public bool AreStagesPicked()
+        {
+            foreach (RivalsGame game in Games)
+            {
+                if (game.SelectedStage == null && game.ResultIsValid())
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         public void DetermineMatchCharacters()
@@ -238,7 +294,10 @@ namespace Slipstream.Models
 
             foreach (RivalsGame game in Games)
             {
-                CharactersPlayed[game.OppCharacter] = CharactersPlayed.GetValueOrDefault(game.OppCharacter, 0) + 1;
+                if (game.ResultIsValid())
+                {
+                    CharactersPlayed[game.OppCharacter] = CharactersPlayed.GetValueOrDefault(game.OppCharacter, 0) + 1;
+                }
             }
         }
     }

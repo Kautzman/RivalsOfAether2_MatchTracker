@@ -362,13 +362,6 @@ namespace Slipstream
             }
         }
 
-        private string _errorText;
-        public string ErrorText
-        {
-            get { return _errorText; }
-            set { SetProperty(ref _errorText, value); }
-        }
-
         private string _activeMatchStatusString = "Waiting For Match...";
         public string ActiveMatchStatusString
         {
@@ -634,6 +627,8 @@ namespace Slipstream
 
                 bool? result = firstStart.ShowDialog();
                 RivalsORM.SetMetaDataValue("IsFirstStart", "0");
+                MyName = RivalsORM.GetPlayerName();
+                CurrentPatch = RivalsORM.GetPatchValue();
             }
             else
             {
@@ -647,10 +642,32 @@ namespace Slipstream
             await StartNewMatchFromOCR();
         }
 
+        private bool IsMatchDataValid()
+        {
+            if (!ActiveMatch.AreCharactersSet())
+            {
+                MessageBox.Show("You must set character for each valid game before marking a match as won or lost");
+                return false;
+            }
+
+            if (!ActiveMatch.AreStagesPicked())
+            {
+                MessageBox.Show("You must set a picked stage for each valid game before marking a match as won or lost");
+                return false;
+            }
+
+            return true;
+        }
+
         private async Task SetMatchWin()
         {
             if (ActiveMatch is not null && ActiveMatch.Status == MatchStatus.InProgress)
             {
+                if (!IsMatchDataValid())
+                {
+                    return;
+                }
+
                 if (ActiveMatch.CanBeFlaggedWin())
                 {
                     ActiveMatch.IsWon = true;
@@ -662,7 +679,7 @@ namespace Slipstream
                 }
                 else
                 {
-                    ErrorText = "Can't flag a Match as 'Lost' unless you've lost more games than you've won";
+                    MessageBox.Show("Can't flag a Match as 'Lost' unless you've lost more games than you've won");
                 }
             }
 
@@ -673,7 +690,18 @@ namespace Slipstream
         {
             if (ActiveMatch is not null && ActiveMatch.Status == MatchStatus.InProgress)
             {
-                if (ActiveMatch.CanBeFlaggedLoss())
+                if (!IsMatchDataValid())
+                {
+                    return;
+                }
+
+                if (!ActiveMatch.CanBeFlaggedLoss())
+                {
+                    MessageBox.Show("Can't flag a Match as 'Lost' unless you've lost more games than you've won");
+                    return;
+                }
+
+                try
                 {
                     ActiveMatch.IsWon = false;
                     ActivityText = "Match has been recorded as a 'Loss'.";
@@ -682,9 +710,9 @@ namespace Slipstream
                     ResetMatchStatus();
                     return;
                 }
-                else
+                catch (Exception ex)
                 {
-                    ErrorText = "Can't flag a Match as 'Lost' unless you've lost more games than you've won";
+                    MessageBox.Show($"Exception: {ex.Message}\n\n {ex}");
                 }
             }
 
@@ -700,14 +728,14 @@ namespace Slipstream
                 ActiveMatch.Status = MatchStatus.Invalid;
                 ActiveOpponent = new();
                 ResetMatchStatus();
-                OpponentName = String.Empty;
-                OpponentElo = String.Empty;
                 return;
             }
         }
 
         private void ResetMatchStatus()
         {
+            OpponentName = String.Empty;
+            OpponentElo = String.Empty;
             ActiveMatchNotes = "";
             RaisePropertyChanged(nameof(ActiveMatch));
             RaisePropertyChanged(nameof(CancelNewMatchButtonString));
@@ -722,9 +750,15 @@ namespace Slipstream
         {
             RivalsOcrResult result = await RivalsOcrEngine.Capture();
 
+            if (result.Match is null)
+            {
+                MessageBox.Show("Failed to find the Rivals client - is Rivals running?");
+                return;
+            }
+
             if (!result.IsValid)
             {
-                ErrorText = result.ErrorText;
+                // MessageBox.Show(result.ErrorText);
             }
 
             if (!result.IsSalvagable)
@@ -737,7 +771,7 @@ namespace Slipstream
             if (ActiveMatch is not null && ActiveMatch.Status == MatchStatus.InProgress)
             {
                 // SystemSounds.Exclamation.Play();
-                ErrorText = "Conclude the active match before starting a new one!";
+                MessageBox.Show("Conclude the active match before starting a new one!");
                 return;
             }
 
@@ -973,7 +1007,7 @@ namespace Slipstream
             }
             else
             {
-                ErrorText = "Character seems to be null?  That's probably a bug";
+                MessageBox.Show("Character seems to be null?  That's probably a bug");
             }
 
             IsMyFlyoutOpen = false;
@@ -992,7 +1026,7 @@ namespace Slipstream
             }
             else
             {
-                SystemSounds.Exclamation.Play();
+                // SystemSounds.Exclamation.Play();
                 ActivityText = "No Active Match - You can't select a character without a match active";
             }
             
@@ -1010,7 +1044,7 @@ namespace Slipstream
             }
             else
             {
-                SystemSounds.Exclamation.Play();
+                // SystemSounds.Exclamation.Play();
                 ActivityText = "No Active Match - You can't select a character without a match active";
             }
 
@@ -1021,12 +1055,11 @@ namespace Slipstream
         {            
             Settings settingsWindow = new Settings();
 
-            settingsWindow.Owner = System.Windows.Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive);
+            settingsWindow.Owner = Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive);
             settingsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
             bool? result = settingsWindow.ShowDialog();
             GetMetadata();
-
         }
 
         // Stringly typed nonsense...

@@ -206,10 +206,14 @@
     <Resource Include="Resources\StageIcons\TempestPeakV.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Resources\tutorial1.jpg" />
+    <Resource Include="Resources\tutorial1.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\tutorial2.jpg" />
     <Resource Include="Resources\tutorial3.jpg" />
-    <Resource Include="Resources\tutorial4.jpg" />
+    <Resource Include="Resources\tutorial4.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\tutorial5.jpg" />
   </ItemGroup>
 

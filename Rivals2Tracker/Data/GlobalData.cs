@@ -10,7 +10,7 @@ namespace Slipstream.Data
     {
         public static IntPtr MainWindowHandle { get; set; }
         public static RivalsSeason CurrentSeason = RivalsSeason.Season3;
-        public static string MyName = "Kadecgos";
+        public static string MyName = "YOU TAG HERE";
         public static bool IsSaveCaptures = false;
         public static bool IsPlayAudio = true;
         public static uint HotKeyCode = 0;
@@ -132,6 +132,7 @@ namespace Slipstream.Data
         Lose = 0,
         Win = 1,
         Draw = 2,
-        InProgress = 3
+        InProgress = 3, // This is used to represent a game that will be played in a set - so game 1 or 2 in a Bo3, or 1, 2, or 3, in a Bo5
+        Unplayed = 4,
     }
 }

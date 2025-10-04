@@ -54,7 +54,7 @@ namespace Slipstream.Data
             string oppMain = string.Empty;
             string oppAlt = string.Empty;
 
-            if (match.HasNoKad())
+            if (match.LocalPlayerNameNotMatched())
             {
                 match.Opponent.FormatManualData();
                 match.Me.FormatManualData();
@@ -67,7 +67,7 @@ namespace Slipstream.Data
 
             oppMain = orderedCharacters[0].Key;
 
-            if (orderedCharacters[1].Key != null)
+            if (orderedCharacters.Count > 1)
                 oppAlt = orderedCharacters[1].Key;
 
 
@@ -78,15 +78,14 @@ namespace Slipstream.Data
                 SqliteCommand cmd = new SqliteCommand();
                 cmd.Connection = conn;
 
-                cmd.CommandText = "INSERT INTO Matches (Date, MyChar, MyElo, Opponent, OpponentElo, OppChar1, OppChar2, OppChar3, Result, Patch, Notes) " +
-                     "VALUES (@Date, @MyChar, @MyElo, @OppName, @OpponentElo, @OppChar1, @OppChar2, @OppChar3, @MatchResult, @Patch, @Notes); SELECT last_insert_rowid();";
+                cmd.CommandText = "INSERT INTO Matches (Date, MyChar, MyElo, Opponent, OpponentElo, OppChar1, OppChar2, Result, Patch, Notes) " +
+                     "VALUES (@Date, @MyChar, @MyElo, @OppName, @OpponentElo, @OppChar1, @OppChar2, @MatchResult, @Patch, @Notes); SELECT last_insert_rowid();";
                 cmd.Parameters.AddWithValue("@Date", DateTime.Now.ToString("MM/dd/yyyy"));
                 cmd.Parameters.AddWithValue("@MyChar", match.Me.Character);
                 cmd.Parameters.AddWithValue("@MyElo", match.Me.EloString);
                 cmd.Parameters.AddWithValue("@OppName", match.Opponent.Name);
-                cmd.Parameters.AddWithValue("@OppChar1", match.Opponent.Character);
-                cmd.Parameters.AddWithValue("@OppChar2", match.Opponent.Character2);
-                cmd.Parameters.AddWithValue("@OppChar3", match.Opponent.Character3);
+                cmd.Parameters.AddWithValue("@OppChar1", oppMain);
+                cmd.Parameters.AddWithValue("@OppChar2", oppAlt);
                 cmd.Parameters.AddWithValue("@OpponentElo", match.Opponent.Elo);
                 cmd.Parameters.AddWithValue("@MatchResult", match.MatchResult);
                 cmd.Parameters.AddWithValue("@Patch", match.Patch);
@@ -110,7 +109,7 @@ namespace Slipstream.Data
         {
             foreach (RivalsGame game in games)
             {
-                if (game.Result != GameResult.Win || game.Result != GameResult.Lose)
+                if (!game.ResultIsValid())
                     continue;
 
                 using (conn)
@@ -124,7 +123,7 @@ namespace Slipstream.Data
                          "VALUES (@MatchID, @GameNumber, @PickedStage, @MyCharacter, @OppCharacter, @Result); SELECT last_insert_rowid();";
                     cmd.Parameters.AddWithValue("@MatchID", matchID);
                     cmd.Parameters.AddWithValue("@GameNumber", game.GameNumber);
-                    cmd.Parameters.AddWithValue("@PickedStage", game.SelectedStage);
+                    cmd.Parameters.AddWithValue("@PickedStage", game.SelectedStage.StageName);
                     cmd.Parameters.AddWithValue("@MyCharacter", game.MyCharacter);
                     cmd.Parameters.AddWithValue("@OppCharacter", game.OppCharacter);
                     cmd.Parameters.AddWithValue("@Result", game.Result);
@@ -137,17 +136,17 @@ namespace Slipstream.Data
                     if (rowID.Exception != null)
                         Debug.WriteLine($"**Unknown Error:** {rowID.Exception.Message}");
 
-                    AddBannedStages(game.BannedStages, (long)rowID.Result);
+                    AddBannedStages(game.BannedStages, (long)rowID.Result, game.GameNumber);
                 }
             }
         }
 
-        public static void AddBannedStages(ObservableCollection<RivalsStage> bannedStages, long gameID)
+        public static void AddBannedStages(List<RivalsStage> bannedStages, long gameID, int gameNumber)
         {
             foreach (RivalsStage stage in bannedStages)
             {
-                if (gameID == 1)
-                    continue; // We don't mark bans for game one
+                if (gameNumber == 1)
+                    return; // We don't mark bans for game one
 
                 using (conn)
                 {
@@ -156,11 +155,10 @@ namespace Slipstream.Data
                     SqliteCommand cmd = new SqliteCommand();
                     cmd.Connection = conn;
 
-                    cmd.CommandText = "INSERT INTO Games (GameID, BannedStage, PickedStage, MyCharacter, OppCharacter) " +
-                         "VALUES (@GameID, @BannedStage, @PickedStage, @MyCharacter, @OppCharacter); SELECT last_insert_rowid();";
+                    cmd.CommandText = "INSERT INTO BannedStages (GameID, BannedStage) " +
+                         "VALUES (@GameID, @BannedStage); SELECT last_insert_rowid();";
                     cmd.Parameters.AddWithValue("@GameID", gameID);
                     cmd.Parameters.AddWithValue("@BannedStage", stage.StageName);
-
 
                     Task<object?> rowID = cmd.ExecuteScalarAsync();
 

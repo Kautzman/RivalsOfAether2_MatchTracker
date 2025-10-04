@@ -46,7 +46,7 @@
                                      IsHitTestVisible="{Binding IsMatchTextBoxesHitTestable}" behaviors:TextboxWatermark.Watermark="My Elo" behaviors:TextboxWatermark.WatermarkVisibility="{Binding ActiveMatch, Converter={StaticResource MatchStatusToVisibilityConverter}}"/>
                         </Grid>
 
-                        <Label Content="Vs" FontSize="28" VerticalAlignment="Center" HorizontalAlignment="Center" Width="60" FontFamily="Franklin Gothic Demi Cond" Visibility="{Binding ActiveMatch, Converter={StaticResource MatchStatusToVisibilityConverter}}"/>
+                        <Label Content="Vs" FontSize="38" VerticalAlignment="Center" HorizontalAlignment="Center" Width="60" FontFamily="Franklin Gothic Demi Cond" Visibility="{Binding ActiveMatch, Converter={StaticResource MatchStatusToVisibilityConverter}}"/>
 
                         <Grid>
                             <TextBox Text="{Binding OpponentName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="3" KeyDown="TextBox_KeyDown" IsReadOnly="{Binding IsMatchTextBoxesReadOnly}" IsHitTestVisible="{Binding IsMatchTextBoxesHitTestable}"
@@ -62,8 +62,6 @@
 
                 <Label Content="{Binding ActiveMatchStatusString, UpdateSourceTrigger=PropertyChanged}" Name="FocusDump" Focusable="True" FontFamily="Franklin Gothic Demi" Foreground="{StaticResource FG_WhiteLabel}" FontSize="32" Margin="0, 5, 0, 0" VerticalAlignment="Top" HorizontalAlignment="Center" />
                 <Label Content="{Binding ActivityText, UpdateSourceTrigger=PropertyChanged}" FontFamily="Franklin Gothic Demi" FontSize="18" Margin="0, 45, 0, 0" VerticalAlignment="Top" HorizontalAlignment="Center" behaviors:ActivityFadeBehavior.EnableTextFadeActivity="true" />
-                <Label Content="{Binding ErrorText, UpdateSourceTrigger=PropertyChanged}" FontFamily="Franklin Gothic Demi" FontSize="18" Margin="0, 80, 0, 10" VerticalAlignment="Top" Background="Transparent"
-                            Style="{StaticResource ErrorTextLabel}" HorizontalAlignment="Center" HorizontalContentAlignment="Center" behaviors:LabelFadeBehavior.EnableTextFade="true" />
 
                 <StackPanel VerticalAlignment="Bottom">
                     <Border BorderBrush="{StaticResource FG_Gold}" BorderThickness="0, 3, 0, 0" VerticalAlignment="Bottom" />
@@ -271,7 +269,7 @@
                 <Grid>
                     <!-- Button For Main -->
                     <Button Name="MySelectorButton" Grid.Row="0" Width="120" Height="120" Margin="0, 0, 0, 0" HorizontalAlignment="Left" Command="{Binding ShowMyFlyoutCommand}"
-                                BorderThickness="2" BorderBrush="Transparent" Style="{StaticResource MainImageButtonStyle}" Panel.ZIndex="1000">
+                                BorderThickness="2" BorderBrush="Transparent" Style="{StaticResource MainImageButtonStyle}" Panel.ZIndex="1000" Opacity="1">
                         <Button.Background>
                             <ImageBrush ImageSource="{Binding MySelectedCharPortrait}" Stretch="UniformToFill" />
                         </Button.Background>

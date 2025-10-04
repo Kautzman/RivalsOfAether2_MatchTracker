@@ -1,7 +1,9 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
 using Slipstream.Data;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Media;
 
 namespace Slipstream.Models
@@ -54,7 +56,9 @@ namespace Slipstream.Models
             set { SetProperty(ref _isOppFlyoutOpen, value); }
         }
 
-        private GameResult _result = GameResult.InProgress;
+        public GameResult DefaultState;
+
+        private GameResult _result;
         public GameResult Result
         {
             get { return _result; }
@@ -65,7 +69,14 @@ namespace Slipstream.Models
 
         public RivalsCharacter OpponentCharacter { get; set; }
         public ObservableCollection<RivalsStage> AllStages { get; set; } = new();
-        public ObservableCollection<RivalsStage> BannedStages { get; set; } = new ObservableCollection<RivalsStage>();
+        public List<RivalsStage> BannedStages
+        {
+            get
+            {
+                return AllStages.Where(s => s.IsBanned).ToList();
+            }
+        }
+
         public RivalsStage SelectedStage { get; set; }
 
         public DelegateCommand ShowMyFlyoutCommand { get; }
@@ -76,9 +87,11 @@ namespace Slipstream.Models
         public DelegateCommand SetGameWonCommand { get; }
 
 
-        public RivalsGame(int gameNumber, string myCharacter, string oppCharacter)
+        public RivalsGame(int gameNumber, string myCharacter, string oppCharacter, GameResult defaultGameState)
         {
             GameNumber = gameNumber;
+            DefaultState = defaultGameState;
+            Result = defaultGameState;
             SelectMyCharacter(myCharacter);
             SelectOppCharacter(oppCharacter);
 
@@ -118,7 +131,7 @@ namespace Slipstream.Models
             }
             else
             {
-                SystemSounds.Exclamation.Play();
+                // SystemSounds.Exclamation.Play();
             }
 
             IsMyFlyoutOpen = false;
@@ -135,7 +148,7 @@ namespace Slipstream.Models
             }
             else
             {
-                SystemSounds.Exclamation.Play();
+                // SystemSounds.Exclamation.Play();
             }
 
             IsOppFlyoutOpen = false;
@@ -152,6 +165,14 @@ namespace Slipstream.Models
             }
         }
 
+        public bool ResultIsValid()
+        {
+            if (Result == GameResult.Lose || Result == GameResult.Win)
+            {
+                return true;
+            }
+            return false;
+        }
 
         private void ShowMyFlyout()
         {
@@ -165,12 +186,12 @@ namespace Slipstream.Models
 
         private void SetGameLost()
         {
-            Result = Result == GameResult.Lose ? GameResult.InProgress : GameResult.Lose;
+            Result = Result == GameResult.Lose ? DefaultState : GameResult.Lose;
         }
 
         private void SetGameWon()
         {
-            Result = Result == GameResult.Win ? GameResult.InProgress : GameResult.Win;
+            Result = Result == GameResult.Win ? DefaultState : GameResult.Win;
         }
     }
 }

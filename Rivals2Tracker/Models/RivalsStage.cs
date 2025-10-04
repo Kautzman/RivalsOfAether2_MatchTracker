@@ -1,5 +1,6 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
+using Slipstream.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,6 +54,7 @@ namespace Slipstream.Models
         {
             IsBanned = !IsBanned;
             IsSelected = false;
+            FlagGameAsActive();
         }
 
         private void ToggleSelectStage()
@@ -63,10 +65,20 @@ namespace Slipstream.Models
                 return;
             }
 
-
             ParentGame.ClearStageSelection();
             IsSelected = !IsSelected;
             IsBanned = false;
+            ParentGame.SelectedStage = this;
+            FlagGameAsActive();
+
+        }
+
+        private void FlagGameAsActive()
+        {
+            if (ParentGame.Result == GameResult.Unplayed)
+            {
+                ParentGame.Result = GameResult.InProgress;
+            }
         }
     }
 }

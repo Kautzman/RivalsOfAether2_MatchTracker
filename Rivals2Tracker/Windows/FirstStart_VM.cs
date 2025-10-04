@@ -147,7 +147,7 @@ namespace Slipstream.Windows
             TutorialImageCaptionCollection.Add("Slipstream Main Window");
             TutorialImageCaptionCollection.Add("This is the window you need to capture a match on with your hotkey or the 'Start Match' button!");
             TutorialImageCaptionCollection.Add("Modifiers are supported for the 'Capture' keybind, but I personally just like using Scroll Lock.  This is a global hook and will lock the key (or key combination) out for other programs until you close Slipstream!");
-            TutorialImageCaptionCollection.Add("Don't forget to add 'Notes' to your matches!");
+            TutorialImageCaptionCollection.Add("Left click stages to mark them as 'Selected'.  Right click stages to mark them as 'Banned'");
             TutorialImageCaptionCollection.Add("Report Bugs, Issues, UX problems, and feature requests aggressively!");
         }
         public void BuildTutorialTextCollection()
@@ -167,21 +167,23 @@ namespace Slipstream.Windows
 
             TutorialTextCollection.Add(
                 """
-                To start using Slipstream, you have to understand the two primary modes it can be in:  "Waiting for Match", and "Match In Progress"
+                To start using Slipstream, you have to understand the two primary modes it can be in:  "Waiting for Match", and "Match In Progress".
 
-                By default, Slipstream is "Waiting for Match" when it starts up. To start a match, you need to do the following:
+                To start a match, you need to do the following:
 
-                1.  Start Rivals and enter a ranked match.
+                1.  Start Rivals and enter a match.
 
                 2.  At the Stage Selection screen (see image on right), you want to press your 'Capture Match' hotkey (Don't worry, we'll set this shortly).  This will automatically consume the match data (characters, names, elos) and the match will now be "In Progress".  Pressing the 'Start Match' button will do the same thing.
 
                 2a. Slipstream relies on Optical Character Recognition (OCR) to grab the match data.  Because OCR is not 100% reliable, it will sometimes fail to grab the match data.  You might have to enter parts of it yourself.  You can edit any data once the match is "In Progress".
 
-                3.  An extra field on the far right on the header is the 'Notes' field - add any notes you have about an opponent you faced.  Next time you see them in ranked, any notes entered will show up on the right-most panel!
+                3.  From the 'Active Match', you can record individual characters per game, and stage picks and bans.  Right Click to mark a stage as 'banned'.  Left click to mark it as the selected stage.
 
-                4.  Once your match is complete, you can record the match with the [Win] or [Lose] Buttons.  You can discard the match with the [Cancel] button if you wish.
+                4.  You can also record Notes for yourself at the bottom of the view.  These will show up again when you face that same player.
 
-                5.  After the match is marked with a result, the 'Completed' stamp will be painted on top of the match, and Slipstream is ready to start another match.
+                5.  Once your match is complete, you can record the match with the [Win] or [Lose] Buttons.  You can discard the match with the [Cancel] button if you wish.
+
+                6.  After the match is marked with a result, the view will return to the Recent Matches / Ready view and Slipstream is ready to start another match.
 
                 """);
 

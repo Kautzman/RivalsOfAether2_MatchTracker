@@ -67,21 +67,21 @@ namespace Slipstream.Models
             sw.Restart();
 
             nint hWndFound = 0;
-            // hWndFound = FindWindow(null, "Rivals2  ");
+            hWndFound = FindWindow(null, "Rivals2  ");
             // hWndFound = FindWindow(null, "Photos Legacy");
             // hWndFound = FindWindow(null, "CaptureAll-08-22-23-24-25.jpg \u200e- Photos Legacy");
 
             // DO NOT USE PHOTOS LEGACY -- The handler is stupid and doesn't work. Use new Photos
-            EnumWindows(delegate (IntPtr hWnd, IntPtr lParam) {
-                StringBuilder sb = new StringBuilder(256);
-                GetWindowText(hWnd, sb, sb.Capacity);
-                if (sb.ToString().Contains("CaptureAll"))
-                {
-                    hWndFound = hWnd;
-                    return false;
-                }
-                return true;
-            }, IntPtr.Zero);
+            //EnumWindows(delegate (IntPtr hWnd, IntPtr lParam) {
+            //    StringBuilder sb = new StringBuilder(256);
+            //    GetWindowText(hWnd, sb, sb.Capacity);
+            //    if (sb.ToString().Contains("CaptureAll"))
+            //    {
+            //        hWndFound = hWnd;
+            //        return false;
+            //    }
+            //    return true;
+            //}, IntPtr.Zero);
 
 
             if (hWndFound == IntPtr.Zero)
@@ -107,7 +107,7 @@ namespace Slipstream.Models
                 ga.CopyFromScreen(rect.Left, rect.Top, 0, 0, new Size(width, height), CopyPixelOperation.SourceCopy);
             }
 
-            string filename = $"CaptureAll-{DateTime.Now:MM-dd-HH-mm-ss}.jpg";
+            string filename = $"Capture-{DateTime.Now:MM-dd-HH-mm-ss}.jpg";
 
             Bitmap player1bmp = bmp.Clone(player1Crop, bmp.PixelFormat);
             Bitmap player2bmp = bmp.Clone(player2Crop, bmp.PixelFormat);
@@ -119,7 +119,7 @@ namespace Slipstream.Models
                 string subDirectory = "OCRCaptures";
                 Directory.CreateDirectory(subDirectory);
 
-                bmp.Save(filename, ImageFormat.Jpeg);
+                bmp.Save(Path.Combine(subDirectory, $"All-Capture-{DateTime.Now:MM-dd-HH-mm-ss}.jpg"), ImageFormat.Jpeg);
                 player1bmp.Save(Path.Combine(subDirectory, $"p1-{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
                 player2bmp.Save(Path.Combine(subDirectory, $"p2-{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
                 player1elobmp.Save(Path.Combine(subDirectory, $"p1elo-{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
