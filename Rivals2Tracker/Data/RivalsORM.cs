@@ -2,15 +2,12 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Data.Common;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Security.Permissions;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using System.Windows.Media.Animation;
 using Microsoft.Data.Sqlite;
 using Slipstream.Models;
 using Slipstream.Services;
@@ -19,7 +16,8 @@ namespace Slipstream.Data
 {
     class RivalsORM
     {
-        private static SqliteConnection conn = new SqliteConnection("Data Source=rivals2results.db;");
+        private static SqliteConnection userConn = new SqliteConnection("Data Source=rivals2results.db;");
+        private static SqliteConnection staticConn = new SqliteConnection("Data Source=RivalsStatic.db;");
 
         public static List<MatchResult> AllMatches = new();
 
@@ -54,10 +52,20 @@ namespace Slipstream.Data
         {
             DataTable table;
 
-            table = ExecuteQuery($"SELECT * FROM Seasons");
+            table = ExecuteQuery($"SELECT * FROM Seasons", DbConnection.StaticData);
 
             List<RivalsSeason> result = CreateCollectionFromTable<RivalsSeason>(table);
             return new ObservableCollection<RivalsSeason>(result);
+        }
+
+        public static ObservableCollection<RivalsCharacter> GetAllRivals()
+        {
+            DataTable table;
+
+            table = ExecuteQuery($"SELECT * FROM Characters", DbConnection.StaticData);
+
+            List<RivalsCharacter> result = CreateCollectionFromTable<RivalsCharacter>(table);
+            return new ObservableCollection<RivalsCharacter>(result);
         }
 
         public static string AddMatch(RivalsMatch match)
@@ -82,12 +90,12 @@ namespace Slipstream.Data
                 oppAlt = orderedCharacters[1].Key;
 
 
-            using (conn)
+            using (userConn)
             {
-                conn.Open();
+                userConn.Open();
 
                 SqliteCommand cmd = new SqliteCommand();
-                cmd.Connection = conn;
+                cmd.Connection = userConn;
 
                 cmd.CommandText = "INSERT INTO Matches (Date, MyChar, MyElo, Opponent, OpponentElo, OppChar1, OppChar2, Result, Patch, Notes) " +
                      "VALUES (@Date, @MyChar, @MyElo, @OppName, @OpponentElo, @OppChar1, @OppChar2, @MatchResult, @Patch, @Notes); SELECT last_insert_rowid();";
@@ -123,12 +131,12 @@ namespace Slipstream.Data
                 if (!game.ResultIsValid())
                     continue;
 
-                using (conn)
+                using (userConn)
                 {
-                    conn.Open();
+                    userConn.Open();
 
                     SqliteCommand cmd = new SqliteCommand();
-                    cmd.Connection = conn;
+                    cmd.Connection = userConn;
 
                     cmd.CommandText = "INSERT INTO Games (MatchID, GameNumber, PickedStage, MyCharacter, OppCharacter, Result) " +
                          "VALUES (@MatchID, @GameNumber, @PickedStage, @MyCharacter, @OppCharacter, @Result); SELECT last_insert_rowid();";
@@ -159,12 +167,12 @@ namespace Slipstream.Data
                 if (gameNumber == 1)
                     return; // We don't mark bans for game one
 
-                using (conn)
+                using (userConn)
                 {
-                    conn.Open();
+                    userConn.Open();
 
                     SqliteCommand cmd = new SqliteCommand();
-                    cmd.Connection = conn;
+                    cmd.Connection = userConn;
 
                     cmd.CommandText = "INSERT INTO BannedStages (GameID, BannedStage) " +
                          "VALUES (@GameID, @BannedStage); SELECT last_insert_rowid();";
@@ -222,6 +230,11 @@ namespace Slipstream.Data
             return ExecuteQueryForInt("SELECT SaveCaptures FROM Metadata LIMIT 1");
         }
 
+        public static int GetCurrentSeason()
+        {
+            return ExecuteQueryForInt("SELECT CurrentSeason FROM Metadata LIMIT 1");
+        }
+
         public static void SaveHotKeyToDatabase(ModifierKeys modifiers, Key key)
         {
             SetMetaDataValue("CaptureHotKeyCode", HotKeyService.ConvertKeyCodeToUint(key).ToString());
@@ -230,12 +243,12 @@ namespace Slipstream.Data
 
         public static string SetMetaDataValue(string field, string newValue)
         {
-            using (conn)
+            using (userConn)
             {
-                conn.Open();
+                userConn.Open();
 
                 SqliteCommand cmd = new SqliteCommand();
-                cmd.Connection = conn;
+                cmd.Connection = userConn;
                 cmd.CommandText = $"UPDATE Metadata SET {field} = '{newValue}' WHERE ID = '1'";
 
                 Task<object?> rowID = cmd.ExecuteScalarAsync();
@@ -249,14 +262,14 @@ namespace Slipstream.Data
 
         public static string UpdateMatch(MatchResult matchResult)
         {
-            using (conn)
+            using (userConn)
             {
                 try
                 {
-                    conn.Open();
+                    userConn.Open();
 
                     SqliteCommand cmd = new SqliteCommand();
-                    cmd.Connection = conn;
+                    cmd.Connection = userConn;
 
                     cmd.CommandText = "UPDATE Matches SET Opponent = @OppName, OppChar1 = @OppChar1, OpponentElo = @OpponentElo, MyChar = @MyChar, MyElo = @MyElo, " +
                         "OppChar2 = @OppChar2, OppChar3 = @OppChar3, Result = @MatchResult, Patch = @Patch, Notes = @Notes WHERE ID = @ID";
@@ -292,30 +305,34 @@ namespace Slipstream.Data
 
         public static void DeleteMatch(MatchResult matchResult)
         {
-            SqliteCommand command = conn.CreateCommand();
+            SqliteCommand command = userConn.CreateCommand();
             ExecuteQuery($"DELETE FROM Matches WHERE ID = {matchResult.ID}");      
         }
 
-        public static DataTable ExecuteQuery(string query)
+        public static DataTable ExecuteQuery(string query, DbConnection connectionEnum = DbConnection.UserData)
         {
+            SqliteConnection connection = GetConnection(connectionEnum);
+
             DataTable table = new DataTable();
-            using (conn)
+            using (connection)
             {
-                conn.Open();
-                SqliteDataReader reader = new SqliteCommand(query, conn).ExecuteReader();
+                connection.Open();
+                SqliteDataReader reader = new SqliteCommand(query, connection).ExecuteReader();
                 table.Load(reader);
             }
 
             return table;
         }
 
-        public static DataTable ExecuteQuery(SqliteCommand command)
+        public static DataTable ExecuteQuery(SqliteCommand command, DbConnection connectionEnum = DbConnection.UserData)
         {
+            SqliteConnection connection = GetConnection(connectionEnum);
+
             DataTable table = new DataTable();
 
-            using (conn)
+            using (connection)
             {
-                conn.Open();
+                connection.Open();
                 SqliteDataReader reader = command.ExecuteReader();
                 table.Load(reader);
             }
@@ -323,14 +340,16 @@ namespace Slipstream.Data
             return table;
         }
 
-        public static uint ExecuteQueryForUint(string command)
+        public static uint ExecuteQueryForUint(string command, DbConnection connectionEnum = DbConnection.UserData)
         {
+            SqliteConnection connection = GetConnection(connectionEnum);
+
             object? value = null;
 
-            using (conn)
+            using (connection)
             {
-                conn.Open();
-                value = new SqliteCommand(command, conn).ExecuteScalar();
+                connection.Open();
+                value = new SqliteCommand(command, connection).ExecuteScalar();
             }
 
             if (value == null || value == DBNull.Value)
@@ -339,14 +358,16 @@ namespace Slipstream.Data
             return Convert.ToUInt32(value);
         }
 
-        public static int ExecuteQueryForInt(string command)
+        public static int ExecuteQueryForInt(string command, DbConnection connectionEnum = DbConnection.UserData)
         {
+            SqliteConnection connection = GetConnection(connectionEnum);
+
             object? value = null;
 
-            using (conn)
+            using (connection)
             {
-                conn.Open();
-                value = new SqliteCommand(command, conn).ExecuteScalar();
+                connection.Open();
+                value = new SqliteCommand(command, connection).ExecuteScalar();
             }
 
             if (value == null || value == DBNull.Value)
@@ -355,14 +376,16 @@ namespace Slipstream.Data
             return Convert.ToInt32(value);
         }
 
-        public static string ExecuteQueryForValue(string command)
+        public static string ExecuteQueryForValue(string command, DbConnection connectionEnum = DbConnection.UserData)
         {
+            SqliteConnection connection = GetConnection(connectionEnum);
+
             object? value = null;
 
-            using (conn)
+            using (connection)
             {
-                conn.Open();
-                value = new SqliteCommand(command, conn).ExecuteScalar();
+                connection.Open();
+                value = new SqliteCommand(command, connection).ExecuteScalar();
             }
 
             return value as string ?? string.Empty;
@@ -401,5 +424,25 @@ namespace Slipstream.Data
                 }
             }
         }
+
+        public static SqliteConnection GetConnection(DbConnection connection)
+        {
+            if (connection == DbConnection.StaticData)
+            {
+                return staticConn;
+            }
+            else if (connection == DbConnection.UserData)
+            {
+                return userConn;
+            }
+
+            return userConn;
+        }
+    }
+
+    public enum DbConnection
+    {
+        UserData,
+        StaticData
     }
 }

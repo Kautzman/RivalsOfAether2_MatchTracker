@@ -33,7 +33,7 @@ namespace Slipstream.Resources.Converters
                 "Ranno" => "pack://application:,,,/Resources/CharacterIcons/ranno.png",
                 "Orcane" => "pack://application:,,,/Resources/CharacterIcons/orcane.png",
                 "Etalus" => "pack://application:,,,/Resources/CharacterIcons/etalus.png",
-                _ => "pack://application:,,,/Resources/CharacterIcons/unknown.png"
+                _ => "pack://application:,,,/Resources/CharacterIcons/empty.png",
             };
         }
 

@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Security.Permissions;
 
 namespace Slipstream.Data
 {
@@ -10,12 +9,14 @@ namespace Slipstream.Data
     {
         public static IntPtr MainWindowHandle { get; set; }
         public static RivalsSeasonEnum CurrentSeason = RivalsSeasonEnum.Season3;
-        public static string MyName = "YOU TAG HERE";
+        public static string MyName = "YOUR TAG HERE";
         public static bool IsSaveCaptures = false;
         public static bool IsPlayAudio = true;
         public static uint HotKeyCode = 0;
         public static uint ModifierCode = 0;
         public static int BestOf;
+        public static RivalsSeason AllSeasonsSeason = new RivalsSeason { ID = -1, Patch = "-1", Label = "All Seasons", IsCurrentSeason = false };
+        public static ObservableCollection<RivalsCharacter> AllRivals = new();
         public static ObservableCollection<RivalsStage> AllStages = new()
         {
             new RivalsStage("Aetherian Forest", "pack://application:,,,/Resources/StageIcons/AetherianForestV.png", false),

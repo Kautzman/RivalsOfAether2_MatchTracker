@@ -77,6 +77,8 @@ namespace Slipstream.Models
             }
         }
 
+        public RivalsMatch ParentMatch { get; set; }
+
         public RivalsStage SelectedStage { get; set; }
 
         public DelegateCommand ShowMyFlyoutCommand { get; }
@@ -127,15 +129,22 @@ namespace Slipstream.Models
                 {
                     MySelectedImagePath = imagePath;
                     MyCharacter = character;
+                    ParentMatch.CascadeCharacterSelection("Me", MyCharacter);
                 }
-            }
-            else
-            {
-                // SystemSounds.Exclamation.Play();
             }
 
             IsMyFlyoutOpen = false;
         }
+
+        public void AutoSetMyCharacter(string character)
+        {
+            if (GlobalData.CharacterImageDict.TryGetValue(character, out string imagePath))
+            {
+                MySelectedImagePath = imagePath;
+                MyCharacter = character;
+            }
+        }
+
         private void SelectOppCharacter(string character)
         {
             if (!string.IsNullOrEmpty(character))
@@ -144,14 +153,20 @@ namespace Slipstream.Models
                 {
                     OppSelectedImagePath = imagePath;
                     OppCharacter = character;
+                    ParentMatch.CascadeCharacterSelection("Opponent", OppCharacter);
                 }
-            }
-            else
-            {
-                // SystemSounds.Exclamation.Play();
             }
 
             IsOppFlyoutOpen = false;
+        }
+
+        public void AutoSetOppCharacter(string character)
+        {
+            if (GlobalData.CharacterImageDict.TryGetValue(character, out string imagePath))
+            {
+                OppSelectedImagePath = imagePath;
+                OppCharacter = character;
+            }
         }
 
         public void ClearStageSelection()

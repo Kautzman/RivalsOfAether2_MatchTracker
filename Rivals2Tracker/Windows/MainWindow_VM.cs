@@ -354,7 +354,6 @@ namespace Slipstream
 
                 SetProperty(ref _activeMatchNotes, value);
                 RaisePropertyChanged(nameof(IsNotesPhVisible));
-
             }
         }
 
@@ -441,6 +440,23 @@ namespace Slipstream
             get { return currentPatch; }
             set { SetProperty(ref currentPatch, value); }
         }
+
+        private RivalsSeason? _selectedSeason;
+        public RivalsSeason? SelectedSeason
+        {
+            get { return _selectedSeason; }
+            set
+            {
+                if (_selectedSeason is not null && value != SelectedSeason)
+                {
+                    RivalsORM.SetMetaDataValue("CurrentSeason", value.ID.ToString());
+                    GetSeasonalData(value);
+                }
+
+                SetProperty(ref _selectedSeason, value);
+            }
+        }
+
         private string _mySelectedCharPortrait = "/Resources/CharacterIcons/unknown.png";
         public string MySelectedCharPortrait
         {
@@ -583,6 +599,12 @@ namespace Slipstream
             TogglePlayerMatchesCommand = new DelegateCommand(TogglePlayerMatches);
 
             Seasons = RivalsORM.GetSeasons();
+            GlobalData.AllRivals = RivalsORM.GetAllRivals();
+
+            if (Seasons is not null && Seasons.Count > 0)
+            {
+                SelectedSeason = Seasons.FirstOrDefault(s => s.ID == RivalsORM.GetCurrentSeason());
+            }
 
             GlobalData.BestOf = 3;
 
@@ -909,10 +931,9 @@ namespace Slipstream
 
         private void GetMatches(bool isOnStart = false)
         {
-
             MatchResults = RivalsORM.GetAllMatches();
-            CurrentSeasonResults = GetSeasonData("1.3");
-            AllSeasonResults = GetSeasonData("all");
+            CurrentSeasonResults = GetCharacterMetaData(SelectedSeason);
+            AllSeasonResults = GetCharacterMetaData(GlobalData.AllSeasonsSeason);
 
             if (isOnStart)
             {
@@ -920,6 +941,15 @@ namespace Slipstream
             }
             else
             {
+                DisplayedCharacterResults = ShowLifetimeResults ? AllSeasonResults : CurrentSeasonResults;
+            }
+        }
+
+        private void GetSeasonalData(RivalsSeason season)
+        {
+            if (season is not null)
+            {
+                CurrentSeasonResults = GetCharacterMetaData(season);
                 DisplayedCharacterResults = ShowLifetimeResults ? AllSeasonResults : CurrentSeasonResults;
             }
         }
@@ -950,16 +980,15 @@ namespace Slipstream
 
         }
 
-        private MetaDataTable GetSeasonData(string patch)
+        private MetaDataTable GetCharacterMetaData(RivalsSeason season)
         {
             MetaDataTable metadatatable = new MetaDataTable();
-            metadatatable.Patch = patch;
 
-            metadatatable.TableTitle = patch == "all" ? $"Matchup Totals" : $"{patch} Matchups";
+            metadatatable.TableTitle = season.ID == -1 ? $"Matchup Totals" : $"{season.Patch} Matchups";
 
             foreach (MatchResult match in MatchResults)
             {
-                if (IsPatchMatch(patch, match.Patch))
+                if (IsPatchMatch(season.Patch, match.Patch))
                 {
                     metadatatable.AddResult(match);
 
@@ -1095,7 +1124,7 @@ namespace Slipstream
 
         private bool IsPatchMatch(string patchToMatch, string thisMatchPatch)
         {
-            if (patchToMatch == "all")
+            if (patchToMatch == "-1")
             {
                 return true;
             }

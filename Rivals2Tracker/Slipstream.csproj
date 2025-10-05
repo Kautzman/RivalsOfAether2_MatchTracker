@@ -30,6 +30,7 @@
     <None Remove="Resources\Audio\error.mp3" />
     <None Remove="Resources\CharacterIcons\absa.png" />
     <None Remove="Resources\CharacterIcons\clairen.png" />
+    <None Remove="Resources\CharacterIcons\empty.png" />
     <None Remove="Resources\CharacterIcons\etalus.png" />
     <None Remove="Resources\CharacterIcons\fleet.png" />
     <None Remove="Resources\CharacterIcons\kragg.png" />
@@ -124,6 +125,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\CharacterIcons\clairen.png" />
+    <Resource Include="Resources\CharacterIcons\empty.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\CharacterIcons\etalus.png" />
     <Resource Include="Resources\CharacterIcons\fleet.png" />
     <Resource Include="Resources\CharacterIcons\kragg.png" />

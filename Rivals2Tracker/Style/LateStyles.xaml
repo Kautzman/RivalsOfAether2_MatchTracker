@@ -297,7 +297,7 @@
                                        Converter={StaticResource WidthToRangeConverter},
                                        ConverterParameter=Small}"
                                        Value="True">
-                <Setter Property="Margin" Value="0, 70, 0, 45" />
+                <Setter Property="Margin" Value="0, 50, 0, 45" />
             </DataTrigger>
 
             <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window},

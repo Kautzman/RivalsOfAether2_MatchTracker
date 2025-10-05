@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Data;
 using System.Windows.Forms;
 
 namespace Slipstream.Models
@@ -167,6 +168,7 @@ namespace Slipstream.Models
                 }
 
                 RivalsGame newGame = new RivalsGame(i, Me.Character, Opponent.Character, defaultGameState);
+                newGame.ParentMatch = this;
                 Games.Add(newGame);
             }
         }
@@ -187,6 +189,30 @@ namespace Slipstream.Models
             return true;
         }
 
+        // This handles a case where the OCR either didn't pick up a character or you are manually setting up matches so you don't have to select characters for every game.
+        public void CascadeCharacterSelection(string player, string character)
+        {
+            foreach (RivalsGame game in Games)
+            {
+                if (player == "Opponent")
+                {
+                    if (game.OppCharacter is null || game.OppCharacter == "Unknown")
+                    {
+                        game.AutoSetOppCharacter(character);
+                    }
+                }
+
+                if (player == "Me")
+                {
+                    if (game.MyCharacter is null || game.MyCharacter == "Unknown")
+                    {
+                        game.AutoSetMyCharacter(character);
+                    }
+                }
+            }
+        }
+
+        // This is an OCR test - if it doesn't pick up your tag in either player 1 or player 2, it can do something from that state.
         public bool LocalPlayerNameNotMatched()
         {
             if (Player1.IsLocalPlayer() || Player2.IsLocalPlayer())
