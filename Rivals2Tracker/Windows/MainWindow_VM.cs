@@ -23,6 +23,14 @@ namespace Slipstream
     {
 
         #region Variables
+
+        private ObservableCollection<RivalsSeason> _seasons = new();
+        public ObservableCollection<RivalsSeason> Seasons
+        {
+            get { return _seasons; }
+            set { SetProperty(ref _seasons, value); }
+        }
+
         private ObservableCollection<MatchResult> _matchResults = new();
         public ObservableCollection<MatchResult> MatchResults
         {
@@ -67,17 +75,20 @@ namespace Slipstream
                 }
 
                 SetProperty(ref _showLifetimeResults, value);
+                RaisePropertyChanged(nameof(EnableSeasonSelectionComboBox));
             }
+        }
+
+        public bool EnableSeasonSelectionComboBox
+        {
+            get { return !ShowLifetimeResults; }
         }
 
         private MatchHistoryCollection _activeMatchHistory = new();
         public MatchHistoryCollection ActiveMatchHistory
         {
             get { return _activeMatchHistory; }
-            set
-            {
-                SetProperty(ref _activeMatchHistory, value); 
-            }
+            set { SetProperty(ref _activeMatchHistory, value); }
         }
 
         private CharacterMetadata? _activeMatchSeason_CharacterData;
@@ -570,6 +581,8 @@ namespace Slipstream
             TogglePlayersMatchHistoryCommand = new DelegateCommand(TogglePlayersMatchHistory);
             TogglePlayerNotesCommand = new DelegateCommand(TogglePlayerNotes);
             TogglePlayerMatchesCommand = new DelegateCommand(TogglePlayerMatches);
+
+            Seasons = RivalsORM.GetSeasons();
 
             GlobalData.BestOf = 3;
 

@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 using Microsoft.Data.Sqlite;
 using Slipstream.Models;
 using Slipstream.Services;
@@ -47,6 +48,16 @@ namespace Slipstream.Data
 
             List<MatchResult> result = CreateCollectionFromTable<MatchResult>(table);
             return new ObservableCollection<MatchResult>(result);
+        }
+
+        public static ObservableCollection<RivalsSeason> GetSeasons()
+        {
+            DataTable table;
+
+            table = ExecuteQuery($"SELECT * FROM Seasons");
+
+            List<RivalsSeason> result = CreateCollectionFromTable<RivalsSeason>(table);
+            return new ObservableCollection<RivalsSeason>(result);
         }
 
         public static string AddMatch(RivalsMatch match)

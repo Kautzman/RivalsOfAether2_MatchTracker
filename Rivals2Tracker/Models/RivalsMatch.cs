@@ -4,8 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Slipstream.Models
@@ -72,8 +70,8 @@ namespace Slipstream.Models
             }
         }
 
-        private RivalsSeason _season = GlobalData.CurrentSeason;
-        public RivalsSeason Season
+        private RivalsSeasonEnum _season = GlobalData.CurrentSeason;
+        public RivalsSeasonEnum Season
         {
             get { return _season; }
             set
@@ -317,7 +315,7 @@ namespace Slipstream.Models
         NoElo = 3
     }
 
-    public enum RivalsSeason
+    public enum RivalsSeasonEnum
     {
         Season3,
         Season4,

@@ -9,7 +9,7 @@ namespace Slipstream.Data
     public static class GlobalData
     {
         public static IntPtr MainWindowHandle { get; set; }
-        public static RivalsSeason CurrentSeason = RivalsSeason.Season3;
+        public static RivalsSeasonEnum CurrentSeason = RivalsSeasonEnum.Season3;
         public static string MyName = "YOU TAG HERE";
         public static bool IsSaveCaptures = false;
         public static bool IsPlayAudio = true;
@@ -110,7 +110,7 @@ namespace Slipstream.Data
         Matches
     }
 
-    public enum RivalsCharacter
+    public enum RivalsCharacterEnum
     {
         Absa,
         Clairen,

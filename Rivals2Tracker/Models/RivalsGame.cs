@@ -67,7 +67,7 @@ namespace Slipstream.Models
 
         public ObservableCollection<string> AvailableCharacters { get; set; }
 
-        public RivalsCharacter OpponentCharacter { get; set; }
+        public RivalsCharacterEnum OpponentCharacter { get; set; }
         public ObservableCollection<RivalsStage> AllStages { get; set; } = new();
         public List<RivalsStage> BannedStages
         {

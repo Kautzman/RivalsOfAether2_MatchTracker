@@ -132,12 +132,6 @@
 
                         <Grid Margin="0, 70, 0, 0">
                             <StackPanel>
-                                <!--<TextBox Text="{Binding OpponentName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="3" KeyDown="TextBox_KeyDown" IsReadOnly="{Binding IsMatchTextBoxesReadOnly}" IsHitTestVisible="{Binding IsMatchTextBoxesHitTestable}"
-                                    Margin="00, 0, 0, 0" FontFamily="Franklin Gothic Demi Cond" Background="Transparent" HorizontalContentAlignment="Center" Height="60" VerticalAlignment="Top" Style="{StaticResource MatchInformationTextBoxes}" behaviors:TextboxWatermark.Watermark="Opponent Tag" />
-
-                                <TextBox Text="{Binding OpponentElo, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TabIndex="4" KeyDown="TextBox_KeyDown" IsReadOnly="{Binding IsMatchTextBoxesReadOnly}" IsHitTestVisible="{Binding IsMatchTextBoxesHitTestable}" behaviors:TextboxWatermark.Watermark="Opponent Elo" 
-                                     Margin="00, 0, 0, 10" FontFamily="{StaticResource AfterDisaster}" Background="Transparent" HorizontalContentAlignment="Center" Foreground="{StaticResource FG_WhiteLabel}" Height="50" VerticalAlignment="Bottom" FontSize="42" Style="{StaticResource MatchInformationTextBoxes}"/>-->
-
                                 <ListView Margin="0, 10, 10, 0" Style="{StaticResource MatchContainerTemplateStyle}" ItemsSource="{Binding ActiveMatch.Games}" Background="Transparent" BorderThickness="0">
                                     <ListView.ItemContainerStyle>
                                         <Style TargetType="ListViewItem" BasedOn="{StaticResource EmptyListViewItem}">
@@ -180,17 +174,18 @@
                                 OnContent="Lifetime" IsOn="{Binding ShowLifetimeResults, Mode=TwoWay}" Style="{StaticResource MetaResultsToggle}" />
                         </Grid>
 
+                        <ComboBox ItemsSource="{Binding Seasons}" DisplayMemberPath="Label" Width="180" Height="30" BorderBrush="{StaticResource FG_BlueLabel}" IsEnabled="{Binding EnableSeasonSelectionComboBox}"
+                                  FontSize="16" FontFamily="Franklin Gothic Demi" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0, 70, 0, 0"/>
+
                         <ListView Name="MetaResultsListView" ItemsSource="{Binding DisplayedCharacterResults.CharacterData}" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Top"
-                                BorderThickness="0" Margin="0, 70, 0, 0" SelectedItem="{Binding ActiveMatchSeason_CharacterData}" Style="{StaticResource MetaResultsTemplateStyle}">
+                                BorderThickness="0" Margin="0, 120, 0, 0" SelectedItem="{Binding ActiveMatchSeason_CharacterData}" Style="{StaticResource MetaResultsTemplateStyle}">
                             <ListView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <UniformGrid Columns="3" />
                                 </ItemsPanelTemplate>
                             </ListView.ItemsPanel>
                             <ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem" BasedOn="{StaticResource BaseListViewItem}">
-
-                                </Style>
+                                <Style TargetType="ListViewItem" BasedOn="{StaticResource BaseListViewItem}" />
                             </ListView.ItemContainerStyle>
                         </ListView>
                     </Grid>

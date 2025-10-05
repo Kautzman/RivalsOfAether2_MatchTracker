@@ -13,24 +13,25 @@ using Windows.Storage.Streams;
 using Windows.Globalization;
 using System.Text;
 using Slipstream.Data;
+using Slipstream.Models;
 
-namespace Slipstream.Models
+namespace Slipstream.Services
 {
     class RivalsOcrEngine
     {
         [DllImport("user32.dll")]
-        private static extern bool EnumWindows(EnumWindowsProc enumProc, IntPtr lParam);
+        private static extern bool EnumWindows(EnumWindowsProc enumProc, nint lParam);
 
         [DllImport("user32.dll")]
-        private static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
+        private static extern int GetWindowText(nint hWnd, StringBuilder text, int count);
 
         [DllImport("user32.dll")]
-        static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+        static extern nint FindWindow(string lpClassName, string lpWindowName);
 
         [DllImport("user32.dll")]
-        static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+        static extern bool GetWindowRect(nint hWnd, out RECT lpRect);
 
-        delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
+        delegate bool EnumWindowsProc(nint hWnd, nint lParam);
 
         [StructLayout(LayoutKind.Sequential)]
         public struct RECT
@@ -84,7 +85,7 @@ namespace Slipstream.Models
             //}, IntPtr.Zero);
 
 
-            if (hWndFound == IntPtr.Zero)
+            if (hWndFound == nint.Zero)
             {
                 Console.WriteLine("Window not found.");
                 return new RivalsOcrResult(false, "Failed to Find Window", false);

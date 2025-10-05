@@ -1058,6 +1058,7 @@
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Background" TargetName="customBorder" Value="{StaticResource Combobox_SelectedItem}" />
+                            <Setter Property="Foreground" Value="{StaticResource BG_DarkBlue}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -1074,14 +1075,14 @@
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Top" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Height" Value="27" />
-        <Setter Property="BorderBrush" Value="{StaticResource Border_Toolbar}" />
+        <Setter Property="BorderBrush" Value="{StaticResource FG_BlueLabel}" />
 
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBox}">
-                    <Border CornerRadius="2" Background="Transparent" BorderBrush="{StaticResource LGR_Blue}" BorderThickness="0, 0, 0, 1">
+                    <Border x:Name="templateBorder" CornerRadius="2" Background="Transparent" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1">
                         <Grid x:Name="templateRoot" SnapsToDevicePixels="True">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -1113,11 +1114,11 @@
                                             <Setter.Value>
                                                 <ControlTemplate TargetType="{x:Type ToggleButton}">
                                                     <!-- Main Container-->
-                                                    <Border x:Name="templateRoot" BorderBrush="{StaticResource Border_Control}" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="True" CornerRadius="2">
+                                                    <Border x:Name="templateRoot" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="True" CornerRadius="2">
                                                         <Grid>
-                                                            <Border x:Name="mainContainer" CornerRadius="2" Background="{StaticResource BG_DarkBlue}" BorderBrush="{StaticResource LGR_Blue}" BorderThickness="0, 1, 0, 0" />
+                                                            <Border x:Name="mainContainer" CornerRadius="2" Background="{StaticResource BG_DarkBlue}" BorderBrush="{StaticResource FG_BlueLabel}" BorderThickness="0" /> <!-- ComboBox Fill -->
                                                             <Border x:Name="splitBorder" BorderBrush="Transparent" BorderThickness="1" HorizontalAlignment="Right" Margin="0" SnapsToDevicePixels="True" Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}">
-                                                                <Polygon Points="0,0 5,5 10,0" Stroke="{StaticResource FG_Interactable}" Fill="{StaticResource FG_Interactable}" Margin="0, 7, 0, 0"/>
+                                                                <Polygon Points="0,0 7,7 14,0" Stroke="{StaticResource FG_BlueLabel}" Fill="{StaticResource FG_BlueLabel}" Margin="-3, 8, 0, 0"/>
                                                             </Border>
                                                         </Grid>
                                                     </Border>
@@ -1135,7 +1136,7 @@
                                                                 <Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="False"/>
                                                                 <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type ComboBox}}}" Value="False"/>
                                                             </MultiDataTrigger.Conditions>
-                                                            <Setter Property="BorderBrush" TargetName="templateRoot" Value="{StaticResource FG_BlueLabel}"/>
+                                                            <Setter Property="BorderBrush" TargetName="templateRoot" Value="{StaticResource FG_WhiteLabel}"/>
                                                         </MultiDataTrigger>
                                                         <MultiDataTrigger>
                                                             <MultiDataTrigger.Conditions>
@@ -1183,10 +1184,13 @@
                             <Setter Property="Color" TargetName="shadow" Value="#71000000"/>
                         </Trigger>
                         <Trigger Property="HasItems" Value="False">
-                            <Setter Property="Height" TargetName="DropDownBorder" Value="195"/>
+                            <Setter Property="Height" TargetName="DropDownBorder" Value="120"/> <!-- This is what changes the height of the selection box!-->
                         </Trigger>
                         <Trigger Property="IsDropDownOpen" Value="True">
-                            <Setter Property="Height" TargetName="DropDownBorder" Value="195"/>
+                            <Setter Property="Height" TargetName="DropDownBorder" Value="120"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="templateBorder" Property="BorderBrush" Value="{StaticResource GR_Blue}" />
                         </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
