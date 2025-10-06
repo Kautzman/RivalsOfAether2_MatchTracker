@@ -98,7 +98,7 @@ namespace Slipstream
             set
             {
                 ToggleRivalsMatchHistory();
-                SetActiveMatchHistory(value, "season");
+                SetActiveMatchHistory(value);
             }
         }
 
@@ -114,7 +114,7 @@ namespace Slipstream
                     return;
                 }
 
-                if ((value as RivalsMatch).Opponent.Name.Length == 0)
+                if ((value as RivalsMatch).Opponent.PlayerTag.Length == 0)
                 {
                     LocalPlayerNameVisibility = Visibility.Visible;
                 }
@@ -126,7 +126,7 @@ namespace Slipstream
                 SetProperty(ref _activeMatch, value);
 
                 SetMatchTextBoxReadOnly(value.Status);
-                OpponentName = ActiveMatch.Opponent.Name;
+                OpponentName = ActiveMatch.Opponent.PlayerTag;
                 OpponentElo = ActiveMatch.Opponent.Elo;
                 MyElo = ActiveMatch.Me.Elo;
 
@@ -256,13 +256,13 @@ namespace Slipstream
             }
         }
 
-        private string _myCharacter = "Wrastor";
-        public string MyCharacter
+        private RivalsCharacter _myCharacter;
+        public RivalsCharacter MyCharacter
         {
             get { return _myCharacter; }
             set
             {
-                if (!string.IsNullOrEmpty(value) && ActiveMatch is not null)
+                if (!string.IsNullOrEmpty(value.Name) && ActiveMatch is not null)
                 {
                     ActiveMatch.Me.Character = value;
                 }
@@ -333,7 +333,7 @@ namespace Slipstream
             {
                 if (ActiveMatch is not null)
                 {
-                    ActiveMatch.Opponent.Name = value;
+                    ActiveMatch.Opponent.PlayerTag = value;
                 }
 
                 RaisePropertyChanged(nameof(IsOpponentTagPhVisible));
@@ -551,7 +551,7 @@ namespace Slipstream
             get => !IsMatchTextBoxesReadOnly;
         }
 
-        public ObservableCollection<string> AvailableCharacters { get; set; }
+        public ObservableCollection<RivalsCharacter> AvailableCharacters { get; set; }
         #endregion
 
         #region Commands
@@ -567,9 +567,9 @@ namespace Slipstream
         public DelegateCommand ShowSecondaryFlyoutCommand { get; }
         public DelegateCommand ShowSettingsWindowCommand { get; private set; }
 
-        public DelegateCommand<string> SelectMyCharacterCommand { get; set; }
-        public DelegateCommand<string> SelectCharacterCommand { get; set; }
-        public DelegateCommand<string> SelectSecondaryCharacterCommand { get; set; }
+        public DelegateCommand<RivalsCharacter> SelectMyCharacterCommand { get; set; }
+        public DelegateCommand<RivalsCharacter> SelectCharacterCommand { get; set; }
+        public DelegateCommand<RivalsCharacter> SelectSecondaryCharacterCommand { get; set; }
         public DelegateCommand ToggleRivalsMatchHistoryCommand { get; set; }
         public DelegateCommand TogglePlayersMatchHistoryCommand { get; set; }
         public DelegateCommand TogglePlayerNotesCommand { get; set; }
@@ -588,9 +588,9 @@ namespace Slipstream
             ShowMyFlyoutCommand = new DelegateCommand(ShowMyFlyout);
             ShowFlyoutCommand = new DelegateCommand(ShowFlyout);
             ShowSecondaryFlyoutCommand = new DelegateCommand(ShowSecondaryFlyout);
-            SelectMyCharacterCommand = new DelegateCommand<string>(SelectMyCharacter);
-            SelectCharacterCommand = new DelegateCommand<string>(SelectOppCharacter);
-            SelectSecondaryCharacterCommand = new DelegateCommand<string>(SelectSecondaryCharacter);
+            SelectMyCharacterCommand = new DelegateCommand<RivalsCharacter>(SelectMyCharacter);
+            SelectCharacterCommand = new DelegateCommand<RivalsCharacter>(SelectOppCharacter);
+            SelectSecondaryCharacterCommand = new DelegateCommand<RivalsCharacter>(SelectSecondaryCharacter);
             ShowSettingsWindowCommand = new DelegateCommand(ShowSettingsWindow);
             UpdateOpponentMatchHistoryCommand = new DelegateCommand(GetOpponentSeasonInfo);
             ToggleRivalsMatchHistoryCommand = new DelegateCommand(ToggleRivalsMatchHistory);
@@ -607,19 +607,20 @@ namespace Slipstream
             }
 
             GlobalData.BestOf = 3;
-
             MatchHistoryUpdateEvent.MatchSaved += UpdateMatchHistory;
+
             try
             {
                 SetupImages();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"The match database is either malformed or missing and operation cannot continue (In SetupImages). Please report this bug if possible!\n\n {ex.Message}");
+                MessageBox.Show($"The match database is either malformed or missing and operation cannot continue (In SetupImages). Please report this bug if possible!\n\n {ex.Message}\n\n {ex}");
                 Application.Current.Shutdown();
             }
 
 #if !DEBUGNODB
+
             try
             {
                 GetMetadata();
@@ -627,7 +628,7 @@ namespace Slipstream
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"The match database is either malformed or missing and operation cannot continue (In Metadata and Matches). Please report this bug if possible!\n\n {ex.Message}");
+                MessageBox.Show($"The match database is either malformed or missing and operation cannot continue (In Metadata and Matches). Please report this bug if possible!\n\n {ex.Message}\n\n {ex}");
                 Application.Current.Shutdown();
             }
 #endif                
@@ -636,17 +637,17 @@ namespace Slipstream
 
         private void SetupImages()
         {
-            AvailableCharacters = new ObservableCollection<string>(GlobalData.AllCharacters);
+            AvailableCharacters = GlobalData.AllRivals;
 
-#if DEBUGNODB
-            string defaultCharacter = "Wrastor";
-#else
-            string defaultCharacter = RivalsORM.GetPlayerCharacter();
-#endif
+            RivalsCharacter defaultCharacter = GlobalData.GetCharacterByID(RivalsORM.GetPlayerCharacter());
 
-            if (GlobalData.CharacterPortraitDict.TryGetValue(defaultCharacter, out string imagePath))
+            if (defaultCharacter is null)
             {
-                MySelectedCharPortrait = imagePath;
+                MessageBox.Show("Critical Data Error:  Player default character cannot be retrieved");
+            }
+            else
+            {
+                MySelectedCharPortrait = defaultCharacter.PortraitRef;
                 MyCharacter = defaultCharacter;
             }
         }
@@ -820,15 +821,13 @@ namespace Slipstream
                 AudioService.PlayError();
             }
 
-            if (GlobalData.CharacterImageDict.TryGetValue(ActiveMatch.Opponent.Character, out string imagePath))
-            {
-                SelectedImagePath = imagePath;
-            }
+            SelectedImagePath = ActiveMatch.Opponent.Character.IconRef;
+            
             RaisePropertyChanged(nameof(CancelNewMatchButtonString));
             RaisePropertyChanged(nameof(IsInputLocked));
             RaisePropertyChanged(nameof(ActiveMatchStatusString));
 
-            MatchHistoryOpponentTagSearch = ActiveMatch.Opponent.Name;
+            MatchHistoryOpponentTagSearch = ActiveMatch.Opponent.PlayerTag;
             GetOpponentSeasonInfo();
             ToggleMatchHistoryView(MatchHistoryView.Players);
             TogglePlayerInformationView(PlayerInformationView.Notes);
@@ -1005,8 +1004,6 @@ namespace Slipstream
                 }
             }
 
-            metadatatable.CharacterData.Remove(metadatatable.CharacterData.First(c => c.Character == "Unknown"));
-
             foreach (CharacterMetadata character in metadatatable.CharacterData)
             {
                 character.WeightedData.CalculateWeightedElo();
@@ -1037,59 +1034,30 @@ namespace Slipstream
 
         // TODO: This dual-split but almost identical operation on primary and secondary is dumb.  Combine this into a better flow.
         // There is also a duplicate DataTemplate to pull out
-        private void SelectMyCharacter(string character)
+        private void SelectMyCharacter(RivalsCharacter character)
         {
-            if (!string.IsNullOrEmpty(character))
-            {
-                if (GlobalData.CharacterPortraitDict.TryGetValue(character, out string imagePath))
-                {
-                    MySelectedCharPortrait = imagePath;
-                    MyCharacter = character;
-                }
-            }
-            else
-            {
-                MessageBox.Show("Character seems to be null?  That's probably a bug");
-            }
-
+            MySelectedCharPortrait = character.PortraitRef;
+            MyCharacter = character;
             IsMyFlyoutOpen = false;
         }
 
 
-        private void SelectOppCharacter(string character)
+        private void SelectOppCharacter(RivalsCharacter character)
         {
-            if (!string.IsNullOrEmpty(character) && ActiveMatch is not null)
-            {
-                if (GlobalData.CharacterImageDict.TryGetValue(character, out string imagePath))
-                {
-                    SelectedImagePath = imagePath;
-                    ActiveMatch.Opponent.Character = character;
-                }
-            }
-            else
-            {
-                // SystemSounds.Exclamation.Play();
-                ActivityText = "No Active Match - You can't select a character without a match active";
-            }
-            
+            if (ActiveMatch is null)
+                return;
+
+            SelectedImagePath = character.IconRef;
+            ActiveMatch.Opponent.Character = character;
             IsOppFlyoutOpen = false;
         }
-        private void SelectSecondaryCharacter(string character)
+        private void SelectSecondaryCharacter(RivalsCharacter character)
         {
-            if (!string.IsNullOrEmpty(character) && ActiveMatch is not null)
-            {
-                if (GlobalData.CharacterImageDict.TryGetValue(character, out string imagePath))
-                {
-                    SecondarySelectedImagePath = imagePath;
-                    ActiveMatch.Opponent.Character2 = character;
-                }
-            }
-            else
-            {
-                // SystemSounds.Exclamation.Play();
-                ActivityText = "No Active Match - You can't select a character without a match active";
-            }
+            if (ActiveMatch is null)
+                return;
 
+            SecondarySelectedImagePath = character.IconRef;
+            ActiveMatch.Opponent.Character2 = character;
             IsSecondaryFlyoutOpen = false;
         }
 
@@ -1104,8 +1072,7 @@ namespace Slipstream
             GetMetadata();
         }
 
-        // Stringly typed nonsense...
-        private void SetActiveMatchHistory(CharacterMetadata characterData, string season)
+        private void SetActiveMatchHistory(CharacterMetadata characterData)
         {
             if (characterData is null)
             {
@@ -1114,9 +1081,7 @@ namespace Slipstream
 
             MatchHistoryCollection matchHistory = new();
 
-            matchHistory.Season = season == "all" ? "All Seasons" : "Current Season";
             matchHistory.Character = characterData.Character;
-
             matchHistory.MatchResults = RivalsORM.GetAllMatches(matchHistory.Character);
 
             ActiveMatchHistory = matchHistory;

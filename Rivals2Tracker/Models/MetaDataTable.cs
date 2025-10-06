@@ -56,7 +56,7 @@ namespace Slipstream.Models
         {
             CharacterData.Clear();
 
-            foreach (string character in GlobalData.AllCharacters)
+            foreach (RivalsCharacter character in GlobalData.AllRivals)
             {
                 CharacterMetadata newCharacter = new CharacterMetadata(character);
                 CharacterData.Add(newCharacter);
@@ -69,7 +69,7 @@ namespace Slipstream.Models
 
             if (character is null)
             {
-                CharacterMetadata? unknownChar = CharacterData.FirstOrDefault(c => c.Character == "Unknown");
+                CharacterMetadata? unknownChar = CharacterData.FirstOrDefault(c => String.IsNullOrEmpty(c.Character.Name));
 
 
                 if (matchResult.Result == "Win")

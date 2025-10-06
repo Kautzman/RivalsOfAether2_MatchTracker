@@ -128,7 +128,7 @@ namespace Slipstream.Models
             }
         }
 
-        public Dictionary<string, int> CharactersPlayed = new();
+        public Dictionary<RivalsCharacter, int> CharactersPlayed = new();
 
         public RivalsMatch(RivalsPlayer player1, RivalsPlayer player2)
         {
@@ -179,7 +179,7 @@ namespace Slipstream.Models
             {
                 if (game.ResultIsValid())
                 {
-                    if (String.IsNullOrEmpty(game.MyCharacter) || String.IsNullOrEmpty(game.OppCharacter ))
+                    if (String.IsNullOrEmpty(game.MyCharacter.Name) || String.IsNullOrEmpty(game.OppCharacter.Name))
                     {
                         return false;
                     }
@@ -190,13 +190,13 @@ namespace Slipstream.Models
         }
 
         // This handles a case where the OCR either didn't pick up a character or you are manually setting up matches so you don't have to select characters for every game.
-        public void CascadeCharacterSelection(string player, string character)
+        public void CascadeCharacterSelection(string player, RivalsCharacter character)
         {
             foreach (RivalsGame game in Games)
             {
                 if (player == "Opponent")
                 {
-                    if (game.OppCharacter is null || game.OppCharacter == "Unknown")
+                    if (game.OppCharacter is null || game.OppCharacter.Name == "Unknown")
                     {
                         game.AutoSetOppCharacter(character);
                     }
@@ -204,7 +204,7 @@ namespace Slipstream.Models
 
                 if (player == "Me")
                 {
-                    if (game.MyCharacter is null || game.MyCharacter == "Unknown")
+                    if (game.MyCharacter is null || game.MyCharacter.Name == "Unknown")
                     {
                         game.AutoSetMyCharacter(character);
                     }
@@ -225,14 +225,14 @@ namespace Slipstream.Models
 
         public void Clean()
         {
-            if (String.IsNullOrEmpty(Player1.Name) && Player2.IsLocalPlayer())
+            if (String.IsNullOrEmpty(Player1.PlayerTag) && Player2.IsLocalPlayer())
             {
-                Player1.Name = "???";
+                Player1.PlayerTag = "???";
             }
 
-            if (String.IsNullOrEmpty(Player2.Name) && Player1.IsLocalPlayer())
+            if (String.IsNullOrEmpty(Player2.PlayerTag) && Player1.IsLocalPlayer())
             {
-                Player1.Name = "???";
+                Player1.PlayerTag = "???";
             }
         }
 

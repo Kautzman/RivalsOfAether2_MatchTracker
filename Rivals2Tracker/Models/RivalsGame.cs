@@ -4,24 +4,22 @@ using Slipstream.Data;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Media;
 
 namespace Slipstream.Models
 {
     public class RivalsGame : BindableBase
     {
         public int GameNumber { get; set; }
-        // public RivalsCharacter MyCharacter { get; set; }
 
-        private string _myCharacter;
-        public string MyCharacter
+        private RivalsCharacter _myCharacter;
+        public RivalsCharacter MyCharacter
         {
             get { return _myCharacter; }
             set { SetProperty(ref _myCharacter, value); }
         }
 
-        private string _oppCharacter;
-        public string OppCharacter
+        private RivalsCharacter _oppCharacter;
+        public RivalsCharacter OppCharacter
         {
             get { return _oppCharacter; }
             set { SetProperty(ref _oppCharacter, value); }
@@ -65,31 +63,21 @@ namespace Slipstream.Models
             set { SetProperty(ref _result, value); }
         }
 
-        public ObservableCollection<string> AvailableCharacters { get; set; }
-
+        public ObservableCollection<RivalsCharacter> AvailableCharacters { get; set; }
         public RivalsCharacterEnum OpponentCharacter { get; set; }
         public ObservableCollection<RivalsStage> AllStages { get; set; } = new();
-        public List<RivalsStage> BannedStages
-        {
-            get
-            {
-                return AllStages.Where(s => s.IsBanned).ToList();
-            }
-        }
-
+        public List<RivalsStage> BannedStages => AllStages.Where(s => s.IsBanned).ToList();
         public RivalsMatch ParentMatch { get; set; }
-
         public RivalsStage SelectedStage { get; set; }
-
         public DelegateCommand ShowMyFlyoutCommand { get; }
         public DelegateCommand ShowOppFlyoutCommand { get; }
-        public DelegateCommand<string> SetMyCharacterCommand { get; }
-        public DelegateCommand<string> SetOppCharacterCommand { get; }
+        public DelegateCommand<RivalsCharacter> SetMyCharacterCommand { get; }
+        public DelegateCommand<RivalsCharacter> SetOppCharacterCommand { get; }
         public DelegateCommand SetGameLostCommand { get; }
         public DelegateCommand SetGameWonCommand { get; }
 
 
-        public RivalsGame(int gameNumber, string myCharacter, string oppCharacter, GameResult defaultGameState)
+        public RivalsGame(int gameNumber, RivalsCharacter myCharacter, RivalsCharacter oppCharacter, GameResult defaultGameState)
         {
             GameNumber = gameNumber;
             DefaultState = defaultGameState;
@@ -114,59 +102,45 @@ namespace Slipstream.Models
             ShowOppFlyoutCommand = new DelegateCommand(ShowOppFlyout);
             SetGameLostCommand = new DelegateCommand(SetGameLost);
             SetGameWonCommand = new DelegateCommand(SetGameWon);
-            SetMyCharacterCommand = new DelegateCommand<string>(SelectMyCharacter);
-            SetOppCharacterCommand = new DelegateCommand<string>(SelectOppCharacter);
-
-            AvailableCharacters = new ObservableCollection<string>(GlobalData.AllCharacters);
+            SetMyCharacterCommand = new DelegateCommand<RivalsCharacter>(SelectMyCharacter);
+            SetOppCharacterCommand = new DelegateCommand<RivalsCharacter>(SelectOppCharacter);
+            AvailableCharacters = GlobalData.AllRivals;
         }
 
-
-        private void SelectMyCharacter(string character)
+        private void SelectMyCharacter(RivalsCharacter character)
         {
-            if (!string.IsNullOrEmpty(character))
+            if (character is not null)
             {
-                if (GlobalData.CharacterImageDict.TryGetValue(character, out string imagePath))
-                {
-                    MySelectedImagePath = imagePath;
-                    MyCharacter = character;
-                    ParentMatch.CascadeCharacterSelection("Me", MyCharacter);
-                }
+                MySelectedImagePath = character.IconRef;
+                MyCharacter = character;
+                ParentMatch.CascadeCharacterSelection("Me", MyCharacter);
             }
 
             IsMyFlyoutOpen = false;
         }
 
-        public void AutoSetMyCharacter(string character)
+        public void AutoSetMyCharacter(RivalsCharacter character)
         {
-            if (GlobalData.CharacterImageDict.TryGetValue(character, out string imagePath))
-            {
-                MySelectedImagePath = imagePath;
-                MyCharacter = character;
-            }
+            MySelectedImagePath = character.IconRef;
+            MyCharacter = character;
         }
 
-        private void SelectOppCharacter(string character)
+        private void SelectOppCharacter(RivalsCharacter character)
         {
-            if (!string.IsNullOrEmpty(character))
+            if (character is not null)
             {
-                if (GlobalData.CharacterImageDict.TryGetValue(character, out string imagePath))
-                {
-                    OppSelectedImagePath = imagePath;
-                    OppCharacter = character;
-                    ParentMatch.CascadeCharacterSelection("Opponent", OppCharacter);
-                }
+                OppSelectedImagePath = character.IconRef;
+                OppCharacter = character;
+                ParentMatch.CascadeCharacterSelection("Opponent", OppCharacter);
             }
 
             IsOppFlyoutOpen = false;
         }
 
-        public void AutoSetOppCharacter(string character)
+        public void AutoSetOppCharacter(RivalsCharacter character)
         {
-            if (GlobalData.CharacterImageDict.TryGetValue(character, out string imagePath))
-            {
-                OppSelectedImagePath = imagePath;
-                OppCharacter = character;
-            }
+            OppSelectedImagePath = character.IconRef;
+            OppCharacter = character;          
         }
 
         public void ClearStageSelection()
@@ -182,11 +156,7 @@ namespace Slipstream.Models
 
         public bool ResultIsValid()
         {
-            if (Result == GameResult.Lose || Result == GameResult.Win)
-            {
-                return true;
-            }
-            return false;
+            return (Result == GameResult.Lose || Result == GameResult.Win);
         }
 
         private void ShowMyFlyout()

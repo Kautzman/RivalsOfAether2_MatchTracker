@@ -31,7 +31,7 @@
         <StackPanel Height="450" Width="600" Margin="0, 70, 0, 0">
             <Grid>
                 <Label Content="My Character" FontFamily="Franklin Gothic Demi" FontSize="20" Width="240" HorizontalAlignment="Left" Foreground="#DEDEDE" HorizontalContentAlignment="Right"/>
-                <ComboBox ItemsSource="{Binding SelectableCharacters}" SelectedItem="{Binding LoadedMatch.MyChar, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="200" Margin="250, 3, 0, 0" FontSize="18" FontFamily="Franklin Gothic Demi" HorizontalAlignment="Left" Background="{StaticResource BG_DarkBlue}" />
+                <ComboBox ItemsSource="{Binding SelectableCharacters}" DisplayMemberPath="Name" SelectedItem="{Binding LoadedMatch.MyChar, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="200" Margin="250, 3, 0, 0" FontSize="18" FontFamily="Franklin Gothic Demi" HorizontalAlignment="Left" Background="{StaticResource BG_DarkBlue}" />
             </Grid>
             <Grid>
                 <Label Content="My Elo" FontFamily="Franklin Gothic Demi" FontSize="20" Width="240" HorizontalAlignment="Left" Foreground="#DEDEDE" HorizontalContentAlignment="Right"/>
@@ -43,11 +43,11 @@
             </Grid>
             <Grid>
                 <Label Content="Opponent Primary Char." FontFamily="Franklin Gothic Demi" FontSize="20" Width="240" HorizontalAlignment="Left" Foreground="#DEDEDE" HorizontalContentAlignment="Right"/>
-                <ComboBox ItemsSource="{Binding SelectableCharacters}" SelectedItem="{Binding LoadedMatch.OppChar1, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="200" Margin="250, 3, 0, 0" FontSize="18" FontFamily="Franklin Gothic Demi" HorizontalAlignment="Left" Background="{StaticResource BG_DarkBlue}" />
+                <ComboBox ItemsSource="{Binding SelectableCharacters}" DisplayMemberPath="Name" SelectedItem="{Binding LoadedMatch.OppChar1, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="200" Margin="250, 3, 0, 0" FontSize="18" FontFamily="Franklin Gothic Demi" HorizontalAlignment="Left" Background="{StaticResource BG_DarkBlue}" />
             </Grid>
             <Grid>
                 <Label Content="Opponent Secondary Char." FontFamily="Franklin Gothic Demi" FontSize="20" Width="240" HorizontalAlignment="Left" Foreground="#DEDEDE" HorizontalContentAlignment="Right"/>
-                <ComboBox ItemsSource="{Binding SelectableCharacters}" SelectedItem="{Binding LoadedMatch.OppChar2, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="200" Margin="250, 3, 0, 0" FontSize="18" FontFamily="Franklin Gothic Demi" HorizontalAlignment="Left" Background="{StaticResource BG_DarkBlue}" />
+                <ComboBox ItemsSource="{Binding SelectableCharacters}" DisplayMemberPath="Name" SelectedItem="{Binding LoadedMatch.OppChar2, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="200" Margin="250, 3, 0, 0" FontSize="18" FontFamily="Franklin Gothic Demi" HorizontalAlignment="Left" Background="{StaticResource BG_DarkBlue}" />
             </Grid>
             <Grid>
                 <Label Content="Opponent Elo" FontFamily="Franklin Gothic Demi" FontSize="20" Width="240" HorizontalAlignment="Left" Foreground="#DEDEDE" HorizontalContentAlignment="Right"/>

@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Prism.Mvvm;
+﻿using Prism.Mvvm;
 
 namespace Slipstream.Models
 {
     class CharacterMetadata : BindableBase
     {
-        private string _character;
-        public string Character
+        private RivalsCharacter _character;
+        public RivalsCharacter Character
         {
             get { return _character; }
             set { SetProperty(ref _character, value); }
@@ -49,7 +44,7 @@ namespace Slipstream.Models
             get => $"{WinRatio.ToString("n2")}%";
         }
 
-        public CharacterMetadata(string character)
+        public CharacterMetadata(RivalsCharacter character)
         {
             Character = character;
             Wins = 0;

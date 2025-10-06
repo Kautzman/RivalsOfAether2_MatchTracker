@@ -5,9 +5,8 @@ using Slipstream.Data;
 using Slipstream.Models;
 using Slipstream.Resources.Events;
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows;
-using System.Windows.Documents;
 
 namespace Slipstream
 {
@@ -23,8 +22,8 @@ namespace Slipstream
             set { SetProperty(ref _loadedMatch, value); }
         }
 
-        private List<string> _selectableCharacters = new();
-        public List<string> SelectableCharacters
+        private ObservableCollection<RivalsCharacter> _selectableCharacters = new();
+        public ObservableCollection<RivalsCharacter> SelectableCharacters
         {
             get { return _selectableCharacters; }
             set { SetProperty(ref _selectableCharacters, value); }
@@ -37,7 +36,7 @@ namespace Slipstream
         public MatchDetails_VM(MatchResult matchResult)
         {
             LoadedMatch = matchResult;
-            SelectableCharacters = GlobalData.AllCharacters;
+            SelectableCharacters = GlobalData.AllRivals;
             SaveAndCloseCommand = new DelegateCommand(SaveAndClose);
             CancelCommand = new DelegateCommand(Cancel);
             DeleteMatchCommand = new DelegateCommand(DeleteMatch);

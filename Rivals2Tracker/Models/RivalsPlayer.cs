@@ -8,10 +8,9 @@ namespace Slipstream.Models
 {
     public class RivalsPlayer : BindableBase
     {
-        public string Name { get; set; } = String.Empty;
-        public string Character { get; set; } = String.Empty;
-        public string Character2 { get; set; } = String.Empty;
-        public string Character3 { get; set; } = String.Empty;
+        public string PlayerTag { get; set; } = String.Empty;
+        public RivalsCharacter Character { get; set; }
+        public RivalsCharacter Character2 { get; set; }
         public string EloString { get; set; } = String.Empty;
 
         private string _elo = String.Empty;
@@ -58,26 +57,26 @@ namespace Slipstream.Models
 
                 if (split.Length > 2)
                 {
-                    Name = FormatName(string.Join(" ", split.Take(split.Length - 1)));
+                    PlayerTag = FormatName(string.Join(" ", split.Take(split.Length - 1)));
                 }
                 else
                 {
-                    Name = FormatName(split[0]);
+                    PlayerTag = FormatName(split[0]);
                 }
                 
-                Character = FormatName(split[split.Length - 1]);
+                Character.Name = FormatName(split[split.Length - 1]);
             }
             catch (Exception ex)
             {
                 Debug.WriteLine("Failed to Parse Character and Name catastrophically.");
-                Name = "";
-                Character = "";
+                PlayerTag = "";
+                Character.Name = "";
             }
         }
 
         public bool IsLocalPlayer()
         {
-            return Name.ToLower() == GlobalData.MyName.ToLower();
+            return PlayerTag.ToLower() == GlobalData.MyName.ToLower();
         }
 
         public string FormatName(string name)

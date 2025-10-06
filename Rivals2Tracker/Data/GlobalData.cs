@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace Slipstream.Data
 {
@@ -17,6 +18,8 @@ namespace Slipstream.Data
         public static int BestOf;
         public static RivalsSeason AllSeasonsSeason = new RivalsSeason { ID = -1, Patch = "-1", Label = "All Seasons", IsCurrentSeason = false };
         public static ObservableCollection<RivalsCharacter> AllRivals = new();
+        public static RivalsCharacter UnknownCharacter = new RivalsCharacter { ID = -1, Name = "Unknown" };
+
         public static ObservableCollection<RivalsStage> AllStages = new()
         {
             new RivalsStage("Aetherian Forest", "pack://application:,,,/Resources/StageIcons/AetherianForestV.png", false),
@@ -29,24 +32,6 @@ namespace Slipstream.Data
             new RivalsStage("Hyperborean Harbor", "pack://application:,,,/Resources/StageIcons/HyperboreanHarborV.png", true),
             new RivalsStage("Rock Wall", "pack://application:,,,/Resources/StageIcons/RockWallV.png", true),
             new RivalsStage("Tempest Peak", "pack://application:,,,/Resources/StageIcons/TempestPeakV.png", true),
-        };
-
-        public static List<string> AllCharacters = new List<string>
-        {
-            "Absa",
-            "Clairen",
-            "Etalus",
-            "Fleet",
-            "Kragg",
-            "Loxodont",
-            "Maypul",
-            "Olympia",
-            "Orcane",
-            "Ranno",
-            "Wrastor",
-            "Forsburn",
-            "Zetterburn",
-            "Unknown"
         };
 
         public static Dictionary<string, string> CharacterImageDict = new Dictionary<string, string>
@@ -97,6 +82,23 @@ namespace Slipstream.Data
             { 9, "Rock Wall" },
             { 10, "Tempest Peak"}
         };
+
+        public static RivalsCharacter GetCharacterByID(string id)
+        {
+            if (String.IsNullOrEmpty(id))
+            {
+                return UnknownCharacter;
+            }
+
+            long longId = Convert.ToInt64(id);
+
+            return AllRivals.First(r => r.ID == longId);
+        }
+
+        public static RivalsCharacter GetCharacterByID(long id)
+        {
+            return AllRivals.First(r => r.ID == id);
+        }
     }
 
     public enum MatchHistoryView

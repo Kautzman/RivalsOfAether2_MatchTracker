@@ -14,7 +14,6 @@
     <converters:SelectedToStrokeConverter x:Key="SelectedToStrokeConverter" />
     <converters:SelectedToBorderConverter x:Key="SelectedToBorderConverter" />
 
-
     <DataTemplate x:Key="RecentMatches1080" DataType="{x:Type data:MatchResult}">
         <Grid Height="70" Width="620" Background="{StaticResource LGR_Blue}" Opacity="0.8">
             <Border BorderBrush="{StaticResource GR_DarkBlue}" BorderThickness="1">
@@ -24,19 +23,19 @@
 
                     <StackPanel Margin="0, 0, 0, 0" Orientation="Horizontal" VerticalAlignment="Center">
                         <Grid Height="70" Margin="10, 0, 0, 0">
-                            <Image Source="{Binding MyChar, Converter={StaticResource IconConverter}}" Height="36" Width="36" Margin="0" VerticalAlignment="Top"/>
+                            <Image Source="{Binding MyChar.IconRef}" Height="36" Width="36" Margin="0" VerticalAlignment="Top"/>
                             <Label Content="{Binding MyElo}" FontFamily="{StaticResource AfterDisaster}" Width="50" FontSize="22" Margin="0, 0, 0, 0" Foreground="{StaticResource FG_WhiteLabel}"  
                                    VerticalAlignment="Bottom" HorizontalAlignment="Center" HorizontalContentAlignment="Center"/>
                         </Grid>
 
                         <Grid Height="70" Margin="12, 0, 0, 0">
-                            <Image Source="{Binding OppChar1, Converter={StaticResource IconConverter}}" Height="36" Width="36" Margin="0" VerticalAlignment="Top"/>
+                            <Image Source="{Binding OppChar1.IconRef}" Height="36" Width="36" Margin="0" VerticalAlignment="Top"/>
                             <Label Content="{Binding OpponentElo}" FontFamily="{StaticResource AfterDisaster}" Width="50" Margin="0, 0, 0, 0" FontSize="22" Foreground="{StaticResource FG_WhiteLabel}"
                                    VerticalAlignment="Bottom" HorizontalAlignment="Center" HorizontalContentAlignment="Center"/>
                         </Grid>
 
                         <Grid>
-                            <Image Source="{Binding OppChar2, Converter={StaticResource IconConverter}}" Height="32" Width="32" Margin="15, 0, 0, 0"/>
+                            <Image Source="{Binding OppChar2.IconRef}" Height="32" Width="32" Margin="15, 0, 0, 0"/>
                         </Grid>
 
                         <Label Content="{Binding Opponent}" FontFamily="Franklin Gothic Demi Cond" Width="145" FontSize="21" Margin="15, 0, 0, 0" VerticalContentAlignment="Center" Foreground="{StaticResource FG_WhiteLabel}"/>
@@ -67,19 +66,19 @@
 
                     <StackPanel Margin="10, 0, 0, 0" Orientation="Horizontal" VerticalAlignment="Center">
                         <Grid Height="74" Margin="10, 0, 0, 0">
-                            <Image Source="{Binding MyChar, Converter={StaticResource IconConverter}}" Height="40" Width="40" Margin="0" VerticalAlignment="Top"/>
+                            <Image Source="{Binding MyChar.IconRef}" Height="40" Width="40" Margin="0" VerticalAlignment="Top"/>
                             <Label Content="{Binding MyElo}" FontFamily="{StaticResource AfterDisaster}" Width="50" FontSize="24" Margin="0, 0, 0, 0" Foreground="{StaticResource FG_WhiteLabel}"  
                                    VerticalAlignment="Bottom" HorizontalAlignment="Center" HorizontalContentAlignment="Center"/>
                         </Grid>
 
                         <Grid Height="74" Margin="15, 0, 0, 0">
-                            <Image Source="{Binding OppChar1, Converter={StaticResource IconConverter}}" Height="40" Width="40" Margin="0" VerticalAlignment="Top"/>
+                            <Image Source="{Binding OppChar1.IconRef}" Height="40" Width="40" Margin="0" VerticalAlignment="Top"/>
                             <Label Content="{Binding OpponentElo}" FontFamily="{StaticResource AfterDisaster}" Width="50" Margin="0, 0, 0, 0" FontSize="24" Foreground="{StaticResource FG_WhiteLabel}"
                                    VerticalAlignment="Bottom" HorizontalAlignment="Center" HorizontalContentAlignment="Center"/>
                         </Grid>
 
                         <Grid>
-                            <Image Source="{Binding OppChar2, Converter={StaticResource IconConverter}}" Height="32" Width="32" Margin="15, 0, 0, 0"/>
+                            <Image Source="{Binding OppChar2.IconRef}" Height="32" Width="32" Margin="15, 0, 0, 0"/>
                         </Grid>
 
                         <Label Content="{Binding Opponent}" FontFamily="Franklin Gothic Demi Cond" Width="180" FontSize="26" Margin="50, 0, 0, 0" VerticalContentAlignment="Center" Foreground="{StaticResource FG_WhiteLabel}"/>
@@ -104,7 +103,7 @@
     <DataTemplate x:Key="MetaResults1440">
         <Grid Height="180" Width="200" Background="{StaticResource LGR_Blue_Opacity}" Opacity="0.83">
             <StackPanel Orientation="Vertical" Margin="0, 20, 0, 0">
-                <Image Source="{Binding Character, Converter={StaticResource IconConverter}}" Height="56" Width="56" Margin="0, 0, 0, 0"/>
+                <Image Source="{Binding Character.IconRef}" Height="56" Width="56" Margin="0, 0, 0, 0"/>
                 <Label Content="{Binding RecordString}" Margin="0, 5, 0, 0"  HorizontalAlignment="Center" HorizontalContentAlignment="Center" FontSize="24" FontFamily="Franklin Gothic Demi Cond"/>
 
                 <Grid Margin="0, 0, 0, 0">
@@ -127,7 +126,7 @@
     <DataTemplate x:Key="MetaResults1080">
         <Grid Height="125" Width="160" Background="{StaticResource LGR_Blue_Opacity}" Opacity="0.83">
             <StackPanel Orientation="Vertical" Margin="0, 6, 0, 0">
-                <Image Source="{Binding Character, Converter={StaticResource IconConverter}}" Height="42" Width="42" Margin="0, 0, 0, 0"/>
+                <Image Source="{Binding Character.IconRef}" Height="42" Width="42" Margin="0, 0, 0, 0"/>
                 <Label Content="{Binding RecordString}" Margin="0, 0, 0, 0"  HorizontalAlignment="Center" HorizontalContentAlignment="Center" FontSize="18" FontFamily="Franklin Gothic Demi Cond"/>
 
                 <Grid Margin="0, 0, 0, 0">

@@ -21,31 +21,54 @@ namespace Slipstream.Data
 
         public static List<MatchResult> AllMatches = new();
 
-        public static ObservableCollection<MatchResult> GetAllMatches(string character = "None")
+        public static ObservableCollection<MatchResult> GetAllMatches(RivalsCharacter character = null)
         {
             DataTable table;
+            List<MatchResult> matchRecords = new();
 
-            if (character == "None")
+            if (character == null)
             {
                 table = ExecuteQuery("SELECT * FROM Matches ORDER BY ID DESC");
-                AllMatches = CreateCollectionFromTable<MatchResult>(table);
+                List<MatchResultRecord> result = CreateCollectionFromTable<MatchResultRecord>(table);
+
+                foreach (MatchResultRecord matchRecord in result)
+                {
+                    matchRecords.Add(new MatchResult(matchRecord));
+                }
+
+                AllMatches = matchRecords;
+
                 return new ObservableCollection<MatchResult>(AllMatches);
             }
             else
             {
-                table = ExecuteQuery($"SELECT * FROM Matches WHERE OppChar1 = '{character}' ORDER BY ID DESC");
-                return new ObservableCollection<MatchResult>(CreateCollectionFromTable<MatchResult>(table));
+                table = ExecuteQuery($"SELECT * FROM Matches WHERE OppChar1 = '{character.ID}' ORDER BY ID DESC");
+                List<MatchResultRecord> result = CreateCollectionFromTable<MatchResultRecord>(table);
+
+                foreach (MatchResultRecord matchRecord in result)
+                {
+                    matchRecords.Add(new MatchResult(matchRecord));
+                }
+
+                return new ObservableCollection<MatchResult>(matchRecords);
             }
         }
 
         public static ObservableCollection<MatchResult> GetAllMatchesByPlayer(string playerTag)
         {
             DataTable table;
+            List<MatchResult> matchRecords = new();
 
             table = ExecuteQuery($"SELECT * FROM Matches WHERE Opponent = '{playerTag}' ORDER BY ID DESC");
 
-            List<MatchResult> result = CreateCollectionFromTable<MatchResult>(table);
-            return new ObservableCollection<MatchResult>(result);
+            List<MatchResultRecord> result = CreateCollectionFromTable<MatchResultRecord>(table);
+
+            foreach (MatchResultRecord matchRecord in result)
+            {
+                matchRecords.Add(new MatchResult(matchRecord));
+            }
+
+            return new ObservableCollection<MatchResult>(matchRecords);
         }
 
         public static ObservableCollection<RivalsSeason> GetSeasons()
@@ -61,17 +84,24 @@ namespace Slipstream.Data
         public static ObservableCollection<RivalsCharacter> GetAllRivals()
         {
             DataTable table;
+            ObservableCollection<RivalsCharacter> characterOC = new();
 
             table = ExecuteQuery($"SELECT * FROM Characters", DbConnection.StaticData);
 
-            List<RivalsCharacter> result = CreateCollectionFromTable<RivalsCharacter>(table);
-            return new ObservableCollection<RivalsCharacter>(result);
+            List<RivalsCharacterRecord> result = CreateCollectionFromTable<RivalsCharacterRecord>(table);
+
+            foreach(RivalsCharacterRecord characterRecord in result)
+            {
+                characterOC.Add(new RivalsCharacter(characterRecord));
+            }
+
+            return characterOC;
         }
 
         public static string AddMatch(RivalsMatch match)
         {
-            string oppMain = string.Empty;
-            string oppAlt = string.Empty;
+            RivalsCharacter oppMain;
+            RivalsCharacter? oppAlt = null;
 
             if (match.LocalPlayerNameNotMatched())
             {
@@ -82,7 +112,7 @@ namespace Slipstream.Data
             match.DetermineMatchCharacters();
 
             // Order characters in the match by played amount - get index of them to determine main or alt.
-            List<KeyValuePair<string, int>> orderedCharacters = match.CharactersPlayed.OrderByDescending(c => c.Value).ToList();
+            List<KeyValuePair<RivalsCharacter, int>> orderedCharacters = match.CharactersPlayed.OrderByDescending(c => c.Value).ToList();
 
             oppMain = orderedCharacters[0].Key;
 
@@ -102,9 +132,9 @@ namespace Slipstream.Data
                 cmd.Parameters.AddWithValue("@Date", DateTime.Now.ToString("MM/dd/yyyy"));
                 cmd.Parameters.AddWithValue("@MyChar", match.Me.Character);
                 cmd.Parameters.AddWithValue("@MyElo", match.Me.EloString);
-                cmd.Parameters.AddWithValue("@OppName", match.Opponent.Name);
-                cmd.Parameters.AddWithValue("@OppChar1", oppMain);
-                cmd.Parameters.AddWithValue("@OppChar2", oppAlt);
+                cmd.Parameters.AddWithValue("@OppName", match.Opponent.PlayerTag);
+                cmd.Parameters.AddWithValue("@OppChar1", oppMain.ID);
+                cmd.Parameters.AddWithValue("@OppChar2", oppAlt is not null ? oppAlt.ID : "");
                 cmd.Parameters.AddWithValue("@OpponentElo", match.Opponent.Elo);
                 cmd.Parameters.AddWithValue("@MatchResult", match.MatchResult);
                 cmd.Parameters.AddWithValue("@Patch", match.Patch);
@@ -190,9 +220,9 @@ namespace Slipstream.Data
             }
         }
 
-        public static string GetPlayerCharacter()
+        public static long GetPlayerCharacter()
         {
-            return ExecuteQueryForValue("SELECT PlayerCharacter FROM Metadata LIMIT 1");
+            return ExecuteQueryForInt("SELECT PlayerCharacter FROM Metadata LIMIT 1");
         }
 
         public static string GetPlayerName()
@@ -272,14 +302,13 @@ namespace Slipstream.Data
                     cmd.Connection = userConn;
 
                     cmd.CommandText = "UPDATE Matches SET Opponent = @OppName, OppChar1 = @OppChar1, OpponentElo = @OpponentElo, MyChar = @MyChar, MyElo = @MyElo, " +
-                        "OppChar2 = @OppChar2, OppChar3 = @OppChar3, Result = @MatchResult, Patch = @Patch, Notes = @Notes WHERE ID = @ID";
+                        "OppChar2 = @OppChar2, Result = @MatchResult, Patch = @Patch, Notes = @Notes WHERE ID = @ID";
                     cmd.Parameters.AddWithValue("@ID", matchResult.ID);
                     cmd.Parameters.AddWithValue("@OppName", matchResult.Opponent);
-                    cmd.Parameters.AddWithValue("@OppChar1", matchResult.OppChar1);
-                    cmd.Parameters.AddWithValue("@OppChar2", matchResult.OppChar2);
-                    cmd.Parameters.AddWithValue("@OppChar3", matchResult.OppChar3);
+                    cmd.Parameters.AddWithValue("@OppChar1", matchResult.OppChar1.Name);
+                    cmd.Parameters.AddWithValue("@OppChar2", matchResult.OppChar2.Name);
                     cmd.Parameters.AddWithValue("@OpponentElo", matchResult.OpponentElo);
-                    cmd.Parameters.AddWithValue("@MyChar", matchResult.MyChar);
+                    cmd.Parameters.AddWithValue("@MyChar", matchResult.MyChar.Name);
                     cmd.Parameters.AddWithValue("@MyElo", matchResult.MyElo);
                     cmd.Parameters.AddWithValue("@MatchResult", matchResult.Result);
                     cmd.Parameters.AddWithValue("@Patch", matchResult.Patch);
@@ -420,7 +449,14 @@ namespace Slipstream.Data
 
                 if (p != null && row[c] != DBNull.Value)
                 {
-                    p.SetValue(obj, row[c], null);
+                    try
+                    {
+                        p.SetValue(obj, row[c], null);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                    }
                 }
             }
         }

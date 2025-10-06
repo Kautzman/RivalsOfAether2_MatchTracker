@@ -1,18 +1,12 @@
 ﻿using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Navigation;
 
 namespace Slipstream.Models
 {
     public class MatchHistoryCollection : BindableBase
     {
-        private string _character;
-        public string Character
+        private RivalsCharacter _character;
+        public RivalsCharacter Character
         {
             get => _character;
             set => SetProperty(ref _character, value);
