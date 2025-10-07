@@ -5,17 +5,252 @@
                     xmlns:converters="clr-namespace:Slipstream.Resources.Converters"
                     xmlns:i="http://schemas.microsoft.com/xaml/behaviors">
 
-    <converters:IconConverter x:Key="IconConverter" />
-    <converters:PortraitConverter x:Key="PortraitConverter" />
     <converters:WinLoseColorConverter x:Key="WinLoseColorConverter" />
     <converters:WinRatioToBackgroundConverter x:Key="WinRatioToColor" />
     <converters:WidthToRangeConverter x:Key="WidthToRangeConverter" />
+    <converters:IconConverter x:Key="IconConverter" />
     <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     <converters:SelectedToStrokeConverter x:Key="SelectedToStrokeConverter" />
     <converters:SelectedToBorderConverter x:Key="SelectedToBorderConverter" />
 
     <DataTemplate x:Key="RecentMatches1080" DataType="{x:Type data:MatchResult}">
         <Grid Height="70" Width="620" Background="{StaticResource LGR_Blue}" Opacity="0.8">
+            <Border BorderBrush="{StaticResource GR_DarkBlue}" BorderThickness="1">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="{Binding Result}" Width="75" Margin="16, 0, 0, 0" HorizontalAlignment="Left" HorizontalContentAlignment="Left" VerticalAlignment="Center" FontSize="24"
+                               Foreground="{Binding Result, Converter={StaticResource WinLoseColorConverter}}" FontFamily="Franklin Gothic Demi Cond" />
+
+                    <StackPanel Margin="0, 0, 0, 0" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Grid Height="70" Margin="10, 2, 0, 0">
+                            <Image Source="{Binding MyChar.IconRef}" Height="36" Width="36" Margin="0" VerticalAlignment="Top"/>
+                            <Label Content="{Binding MyElo}" FontFamily="{StaticResource AfterDisaster}" Width="50" FontSize="22" Margin="0, 0, 0, 0" Foreground="{StaticResource FG_WhiteLabel}"  
+                                   VerticalAlignment="Bottom" HorizontalAlignment="Center" HorizontalContentAlignment="Center"/>
+                        </Grid>
+
+                        <Grid Height="70" Margin="5, 2, 0, 0">
+                            <Image Source="{Binding OppChar1.IconRef}" Height="36" Width="36" Margin="0" VerticalAlignment="Top"/>
+                            <Label Content="{Binding OpponentElo}" FontFamily="{StaticResource AfterDisaster}" Width="50" Margin="0, 0, 0, 0" FontSize="22" Foreground="{StaticResource FG_WhiteLabel}"
+                                   VerticalAlignment="Bottom" HorizontalAlignment="Center" HorizontalContentAlignment="Center"/>
+                        </Grid>
+
+                        <Grid>
+                            <Image Source="{Binding OppChar2.IconRef}" Height="32" Width="32" Margin="10, 0, 0, 0"/>
+                        </Grid>
+
+                        <Label Content="{Binding Opponent}" FontFamily="Franklin Gothic Demi Cond" Width="145" FontSize="21" Margin="15, 0, 0, 0" VerticalContentAlignment="Center" Foreground="{StaticResource FG_WhiteLabel}"/>
+                    </StackPanel>
+
+                    <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Width="155">
+                        <Grid>
+                            <Label Content="{Binding Date}" Foreground="{StaticResource FG_WhiteLabel}" Width="135" FontSize="18" VerticalAlignment="Top" Margin="5, 0, 0, 0"
+                                   HorizontalAlignment="Right" HorizontalContentAlignment="Right" FontFamily="Franklin Gothic Demi Cond"/>
+                            <Label Content="{Binding Patch}" Foreground="{StaticResource FG_GreyLabel}" Width="100" FontSize="17" HorizontalAlignment="Right" HorizontalContentAlignment="Right" Margin="0, 35, 0, 0" FontFamily="Franklin Gothic Demi Cond"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <Button Width="34" Height="34" Content="&#xE712;" FontSize="24" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Right" Margin="0, 0, 0, 0"
+                        Foreground="{StaticResource FG_BlueLabel}" Background="{StaticResource BG_DarkBlue}" BorderBrush="{StaticResource LGR_Blue}"
+                        Command="{Binding ShowMatchDetailsCommand}" BorderThickness="2" />
+                </StackPanel>
+            </Border>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="RecentMatches1440" DataType="{x:Type data:MatchResult}">
+        <Grid Height="74" Width="810" Background="{StaticResource LGR_Blue}" Opacity="0.8">
+            <Border BorderBrush="{StaticResource GR_DarkBlue}" BorderThickness="1" Width="840">
+                <StackPanel Orientation="Horizontal" Width="840" >
+                    <Label Content="{Binding Result}" Width="75" Margin="25, 0, 0, 0" HorizontalAlignment="Left" HorizontalContentAlignment="Left" VerticalAlignment="Center" FontSize="28"
+                               Foreground="{Binding Result, Converter={StaticResource WinLoseColorConverter}}" FontFamily="Franklin Gothic Demi Cond" />
+
+                    <StackPanel Margin="10, 0, 0, 0" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Grid Height="74" Margin="10, 0, 0, 0">
+                            <Image Source="{Binding MyChar.IconRef}" Height="40" Width="40" Margin="0" VerticalAlignment="Top"/>
+                            <Label Content="{Binding MyElo}" FontFamily="{StaticResource AfterDisaster}" Width="50" FontSize="24" Margin="0, 0, 0, 0" Foreground="{StaticResource FG_WhiteLabel}"  
+                                   VerticalAlignment="Bottom" HorizontalAlignment="Center" HorizontalContentAlignment="Center"/>
+                        </Grid>
+
+                        <Grid Height="74" Margin="15, 0, 0, 0">
+                            <Image Source="{Binding OppChar1.IconRef}" Height="40" Width="40" Margin="0" VerticalAlignment="Top"/>
+                            <Label Content="{Binding OpponentElo}" FontFamily="{StaticResource AfterDisaster}" Width="50" Margin="0, 0, 0, 0" FontSize="24" Foreground="{StaticResource FG_WhiteLabel}"
+                                   VerticalAlignment="Bottom" HorizontalAlignment="Center" HorizontalContentAlignment="Center"/>
+                        </Grid>
+
+                        <Grid>
+                            <Image Source="{Binding OppChar2.IconRef}" Height="32" Width="32" Margin="15, 0, 0, 0"/>
+                        </Grid>
+
+                        <Label Content="{Binding Opponent}" FontFamily="Franklin Gothic Demi Cond" Width="180" FontSize="26" Margin="50, 0, 0, 0" VerticalContentAlignment="Center" Foreground="{StaticResource FG_WhiteLabel}"/>
+                    </StackPanel>
+
+                    <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Width="230">
+                        <Grid>
+                            <Label Content="{Binding Date}" Foreground="{StaticResource FG_WhiteLabel}" Width="190" FontSize="22" VerticalAlignment="Top" Margin="5, 0, 0, 0"
+                                   HorizontalAlignment="Right" HorizontalContentAlignment="Right" FontFamily="Franklin Gothic Demi Cond"/>
+                            <Label Content="{Binding Patch}" Foreground="{StaticResource FG_GreyLabel}" Width="100" FontSize="18" HorizontalAlignment="Right" HorizontalContentAlignment="Right" Margin="0, 35, 0, 0" FontFamily="Franklin Gothic Demi Cond"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <Button Width="38" Height="38" Content="&#xE712;" FontSize="24" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Right" Margin="0, 0, 0, 0"
+                        Foreground="{StaticResource FG_BlueLabel}" Background="{StaticResource BG_DarkBlue}" BorderBrush="{StaticResource LGR_Blue}"
+                        Command="{Binding ShowMatchDetailsCommand}" BorderThickness="2" />
+                </StackPanel>
+            </Border>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="PlayerGameSubResults1080" DataType="{x:Type data:GameResult}">
+        <Grid Height="55" Width="540" Background="{StaticResource GR_DarkBlue}">
+            <Border BorderBrush="{StaticResource GR_DarkBlue}" BorderThickness="0">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="{Binding Result}" Width="75" Margin="16, 0, 0, 0" HorizontalAlignment="Left" HorizontalContentAlignment="Left" VerticalAlignment="Center" FontSize="24"
+                               Foreground="{Binding Result, Converter={StaticResource WinLoseColorConverter}}" FontFamily="Franklin Gothic Demi Cond" />
+
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{Binding MyCharacter.IconRef}" Height="36" Width="36" VerticalAlignment="Center" Margin="0, 0, 20, 0"/>
+                        <Image Source="{Binding OppCharacter.IconRef}" Height="36" Width="36" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <Grid Margin="20, 0, 10, 0">
+                        <Image Source="{Binding PickedStage.StageRefHorizontal}" Width="80" />
+                    </Grid>
+                    <Grid Margin="40, 0, 0, 0" Visibility="{Binding BannedStage1Visibility}">
+                        <Image Source="{Binding BannedStage1.StageRefHorizontal}" Width="80" />
+                        <Image Source="/Resources/StageIcons/StageBannedWideOverlay.png" Width="80" Opacity="0.4" />
+                    </Grid>
+                    <Grid Margin="15, 0, 0, 0" Visibility="{Binding BannedStage2Visibility}">
+                        <Image Source="{Binding BannedStage2.StageRefHorizontal}" Width="80" />
+                        <Image Source="/Resources/StageIcons/StageBannedWideOverlay.png" Width="80" Opacity="0.4" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="PlayerGameSubResults1440" DataType="{x:Type data:GameResult}">
+        <Grid Height="65" Width="650" Background="{StaticResource GR_DarkBlue}">
+            <Border BorderBrush="{StaticResource GR_DarkBlue}" BorderThickness="0">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="{Binding Result}" Width="75" Margin="16, 0, 0, 0" HorizontalAlignment="Left" HorizontalContentAlignment="Left" VerticalAlignment="Center" FontSize="24"
+                               Foreground="{Binding Result, Converter={StaticResource WinLoseColorConverter}}" FontFamily="Franklin Gothic Demi Cond" />
+
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{Binding MyCharacter.IconRef}" Height="36" Width="36" VerticalAlignment="Center" Margin="0, 0, 20, 0"/>
+                        <Image Source="{Binding OppCharacter.IconRef}" Height="36" Width="36" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <Grid Margin="20, 0, 10, 0">
+                        <Image Source="{Binding PickedStage.StageRefHorizontal}" Width="100" />
+                    </Grid>
+                    <Grid Margin="60, 0, 0, 0" Visibility="{Binding BannedStage1Visibility}">
+                        <Image Source="{Binding BannedStage1.StageRefHorizontal}" Width="100" />
+                        <Image Source="/Resources/StageIcons/StageBannedWideOverlay.png" Width="100" Opacity="0.4" />
+                    </Grid>
+                    <Grid Margin="15, 0, 0, 0" Visibility="{Binding BannedStage2Visibility}">
+                        <Image Source="{Binding BannedStage2.StageRefHorizontal}" Width="100" />
+                        <Image Source="/Resources/StageIcons/StageBannedWideOverlay.png" Width="100" Opacity="0.4" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="PlayerGameResults1080" DataType="{x:Type data:MatchResult}">
+        <Grid Width="610" Background="{StaticResource LGR_Blue}" Opacity="0.8">
+            <Border BorderBrush="{StaticResource GR_DarkBlue}" BorderThickness="1">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="{Binding Result}" Width="75" Margin="16, 0, 0, 0" HorizontalAlignment="Left" HorizontalContentAlignment="Left" VerticalAlignment="Center" FontSize="24"
+                                   Foreground="{Binding Result, Converter={StaticResource WinLoseColorConverter}}" FontFamily="Franklin Gothic Demi Cond" />
+
+                        <StackPanel Margin="0, 0, 0, 0" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Grid Height="70" Margin="10, 2, 0, 0">
+                                <Image Source="{Binding MyChar.IconRef}" Height="36" Width="36" Margin="0" VerticalAlignment="Top"/>
+                                <Label Content="{Binding MyElo}" FontFamily="{StaticResource AfterDisaster}" Width="50" FontSize="22" Margin="0, 0, 0, 0" Foreground="{StaticResource FG_WhiteLabel}"  
+                                       VerticalAlignment="Bottom" HorizontalAlignment="Center" HorizontalContentAlignment="Center"/>
+                            </Grid>
+
+                            <Grid Height="70" Margin="5, 2, 0, 0">
+                                <Image Source="{Binding OppChar1.IconRef}" Height="36" Width="36" Margin="0" VerticalAlignment="Top"/>
+                                <Label Content="{Binding OpponentElo}" FontFamily="{StaticResource AfterDisaster}" Width="50" Margin="0, 0, 0, 0" FontSize="22" Foreground="{StaticResource FG_WhiteLabel}"
+                                       VerticalAlignment="Bottom" HorizontalAlignment="Center" HorizontalContentAlignment="Center"/>
+                            </Grid>
+
+                            <Grid>
+                                <Image Source="{Binding OppChar2.IconRef}" Height="32" Width="32" Margin="15, 0, 0, 0"/>
+                            </Grid>
+
+                            <Label Content="{Binding Opponent}" FontFamily="Franklin Gothic Demi Cond" Width="135" FontSize="21" Margin="15, 0, 0, 0" VerticalContentAlignment="Center" Foreground="{StaticResource FG_WhiteLabel}"/>
+                        </StackPanel>
+
+                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Width="150">
+                            <Grid>
+                                <Label Content="{Binding Date}" Foreground="{StaticResource FG_WhiteLabel}" Width="135" FontSize="18" VerticalAlignment="Top" Margin="5, 0, 0, 0"
+                                       HorizontalAlignment="Right" HorizontalContentAlignment="Right" FontFamily="Franklin Gothic Demi Cond"/>
+                                <Label Content="{Binding Patch}" Foreground="{StaticResource FG_GreyLabel}" Width="100" FontSize="17" HorizontalAlignment="Right" HorizontalContentAlignment="Right" Margin="0, 35, 0, 0" FontFamily="Franklin Gothic Demi Cond"/>
+                            </Grid>
+                        </StackPanel>
+
+                        <Button Width="34" Height="34" Content="&#xE712;" FontSize="24" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Right" Margin="0, 0, 0, 0"
+                            Foreground="{StaticResource FG_BlueLabel}" Background="{StaticResource BG_DarkBlue}" BorderBrush="{StaticResource LGR_Blue}"
+                            Command="{Binding ShowMatchDetailsCommand}" BorderThickness="2" />
+                    </StackPanel>
+
+                    <ListView ItemsSource="{Binding Games}" ItemTemplate="{StaticResource PlayerGameSubResults1080}" Width="560" ScrollViewer.CanContentScroll="False" BorderThickness="0" Background="Transparent"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="PlayerGameResults1440" DataType="{x:Type data:MatchResult}">
+        <Grid Width="810" Background="{StaticResource LGR_Blue}" Opacity="0.8">
+            <Border BorderBrush="{StaticResource GR_DarkBlue}" BorderThickness="1">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="{Binding Result}" Width="75" Margin="16, 0, 0, 0" HorizontalAlignment="Left" HorizontalContentAlignment="Left" VerticalAlignment="Center" FontSize="24"
+                                   Foreground="{Binding Result, Converter={StaticResource WinLoseColorConverter}}" FontFamily="Franklin Gothic Demi Cond" />
+
+                        <StackPanel Margin="0, 0, 0, 0" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Grid Height="70" Margin="10, 2, 0, 0">
+                                <Image Source="{Binding MyChar.IconRef}" Height="36" Width="36" Margin="0" VerticalAlignment="Top"/>
+                                <Label Content="{Binding MyElo}" FontFamily="{StaticResource AfterDisaster}" Width="50" FontSize="22" Margin="0, 0, 0, 0" Foreground="{StaticResource FG_WhiteLabel}"  
+                                       VerticalAlignment="Bottom" HorizontalAlignment="Center" HorizontalContentAlignment="Center"/>
+                            </Grid>
+
+                            <Grid Height="70" Margin="15, 2, 0, 0">
+                                <Image Source="{Binding OppChar1.IconRef}" Height="36" Width="36" Margin="0" VerticalAlignment="Top"/>
+                                <Label Content="{Binding OpponentElo}" FontFamily="{StaticResource AfterDisaster}" Width="50" Margin="0, 0, 0, 0" FontSize="22" Foreground="{StaticResource FG_WhiteLabel}"
+                                       VerticalAlignment="Bottom" HorizontalAlignment="Center" HorizontalContentAlignment="Center"/>
+                            </Grid>
+
+                            <Grid>
+                                <Image Source="{Binding OppChar2.IconRef}" Height="32" Width="32" Margin="15, 0, 0, 0"/>
+                            </Grid>
+
+                            <Label Content="{Binding Opponent}" FontFamily="Franklin Gothic Demi Cond" Width="320" FontSize="21" Margin="15, 0, 0, 0" VerticalContentAlignment="Center" Foreground="{StaticResource FG_WhiteLabel}"/>
+                        </StackPanel>
+
+                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Width="150">
+                            <Grid>
+                                <Label Content="{Binding Date}" Foreground="{StaticResource FG_WhiteLabel}" Width="135" FontSize="22" VerticalAlignment="Top" Margin="5, 0, 0, 0"
+                                       HorizontalAlignment="Right" HorizontalContentAlignment="Right" FontFamily="Franklin Gothic Demi Cond"/>
+                                <Label Content="{Binding Patch}" Foreground="{StaticResource FG_GreyLabel}" Width="100" FontSize="17" HorizontalAlignment="Right" HorizontalContentAlignment="Right" Margin="0, 35, 0, 0" FontFamily="Franklin Gothic Demi Cond"/>
+                            </Grid>
+                        </StackPanel>
+
+                        <Button Width="34" Height="34" Content="&#xE712;" FontSize="24" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Right" Margin="0, 0, 0, 0"
+                            Foreground="{StaticResource FG_BlueLabel}" Background="{StaticResource BG_DarkBlue}" BorderBrush="{StaticResource LGR_Blue}"
+                            Command="{Binding ShowMatchDetailsCommand}" BorderThickness="2" />
+                    </StackPanel>
+
+                    <ListView ItemsSource="{Binding Games}" ItemTemplate="{StaticResource PlayerGameSubResults1440}" Width="685" ScrollViewer.CanContentScroll="False" BorderThickness="0" Background="Transparent"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="PlayerMatches1080" DataType="{x:Type data:MatchResult}">
+        <Grid Height="70" Width="611" Background="{StaticResource LGR_Blue}" Opacity="0.8">
             <Border BorderBrush="{StaticResource GR_DarkBlue}" BorderThickness="1">
                 <StackPanel Orientation="Horizontal">
                     <Label Content="{Binding Result}" Width="75" Margin="16, 0, 0, 0" HorizontalAlignment="Left" HorizontalContentAlignment="Left" VerticalAlignment="Center" FontSize="24"
@@ -57,7 +292,7 @@
         </Grid>
     </DataTemplate>
 
-    <DataTemplate x:Key="RecentMatches1440" DataType="{x:Type data:MatchResult}">
+    <DataTemplate x:Key="PlayerMatches1440" DataType="{x:Type data:MatchResult}">
         <Grid Height="74" Width="810" Background="{StaticResource LGR_Blue}" Opacity="0.8">
             <Border BorderBrush="{StaticResource GR_DarkBlue}" BorderThickness="1" Width="840">
                 <StackPanel Orientation="Horizontal" Width="840" >
@@ -151,7 +386,7 @@
         <Button Style="{StaticResource ImageFlyoutButtonStyle}"
                Command="{Binding DataContext.SetMyCharacterCommand, RelativeSource={RelativeSource AncestorType=Grid}}"
                CommandParameter="{Binding}">
-            <Image Source="{Binding Converter={StaticResource IconConverter}}" Stretch="UniformToFill"/>
+            <Image Source="{Binding IconRef}" Stretch="UniformToFill"/>
         </Button>
     </DataTemplate>
 
@@ -160,7 +395,7 @@
         <Button Style="{StaticResource ImageFlyoutButtonStyle}"
                    Command="{Binding DataContext.SetOppCharacterCommand, RelativeSource={RelativeSource AncestorType=Grid}}"
                    CommandParameter="{Binding}">
-            <Image Source="{Binding Converter={StaticResource IconConverter}}" Stretch="UniformToFill"/>
+            <Image Source="{Binding IconRef}" Stretch="UniformToFill"/>
         </Button>
     </DataTemplate>
 
@@ -172,11 +407,6 @@
 
     <DataTemplate x:Key="TiltedStageList1440" DataType="{x:Type data:RivalsStage}">
         <Grid>
-            <Grid.InputBindings>
-                <!--<MouseBinding Gesture="RightClick" Command="{Binding ToggleBanStageCommand}" />
-                <MouseBinding Gesture="LeftClick" Command="{Binding ToggleSelectStageCommand}" />-->
-            </Grid.InputBindings>
-
             <!-- This is way faster than MouseBinding - Use this instead -->
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseLeftButtonDown">
@@ -201,11 +431,7 @@
             </Path>
 
             <!-- Stage Image -->
-            <Image Source="{Binding StagePicture}"
-               ToolTip="{Binding StageName}"
-               Width="75" Height="97"
-               Stretch="UniformToFill"
-               Cursor="Hand">
+            <Image Source="{Binding StageRefVertical}"  ToolTip="{Binding StageName}" Width="75" Height="97" Stretch="UniformToFill" Cursor="Hand">
                 <Image.Clip>
                     <PathGeometry>
                         <PathFigure StartPoint="15,0" IsClosed="True">
@@ -219,8 +445,7 @@
 
             <!-- "Banned" Image -->
             <Image Width="75" Height="97" Margin="0, -12, 0, 0" Source="/Resources/StageIcons/StageBannedOverlay.png" 
-               Visibility="{Binding IsBanned, Converter={StaticResource BoolToVisibilityConverter}}"
-               IsHitTestVisible="False">
+               Visibility="{Binding IsBanned, Converter={StaticResource BoolToVisibilityConverter}}" IsHitTestVisible="False">
                 <Image.Clip>
                     <PathGeometry>
                         <PathFigure StartPoint="15,0" IsClosed="True">
@@ -243,11 +468,7 @@
 
     <DataTemplate x:Key="TiltedStageList1080" DataType="{x:Type data:RivalsStage}">
         <Grid>
-            <Grid.InputBindings>
-                <!--<MouseBinding Gesture="RightClick" Command="{Binding ToggleBanStageCommand}" />
-                <MouseBinding Gesture="LeftClick" Command="{Binding ToggleSelectStageCommand}" />-->
-            </Grid.InputBindings>
-
+            
             <!-- This is way faster than MouseBinding - Use this instead -->
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseLeftButtonDown">
@@ -272,7 +493,7 @@
             </Path>
 
             <!-- Stage Image -->
-            <Image Source="{Binding StagePicture}" ToolTip="{Binding StageName}" Width="63" Height="75" Stretch="UniformToFill" Cursor="Hand">
+            <Image Source="{Binding StageRefVertical}" ToolTip="{Binding StageName}" Width="63" Height="75" Stretch="UniformToFill" Cursor="Hand">
                 <Image.Clip>
                     <PathGeometry>
                         <PathFigure StartPoint="12,0" IsClosed="True">
@@ -401,13 +622,13 @@
                             <Setter Property="Opacity" Value="0.4"/>
 
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding Result}" Value="{x:Static globaldata:GameResult.Win}">
+                                <DataTrigger Binding="{Binding Result}" Value="{x:Static globaldata:GameResultEnum.Win}">
                                     <Setter Property="Opacity" Value="1.0"/>
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Result}" Value="{x:Static globaldata:GameResult.Lose}">
+                                <DataTrigger Binding="{Binding Result}" Value="{x:Static globaldata:GameResultEnum.Lose}">
                                     <Setter Property="Opacity" Value="1.0"/>
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Result}" Value="{x:Static globaldata:GameResult.InProgress}">
+                                <DataTrigger Binding="{Binding Result}" Value="{x:Static globaldata:GameResultEnum.InProgress}">
                                     <Setter Property="Opacity" Value="1.0"/>
                                 </DataTrigger>
                             </Style.Triggers>
@@ -534,13 +755,13 @@
                             <Setter Property="Opacity" Value="0.4"/>
 
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding Result}" Value="{x:Static globaldata:GameResult.Win}">
+                                <DataTrigger Binding="{Binding Result}" Value="{x:Static globaldata:GameResultEnum.Win}">
                                     <Setter Property="Opacity" Value="1.0"/>
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Result}" Value="{x:Static globaldata:GameResult.Lose}">
+                                <DataTrigger Binding="{Binding Result}" Value="{x:Static globaldata:GameResultEnum.Lose}">
                                     <Setter Property="Opacity" Value="1.0"/>
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Result}" Value="{x:Static globaldata:GameResult.InProgress}">
+                                <DataTrigger Binding="{Binding Result}" Value="{x:Static globaldata:GameResultEnum.InProgress}">
                                     <Setter Property="Opacity" Value="1.0"/>
                                 </DataTrigger>
                             </Style.Triggers>
@@ -575,30 +796,12 @@
         </Grid>
     </DataTemplate>
 
-    <!-- DataTemplate for goofy flyout -->
+    <!-- DataTemplate for Portrait flyout -->
     <DataTemplate x:Key="MyCharacterItemTemplate">
         <Button Style="{StaticResource ImageFlyoutButtonStyle}"
                    Command="{Binding DataContext.SelectMyCharacterCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                    CommandParameter="{Binding}">
             <Image Source="{Binding Converter={StaticResource PortraitConverter}}" Stretch="UniformToFill"/>
-        </Button>
-    </DataTemplate>
-
-    <!-- DataTemplate for goofy flyout -->
-    <DataTemplate x:Key="CharacterItemTemplate">
-        <Button Style="{StaticResource ImageFlyoutButtonStyle}"
-                   Command="{Binding DataContext.SelectCharacterCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                   CommandParameter="{Binding}">
-            <Image Source="{Binding Converter={StaticResource IconConverter}}" Stretch="UniformToFill"/>
-        </Button>
-    </DataTemplate>
-
-    <!-- DataTemplate for goofy flyout -->
-    <DataTemplate x:Key="SecondaryCharacterItemTemplate">
-        <Button Style="{StaticResource ImageFlyoutButtonStyle}"
-                   Command="{Binding DataContext.SelectSecondaryCharacterCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                   CommandParameter="{Binding}">
-            <Image Source="{Binding Converter={StaticResource IconConverter}}" Stretch="UniformToFill" />
         </Button>
     </DataTemplate>
 </ResourceDictionary>

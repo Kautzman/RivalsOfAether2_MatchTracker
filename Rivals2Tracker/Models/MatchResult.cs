@@ -1,6 +1,7 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
 using Slipstream.Data;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 
@@ -14,6 +15,7 @@ namespace Slipstream.Models
         public string OpponentElo { get; set; }
         public RivalsCharacter MyChar { get; set; }
         public string MyElo { get; set; }
+        public ObservableCollection<GameResult> Games { get; set; }
         public RivalsCharacter OppChar1 { get; set; }
 
         private RivalsCharacter _oppChar2;

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
-using System.Data.Common;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Microsoft.Data.Sqlite;
@@ -14,6 +14,7 @@ using Slipstream.Services;
 
 namespace Slipstream.Data
 {
+    // TODO:  The ObjectRecord > Object pattern could be further compressed into the generic structures of CreateCollectionFromTable<T>.
     class RivalsORM
     {
         private static SqliteConnection userConn = new SqliteConnection("Data Source=rivals2results.db;");
@@ -71,6 +72,61 @@ namespace Slipstream.Data
             return new ObservableCollection<MatchResult>(matchRecords);
         }
 
+        public static Dictionary<long, ObservableCollection<GameResult>> GetAllGameResultData()
+        {
+            List<GameResultRecord> results = new();
+            Dictionary<long, ObservableCollection<GameResult>> gameReferenceDict = new();
+
+            string query = """       
+                SELECT Matches.ID as MatchID, Games.ID AS GameID, Games.GameNumber, Games.MyCharacter, Games.OppCharacter, Games.PickedStage, Games.Result,
+                    CAST(GROUP_CONCAT(BannedStages.BannedStage, ', ') AS TEXT) AS 'BannedStagesList'
+                FROM Matches
+                INNER JOIN Games ON Games.MatchID = Matches.ID
+                LEFT JOIN BannedStages ON BannedStages.GameID = Games.ID
+                    GROUP BY Matches.ID, Games.ID, Games.GameNumber, Games.MyCharacter, Games.OppCharacter, Games.PickedStage, Games.Result
+                ORDER BY Matches.ID, Games.GameNumber;          
+                """;
+
+            using SqliteCommand cmd = new SqliteCommand(query, userConn);
+            {
+                userConn.Open();
+                using SqliteDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    results.Add(new GameResultRecord
+                    {
+                        MatchID = reader.GetInt64(reader.GetOrdinal("MatchID")),
+                        GameID = reader.GetInt64(reader.GetOrdinal("GameID")),
+                        GameNumber = reader.GetInt32(reader.GetOrdinal("GameNumber")),
+                        MyCharacter = reader["MyCharacter"].ToString(),
+                        OppCharacter = reader["OppCharacter"].ToString(),
+                        PickedStage = reader["PickedStage"].ToString(),
+                        Result = reader.GetInt64(reader.GetOrdinal("Result")),
+                        BannedStagesList = reader["BannedStagesList"] is byte[] bytes
+                            ? Encoding.UTF8.GetString(bytes)
+                            : reader["BannedStagesList"]?.ToString()
+                    });
+                }
+            }
+
+            foreach (GameResultRecord gameResultRecord in results)
+            {
+                GameResult game = new GameResult(gameResultRecord);
+
+                if (gameReferenceDict.ContainsKey(game.MatchID))
+                {
+                    gameReferenceDict[game.MatchID].Add(game);
+                }
+                else
+                {
+                    gameReferenceDict.Add(game.MatchID, new ObservableCollection<GameResult> { game });
+                }
+            }
+
+            return gameReferenceDict;
+        }
+
         public static ObservableCollection<RivalsSeason> GetSeasons()
         {
             DataTable table;
@@ -96,6 +152,25 @@ namespace Slipstream.Data
             }
 
             return characterOC;
+        }
+
+        public static ObservableCollection<RivalsStage> GetAllStages()
+        {
+            DataTable table;
+            ObservableCollection<RivalsStage> stages = new();
+
+            table = ExecuteQuery($"SELECT * FROM Stages", DbConnection.StaticData);
+
+            List<RivalsStageRecord> result = CreateCollectionFromTable<RivalsStageRecord>(table);
+
+            foreach (RivalsStageRecord stageRecord in result)
+            {
+                stages.Add(new RivalsStage(stageRecord));
+            }
+
+            stages.OrderByDescending(s => s.ID);
+
+            return stages;
         }
 
         public static string AddMatch(RivalsMatch match)
@@ -130,7 +205,7 @@ namespace Slipstream.Data
                 cmd.CommandText = "INSERT INTO Matches (Date, MyChar, MyElo, Opponent, OpponentElo, OppChar1, OppChar2, Result, Patch, Notes) " +
                      "VALUES (@Date, @MyChar, @MyElo, @OppName, @OpponentElo, @OppChar1, @OppChar2, @MatchResult, @Patch, @Notes); SELECT last_insert_rowid();";
                 cmd.Parameters.AddWithValue("@Date", DateTime.Now.ToString("MM/dd/yyyy"));
-                cmd.Parameters.AddWithValue("@MyChar", match.Me.Character);
+                cmd.Parameters.AddWithValue("@MyChar", match.Me.Character.ID);
                 cmd.Parameters.AddWithValue("@MyElo", match.Me.EloString);
                 cmd.Parameters.AddWithValue("@OppName", match.Opponent.PlayerTag);
                 cmd.Parameters.AddWithValue("@OppChar1", oppMain.ID);
@@ -172,9 +247,9 @@ namespace Slipstream.Data
                          "VALUES (@MatchID, @GameNumber, @PickedStage, @MyCharacter, @OppCharacter, @Result); SELECT last_insert_rowid();";
                     cmd.Parameters.AddWithValue("@MatchID", matchID);
                     cmd.Parameters.AddWithValue("@GameNumber", game.GameNumber);
-                    cmd.Parameters.AddWithValue("@PickedStage", game.SelectedStage.StageName);
-                    cmd.Parameters.AddWithValue("@MyCharacter", game.MyCharacter);
-                    cmd.Parameters.AddWithValue("@OppCharacter", game.OppCharacter);
+                    cmd.Parameters.AddWithValue("@PickedStage", game.SelectedStage.ID);
+                    cmd.Parameters.AddWithValue("@MyCharacter", game.MyCharacter.ID);
+                    cmd.Parameters.AddWithValue("@OppCharacter", game.OppCharacter.ID);
                     cmd.Parameters.AddWithValue("@Result", game.Result);
 
                     Task<object?> rowID = cmd.ExecuteScalarAsync();
@@ -207,7 +282,7 @@ namespace Slipstream.Data
                     cmd.CommandText = "INSERT INTO BannedStages (GameID, BannedStage) " +
                          "VALUES (@GameID, @BannedStage); SELECT last_insert_rowid();";
                     cmd.Parameters.AddWithValue("@GameID", gameID);
-                    cmd.Parameters.AddWithValue("@BannedStage", stage.StageName);
+                    cmd.Parameters.AddWithValue("@BannedStage", stage.ID);
 
                     Task<object?> rowID = cmd.ExecuteScalarAsync();
 
@@ -305,10 +380,10 @@ namespace Slipstream.Data
                         "OppChar2 = @OppChar2, Result = @MatchResult, Patch = @Patch, Notes = @Notes WHERE ID = @ID";
                     cmd.Parameters.AddWithValue("@ID", matchResult.ID);
                     cmd.Parameters.AddWithValue("@OppName", matchResult.Opponent);
-                    cmd.Parameters.AddWithValue("@OppChar1", matchResult.OppChar1.Name);
-                    cmd.Parameters.AddWithValue("@OppChar2", matchResult.OppChar2.Name);
+                    cmd.Parameters.AddWithValue("@OppChar1", matchResult.OppChar1.ID);
+                    cmd.Parameters.AddWithValue("@OppChar2", matchResult.OppChar2.ID);
                     cmd.Parameters.AddWithValue("@OpponentElo", matchResult.OpponentElo);
-                    cmd.Parameters.AddWithValue("@MyChar", matchResult.MyChar.Name);
+                    cmd.Parameters.AddWithValue("@MyChar", matchResult.MyChar.ID);
                     cmd.Parameters.AddWithValue("@MyElo", matchResult.MyElo);
                     cmd.Parameters.AddWithValue("@MatchResult", matchResult.Result);
                     cmd.Parameters.AddWithValue("@Patch", matchResult.Patch);

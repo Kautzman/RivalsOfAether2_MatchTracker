@@ -2,10 +2,10 @@
 {
     public class RivalsCharacter
     {
-        public long ID { get; set; }
-        public string Name { get; set; }
+        public long ID { get; set; } = -1;
+        public string Name { get; set; } = "Unknown";
         public string Patch { get; set; }
-        public string IconRef { get; set; } = "/Resources/CharacterIcons/empty.png";
+        public string IconRef { get; set; } = "/Resources/CharacterIcons/unknown.png";
         public string PortraitRef { get; set; }
 
         public RivalsCharacter(RivalsCharacterRecord record)

@@ -19,6 +19,8 @@ using Slipstream.Windows;
 
 namespace Slipstream
 {
+    //TODO (High): This has become a mess of a class - lots of data manip happening in here.  There needs to be a philosophy about where data is managed and where it's transformed
+    //          The MainWindow_VM is just not the place and it's made this class difficult to weild.
     class MainWindow_VM : BindableBase
     {
 
@@ -147,6 +149,13 @@ namespace Slipstream
         {
             get { return _completedLabelVisibility; }
             set { SetProperty(ref _completedLabelVisibility, value); }
+        }
+
+        private Visibility _stagesMatchHistoryViewVisibility = Visibility.Collapsed;
+        public Visibility StagesMatchHistoryViewVisibility
+        {
+            get { return _stagesMatchHistoryViewVisibility; }
+            set { SetProperty(ref _stagesMatchHistoryViewVisibility, value); }
         }
 
         private Visibility _rivalsMatchHistoryViewVisibility = Visibility.Collapsed;
@@ -499,13 +508,6 @@ namespace Slipstream
             set { SetProperty(ref _isSecondaryFlyoutOpen, value); }
         }
 
-        private bool _isShowingRivalsHistory = false; // Player Search is open by default
-        public bool IsShowingRivalsHistory
-        {
-            get { return _isShowingRivalsHistory; }
-            set { SetProperty(ref _isShowingRivalsHistory, value); }
-        }
-
         private bool _isShowingPlayerNotes = true;
         public bool IsShowingPlayerNotes
         {
@@ -570,6 +572,7 @@ namespace Slipstream
         public DelegateCommand<RivalsCharacter> SelectMyCharacterCommand { get; set; }
         public DelegateCommand<RivalsCharacter> SelectCharacterCommand { get; set; }
         public DelegateCommand<RivalsCharacter> SelectSecondaryCharacterCommand { get; set; }
+        public DelegateCommand ToggleStageMatchHistoryCommand { get; set; }
         public DelegateCommand ToggleRivalsMatchHistoryCommand { get; set; }
         public DelegateCommand TogglePlayersMatchHistoryCommand { get; set; }
         public DelegateCommand TogglePlayerNotesCommand { get; set; }
@@ -593,11 +596,13 @@ namespace Slipstream
             SelectSecondaryCharacterCommand = new DelegateCommand<RivalsCharacter>(SelectSecondaryCharacter);
             ShowSettingsWindowCommand = new DelegateCommand(ShowSettingsWindow);
             UpdateOpponentMatchHistoryCommand = new DelegateCommand(GetOpponentSeasonInfo);
+            ToggleStageMatchHistoryCommand = new DelegateCommand(ToggleStageMatchHistory);
             ToggleRivalsMatchHistoryCommand = new DelegateCommand(ToggleRivalsMatchHistory);
             TogglePlayersMatchHistoryCommand = new DelegateCommand(TogglePlayersMatchHistory);
             TogglePlayerNotesCommand = new DelegateCommand(TogglePlayerNotes);
             TogglePlayerMatchesCommand = new DelegateCommand(TogglePlayerMatches);
 
+            GlobalData.AllStages = RivalsORM.GetAllStages();
             Seasons = RivalsORM.GetSeasons();
             GlobalData.AllRivals = RivalsORM.GetAllRivals();
 
@@ -894,14 +899,26 @@ namespace Slipstream
             if (viewToToggle == MatchHistoryView.Players)
             {
                 IsShowingPlayerNotes = true;
+                
                 PlayerMatchHistoryViewVisibility = Visibility.Visible;
                 RivalsMatchHistoryViewVisibility = Visibility.Collapsed;
+                StagesMatchHistoryViewVisibility = Visibility.Collapsed;
             }
-            else if(viewToToggle == MatchHistoryView.Rivals)
+            else if (viewToToggle == MatchHistoryView.Stages)
             {
                 IsShowingPlayerNotes = false;
+
+                PlayerMatchHistoryViewVisibility = Visibility.Collapsed;
+                RivalsMatchHistoryViewVisibility = Visibility.Collapsed;
+                StagesMatchHistoryViewVisibility = Visibility.Visible;
+            }
+            else if (viewToToggle == MatchHistoryView.Rivals)
+            {
+                IsShowingPlayerNotes = false;
+
                 PlayerMatchHistoryViewVisibility = Visibility.Collapsed;
                 RivalsMatchHistoryViewVisibility = Visibility.Visible;
+                StagesMatchHistoryViewVisibility = Visibility.Collapsed;
             }
         }
 
@@ -933,6 +950,8 @@ namespace Slipstream
             MatchResults = RivalsORM.GetAllMatches();
             CurrentSeasonResults = GetCharacterMetaData(SelectedSeason);
             AllSeasonResults = GetCharacterMetaData(GlobalData.AllSeasonsSeason);
+            GlobalData.GameResultsRef = RivalsORM.GetAllGameResultData();
+            GlueMatchesToResults();
 
             if (isOnStart)
             {
@@ -953,15 +972,29 @@ namespace Slipstream
             }
         }
 
+        private void GlueMatchesToResults()
+        {
+            foreach (MatchResult match in MatchResults)
+            {
+                if (GlobalData.GameResultsRef.ContainsKey(match.ID))
+                {
+                    match.Games = GlobalData.GameResultsRef[match.ID];
+                }
+            }
+        }
+
+        private void ToggleStageMatchHistory()
+        {
+            ToggleMatchHistoryView(MatchHistoryView.Stages);
+        }
+
         private void ToggleRivalsMatchHistory()
         {
-            IsShowingRivalsHistory = true;
             ToggleMatchHistoryView(MatchHistoryView.Rivals);
         }
         
         private void TogglePlayersMatchHistory()
         {
-            IsShowingRivalsHistory = false;
             ToggleMatchHistoryView(MatchHistoryView.Players);
         }
 
@@ -969,14 +1002,12 @@ namespace Slipstream
         {
             IsShowingPlayerNotes = true;
             TogglePlayerInformationView(PlayerInformationView.Notes);
-
         }
 
         private void TogglePlayerMatches()
         {
             IsShowingPlayerNotes = false;
             TogglePlayerInformationView(PlayerInformationView.Matches);
-
         }
 
         private MetaDataTable GetCharacterMetaData(RivalsSeason season)

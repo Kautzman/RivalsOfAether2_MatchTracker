@@ -192,12 +192,19 @@
 
                     <!-- Per Character Matches / Active Match Notes -->
                     <Grid DockPanel.Dock="Right">
-                        <Label Content="Match History" FontFamily="Franklin Gothic Demi" FontSize="32" Margin="75, 25, 0, 0"/>
+                        <Label Content="History" FontFamily="Franklin Gothic Demi" FontSize="32" Style="{StaticResource MatchHistoryLabel}"/>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Height="40" Margin="0, 30, 49, 0">
+                            <Button Content="Stages" ToolTip="Show Per Rivals Match History" Height="40" FontSize="24" Width="140" FontFamily="Franklin Gothic Demi" BorderThickness="2" Style="{StaticResource StagesButtonStyle}" Command="{Binding ToggleStageMatchHistoryCommand}"/>
                             <Button Content="Rivals" ToolTip="Show Per Rivals Match History" Height="40" FontSize="24" Width="140" FontFamily="Franklin Gothic Demi" BorderThickness="2" Style="{StaticResource RivalsButtonStyle}" Command="{Binding ToggleRivalsMatchHistoryCommand}"/>
                             <Button Content="Players" ToolTip="Show Per Player Match History" Height="40" FontSize="24" Width="140" FontFamily="Franklin Gothic Demi" BorderThickness="2" Style="{StaticResource PlayersButtonStyle}" Command="{Binding TogglePlayersMatchHistoryCommand}"/>
                         </StackPanel>
 
+                        <!-- Match History: Stages -->
+                        <Grid Visibility="{Binding StagesMatchHistoryViewVisibility}">
+                            
+                        </Grid>
+
+                        <!-- Match History: Rivals -->
                         <Grid Visibility="{Binding RivalsMatchHistoryViewVisibility}">
                             <ListView ItemsSource="{Binding ActiveMatchHistory.MatchResults}" Background="Transparent" HorizontalAlignment="Right" VerticalAlignment="Top"
                                       BorderThickness="0" Margin="0, 70, 10, 50" Grid.Column="2" Style="{StaticResource RecentMatchesTemplateStyle}">
@@ -209,10 +216,11 @@
                             </ListView>
                         </Grid>
 
+                        <!-- Match History: Players -->
                         <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding PlayerMatchHistoryViewVisibility}" Margin="0, 70, 10, 50">
                             <Grid Margin="10, 20, 0, 0">
 
-                                <StackPanel Orientation="Horizontal" Margin="25, 10, 0, 0">
+                                <StackPanel Orientation="Horizontal" Margin="30, 10, 0, 0">
                                     <Button Content="&#xF78B;" FontSize="24" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource FG_WhiteLabel}" Margin="0, 10, 0, 0" VerticalAlignment="Top" 
                                             Height="40" Width="40" Background="{StaticResource BG_DarkBlue}" Padding="3" BorderBrush="{StaticResource FG_BlueLabel}" BorderThickness="2" Command="{Binding UpdateOpponentMatchHistoryCommand}"/>
                                     <TextBox Text="{Binding MatchHistoryOpponentTagSearch, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="5, 10, 0, 0" FontFamily="Franklin Gothic Demi Cond" Background="Transparent" Height="40" Width="240" VerticalAlignment="Top" BorderBrush="{StaticResource FG_BlueLabel}" 
@@ -229,27 +237,32 @@
                                     <Label Content="{Binding MatchHistoryOpponent.LosesSeasonal}" FontFamily="Franklin Gothic Demi" FontSize="32"/>
                                 </StackPanel>
 
-                                <StackPanel Margin="0, 20, 40, 0" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Height="40">
+                                <!--<StackPanel Margin="0, 20, 40, 0" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Height="40">
                                     <Button Content="&#xF0E3;" ToolTip="Show Player Notes" Height="40" FontSize="24" Width="70" FontFamily="Segoe MDL2 Assets" BorderThickness="2" Style="{StaticResource PlayerNotesStyle}" Command="{Binding TogglePlayerNotesCommand}"/>
                                     <Button Content="&#xE8FD;" ToolTip="Show Player Match Record" Height="40" FontSize="24" Width="70" FontFamily="Segoe MDL2 Assets" BorderThickness="2" Style="{StaticResource PlayerMatchHistoryStyle}" Command="{Binding TogglePlayerMatchesCommand}"/>
-                                </StackPanel>
+                                </StackPanel>-->
 
                                 <Grid Margin="20, 100, 20, 0">
-                                    <!-- Player Notes-->
-                                    <Grid Visibility="{Binding PlayerNotesVisibility}">
-                                        <Label Content="{Binding MatchHistoryOpponent.NotesLabel, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" FontSize="20"/>
-                                    </Grid>
-
                                     <!-- Player Match History-->
                                     <Grid Visibility="{Binding PlayerMatchesVisibility}">
-                                        <ListView ItemsSource="{Binding MatchHistoryOpponentMatches.MatchResults}" Background="Transparent" HorizontalAlignment="Right" VerticalAlignment="Top"
-                                                BorderThickness="0" Margin="0, 0, 0, 50" Grid.Column="2" Style="{StaticResource RecentMatchesTemplateStyle}">
-                                            <ListView.ItemContainerStyle>
-                                                <Style TargetType="ListViewItem" BasedOn="{StaticResource BaseListViewItem}">
-                                                    <Setter Property="Padding" Value="0, 2, 15, 0" />
-                                                </Style>
-                                            </ListView.ItemContainerStyle>
-                                        </ListView>
+                                        <StackPanel>
+                                            <Label Content="Player Notes" FontSize="18" Foreground="{StaticResource FG_BlueLabel}" FontWeight="Bold" Style="{StaticResource MatchHistoryNotes}"/>
+                                            <Grid>
+                                                <Label Content="{Binding MatchHistoryOpponent.NotesLabel, UpdateSourceTrigger=PropertyChanged}"
+                                                   VerticalAlignment="Top" FontSize="18" Height="100" Background="{StaticResource GR_DarkBlue}" Style="{StaticResource MatchHistoryLabelPlayerNotes}"/>
+                                            </Grid>
+
+                                            <Label Content="Match History" FontSize="18" Foreground="{StaticResource FG_BlueLabel}" FontWeight="Bold" Style="{StaticResource MatchHistoryLabelMatchHistory}"/>
+                                            <ListView ItemsSource="{Binding MatchHistoryOpponentMatches.MatchResults}" Background="Transparent" HorizontalAlignment="Right" VerticalAlignment="Top"
+                                                BorderThickness="0" Margin="0, 0, 0, 50" Grid.Column="2" Style="{StaticResource PlayerMatchesTemplateStyle}" >
+                                                <ListView.ItemContainerStyle>
+                                                    <Style TargetType="ListViewItem" BasedOn="{StaticResource BaseListViewItem}">
+                                                        <Setter Property="Padding" Value="0, 2, 15, 0" />
+                                                        <Setter Property="Focusable" Value="False" />
+                                                    </Style>
+                                                </ListView.ItemContainerStyle>
+                                            </ListView>
+                                        </StackPanel>
                                     </Grid>
                                 </Grid>
                             </Grid>

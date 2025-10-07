@@ -160,15 +160,15 @@ namespace Slipstream.Models
 
             for (int i = 1; i <= GlobalData.BestOf; i++)
             {
-                GameResult defaultGameState = GameResult.Unplayed;
+                GameResultEnum defaultGameState = GameResultEnum.Unplayed;
 
                 if (i < 3 || (i == 3 && GlobalData.BestOf == 5))
                 {
-                    defaultGameState = GameResult.InProgress;
+                    defaultGameState = GameResultEnum.InProgress;
                 }
 
-                RivalsGame newGame = new RivalsGame(i, Me.Character, Opponent.Character, defaultGameState);
-                newGame.ParentMatch = this;
+                RivalsGame newGame = new RivalsGame();
+                newGame.BuildGame(i, Me.Character, Opponent.Character, defaultGameState, this);
                 Games.Add(newGame);
             }
         }
@@ -196,7 +196,7 @@ namespace Slipstream.Models
             {
                 if (player == "Opponent")
                 {
-                    if (game.OppCharacter is null || game.OppCharacter.Name == "Unknown")
+                    if (game.OppCharacter is null || game.OppCharacter.Name == "Unknown" || String.IsNullOrEmpty(game.OppCharacter.Name))
                     {
                         game.AutoSetOppCharacter(character);
                     }
@@ -204,7 +204,7 @@ namespace Slipstream.Models
 
                 if (player == "Me")
                 {
-                    if (game.MyCharacter is null || game.MyCharacter.Name == "Unknown")
+                    if (game.MyCharacter is null || game.MyCharacter.Name == "Unknown" || String.IsNullOrEmpty(game.MyCharacter.Name))
                     {
                         game.AutoSetMyCharacter(character);
                     }
@@ -256,8 +256,8 @@ namespace Slipstream.Models
 
         public bool CanBeFlaggedWin()
         {
-            int wins = Games.Where(g => g.Result == GameResult.Win).Count();
-            int losses = Games.Where(g => g.Result == GameResult.Lose).Count();
+            int wins = Games.Where(g => g.Result == GameResultEnum.Win).Count();
+            int losses = Games.Where(g => g.Result == GameResultEnum.Lose).Count();
 
             if (wins > losses)
             {
@@ -278,8 +278,8 @@ namespace Slipstream.Models
         }
         public bool CanBeFlaggedLoss()
         {
-            int wins = Games.Where(g => g.Result == GameResult.Win).Count();
-            int losses = Games.Where(g => g.Result == GameResult.Lose).Count();
+            int wins = Games.Where(g => g.Result == GameResultEnum.Win).Count();
+            int losses = Games.Where(g => g.Result == GameResultEnum.Lose).Count();
 
             if (losses > wins)
             {

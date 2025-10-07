@@ -215,13 +215,13 @@
         </Setter>
 
         <Style.Triggers>
-            <DataTrigger Binding="{Binding Result}" Value="{x:Static globaldata:GameResult.Win}">
+            <DataTrigger Binding="{Binding Result}" Value="{x:Static globaldata:GameResultEnum.Win}">
                 <Setter Property="Opacity" Value="1.0"/>
             </DataTrigger>
-            <DataTrigger Binding="{Binding Result}" Value="{x:Static globaldata:GameResult.Lose}">
+            <DataTrigger Binding="{Binding Result}" Value="{x:Static globaldata:GameResultEnum.Lose}">
                 <Setter Property="Opacity" Value="1.0"/>
             </DataTrigger>
-            <DataTrigger Binding="{Binding Result}" Value="{x:Static globaldata:GameResult.InProgress}">
+            <DataTrigger Binding="{Binding Result}" Value="{x:Static globaldata:GameResultEnum.InProgress}">
                 <Setter Property="Opacity" Value="1.0"/>
             </DataTrigger>
         </Style.Triggers>
@@ -252,7 +252,7 @@
 
     <Style x:Key="GameWinButtonStyle" TargetType="Button" BasedOn="{StaticResource MatchHistoryButtonStyle}">
         <Style.Triggers>
-            <DataTrigger Binding="{Binding Result}" Value="{x:Static globaldata:GameResult.Win}">
+            <DataTrigger Binding="{Binding Result}" Value="{x:Static globaldata:GameResultEnum.Win}">
                 <Setter Property="Foreground" Value="{StaticResource FG_WhiteLabel}"/>
                 <Setter Property="BorderBrush" Value="{StaticResource FG_WinGreen}"/>
             </DataTrigger>
@@ -261,16 +261,25 @@
 
     <Style x:Key="GameLoseButtonStyle" TargetType="Button" BasedOn="{StaticResource MatchHistoryButtonStyle}">
         <Style.Triggers>
-            <DataTrigger Binding="{Binding Result}" Value="{x:Static globaldata:GameResult.Lose}">
+            <DataTrigger Binding="{Binding Result}" Value="{x:Static globaldata:GameResultEnum.Lose}">
                 <Setter Property="Foreground" Value="{StaticResource FG_WhiteLabel}"/>
                 <Setter Property="BorderBrush" Value="{StaticResource FG_LoseRed}"/>
             </DataTrigger>
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="StagesButtonStyle" TargetType="Button" BasedOn="{StaticResource MatchHistoryButtonStyle}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding StagesMatchHistoryViewVisibility}" Value="Visible">
+                <Setter Property="Foreground" Value="{StaticResource FG_WhiteLabel}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource FG_BlueLabel}"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
     <Style x:Key="PlayersButtonStyle" TargetType="Button" BasedOn="{StaticResource MatchHistoryButtonStyle}">
         <Style.Triggers>
-            <DataTrigger Binding="{Binding IsShowingRivalsHistory}" Value="False">
+            <DataTrigger Binding="{Binding PlayerMatchHistoryViewVisibility}" Value="Visible">
                 <Setter Property="Foreground" Value="{StaticResource FG_WhiteLabel}"/>
                 <Setter Property="BorderBrush" Value="{StaticResource FG_BlueLabel}"/>
             </DataTrigger>
@@ -279,7 +288,7 @@
 
     <Style x:Key="RivalsButtonStyle" TargetType="Button" BasedOn="{StaticResource MatchHistoryButtonStyle}">
         <Style.Triggers>
-            <DataTrigger Binding="{Binding IsShowingRivalsHistory}" Value="True">
+            <DataTrigger Binding="{Binding RivalsMatchHistoryViewVisibility}" Value="Visible">
                 <Setter Property="Foreground" Value="{StaticResource FG_WhiteLabel}"/>
                 <Setter Property="BorderBrush" Value="{StaticResource FG_BlueLabel}"/>
             </DataTrigger>

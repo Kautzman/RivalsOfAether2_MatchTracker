@@ -442,4 +442,132 @@
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="PlayerMatchesTemplateStyle" TargetType="ListView">
+        <Setter Property="ItemTemplate" Value="{StaticResource PlayerGameResults1080}" />
+
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window},
+                                       Path=ActualWidth,
+                                       Converter={StaticResource WidthToRangeConverter},
+                                       ConverterParameter=Medium}"
+                                       Value="True">
+                <Setter Property="ItemTemplate" Value="{StaticResource PlayerGameResults1440}" />
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window},
+                                       Path=ActualWidth,
+                                       Converter={StaticResource WidthToRangeConverter},
+                                       ConverterParameter=Large}"
+                                       Value="True">
+                <Setter Property="ItemTemplate" Value="{StaticResource PlayerGameResults1440}" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="MatchHistoryLabel" TargetType="Label" BasedOn="{StaticResource BaseLabel}">
+        <Setter Property="Margin" Value="20, 25, 0, 0" />
+
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window},
+                                       Path=ActualWidth,
+                                       Converter={StaticResource WidthToRangeConverter},
+                                       ConverterParameter=Medium}"
+                                       Value="True">
+                <Setter Property="Margin" Value="70, 25, 0, 0" />
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window},
+                                       Path=ActualWidth,
+                                       Converter={StaticResource WidthToRangeConverter},
+                                       ConverterParameter=Large}"
+                                       Value="True">
+                <Setter Property="Margin" Value="70, 25, 0, 0" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="MatchHistoryNotes" TargetType="Label">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window},
+                                    Path=ActualWidth,
+                                    Converter={StaticResource WidthToRangeConverter},
+                                    ConverterParameter=Small}"
+                                    Value="True">
+                <Setter Property="Margin" Value="10, 0, 20, 0" />
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window},
+                                    Path=ActualWidth,
+                                    Converter={StaticResource WidthToRangeConverter},
+                                    ConverterParameter=Medium}"
+                                    Value="True">
+                <Setter Property="Margin" Value="80, 10, 0, 0" />
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window},
+                                    Path=ActualWidth,
+                                    Converter={StaticResource WidthToRangeConverter},
+                                    ConverterParameter=Large}"
+                                    Value="True">
+                <Setter Property="Margin" Value="80, 10, 0, 0" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="MatchHistoryLabelPlayerNotes" TargetType="Label" BasedOn="{StaticResource BaseLabel}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window},
+                                       Path=ActualWidth,
+                                       Converter={StaticResource WidthToRangeConverter},
+                                       ConverterParameter=Small}"
+                                       Value="True">
+                <Setter Property="Margin" Value="10, -20, 0, 0" />
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window},
+                                       Path=ActualWidth,
+                                       Converter={StaticResource WidthToRangeConverter},
+                                       ConverterParameter=Medium}"
+                                       Value="True">
+                <Setter Property="Margin" Value="80, -20, 0, 0" />
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window},
+                                       Path=ActualWidth,
+                                       Converter={StaticResource WidthToRangeConverter},
+                                       ConverterParameter=Large}"
+                                       Value="True">
+                <Setter Property="Margin" Value="80, -20, 0, 0" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="MatchHistoryLabelMatchHistory" TargetType="Label" BasedOn="{StaticResource BaseLabel}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window},
+                                    Path=ActualWidth,
+                                    Converter={StaticResource WidthToRangeConverter},
+                                    ConverterParameter=Small}"
+                                    Value="True">
+                <Setter Property="Margin" Value="20, 10, 0, 0" />
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window},
+                                    Path=ActualWidth,
+                                    Converter={StaticResource WidthToRangeConverter},
+                                    ConverterParameter=Medium}"
+                                    Value="True">
+                <Setter Property="Margin" Value="80, 10, 0, 0" />
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window},
+                                    Path=ActualWidth,
+                                    Converter={StaticResource WidthToRangeConverter},
+                                    ConverterParameter=Large}"
+                                    Value="True">
+                <Setter Property="Margin" Value="80, 10, 0, 0" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
 </ResourceDictionary>

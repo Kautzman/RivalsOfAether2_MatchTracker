@@ -9,8 +9,8 @@ namespace Slipstream.Models
     public class RivalsPlayer : BindableBase
     {
         public string PlayerTag { get; set; } = String.Empty;
-        public RivalsCharacter Character { get; set; }
-        public RivalsCharacter Character2 { get; set; }
+        public RivalsCharacter Character { get; set; } = new();
+        public RivalsCharacter Character2 { get; set; } = new();
         public string EloString { get; set; } = String.Empty;
 
         private string _elo = String.Empty;
@@ -51,7 +51,6 @@ namespace Slipstream.Models
         {
             try
             {
-
                 Debug.WriteLine("Parsed Text: " + text);
                 string[] split = text.Split(' ');
 

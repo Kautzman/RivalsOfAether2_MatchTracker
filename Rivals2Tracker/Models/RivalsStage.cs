@@ -1,13 +1,16 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
 using Slipstream.Data;
+using System.Security.Policy;
 
 namespace Slipstream.Models
 {
     public class RivalsStage : BindableBase
     {
+        public long ID { get; set; }
         public string StageName { get; set; }
-        public string StagePicture { get; set; }
+        public string StageRefHorizontal { get; set; }
+        public string StageRefVertical { get; set; }
         public bool IsCounterpick { get; set; }
 
         private bool _isBanned = false;
@@ -30,10 +33,19 @@ namespace Slipstream.Models
         public DelegateCommand ToggleSelectStageCommand { get; set; }
 
 
-        public RivalsStage(string stageName, string stagePicture, bool isCounterpick)
+        public RivalsStage(RivalsStageRecord record)
         {
-            StageName = stageName;
-            StagePicture = stagePicture;
+            ID = record.ID;
+            StageName = record.Name;
+            StageRefHorizontal = record.ImageRefH;
+            StageRefVertical = record.ImageRefV;
+            IsCounterpick = record.IsCounterpick == 1;
+        }
+
+        public RivalsStage(string name, string imageV, bool isCounterpick)
+        {
+            StageName = name;
+            StageRefVertical = imageV;
             IsCounterpick = isCounterpick;
 
             ToggleBanStageCommand = new DelegateCommand(ToggleBanStage);
@@ -70,10 +82,19 @@ namespace Slipstream.Models
 
         private void FlagGameAsActive()
         {
-            if (ParentGame.Result == GameResult.Unplayed)
+            if (ParentGame.Result == GameResultEnum.Unplayed)
             {
-                ParentGame.Result = GameResult.InProgress;
+                ParentGame.Result = GameResultEnum.InProgress;
             }
         }
+    }
+
+    public record RivalsStageRecord
+    {
+        public long ID { get; set; }
+        public string Name { get; set; }
+        public string ImageRefV { get; set; }
+        public string ImageRefH { get; set; }
+        public long IsCounterpick { get; set; }
     }
 }

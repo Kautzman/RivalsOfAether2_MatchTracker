@@ -54,10 +54,10 @@ namespace Slipstream.Models
             set { SetProperty(ref _isOppFlyoutOpen, value); }
         }
 
-        public GameResult DefaultState;
+        public GameResultEnum DefaultState;
 
-        private GameResult _result;
-        public GameResult Result
+        private GameResultEnum _result;
+        public GameResultEnum Result
         {
             get { return _result; }
             set { SetProperty(ref _result, value); }
@@ -77,17 +77,11 @@ namespace Slipstream.Models
         public DelegateCommand SetGameWonCommand { get; }
 
 
-        public RivalsGame(int gameNumber, RivalsCharacter myCharacter, RivalsCharacter oppCharacter, GameResult defaultGameState)
+        public RivalsGame()
         {
-            GameNumber = gameNumber;
-            DefaultState = defaultGameState;
-            Result = defaultGameState;
-            SelectMyCharacter(myCharacter);
-            SelectOppCharacter(oppCharacter);
-
             foreach (RivalsStage stage in GlobalData.AllStages)
             {
-                RivalsStage newStage = new RivalsStage(stage.StageName, stage.StagePicture, stage.IsCounterpick);
+                RivalsStage newStage = new RivalsStage(stage.StageName, stage.StageRefVertical, stage.IsCounterpick);
                 newStage.SetParentGame(this);
 
                 if (GameNumber == 1)
@@ -105,6 +99,16 @@ namespace Slipstream.Models
             SetMyCharacterCommand = new DelegateCommand<RivalsCharacter>(SelectMyCharacter);
             SetOppCharacterCommand = new DelegateCommand<RivalsCharacter>(SelectOppCharacter);
             AvailableCharacters = GlobalData.AllRivals;
+        }
+
+        public void BuildGame(int gameNumber, RivalsCharacter myCharacter, RivalsCharacter oppCharacter, GameResultEnum defaultGameState, RivalsMatch parentMatch)
+        {
+            GameNumber = gameNumber;
+            DefaultState = defaultGameState;
+            Result = defaultGameState;
+            ParentMatch = parentMatch;
+            SelectMyCharacter(myCharacter);
+            SelectOppCharacter(oppCharacter);
         }
 
         private void SelectMyCharacter(RivalsCharacter character)
@@ -156,7 +160,7 @@ namespace Slipstream.Models
 
         public bool ResultIsValid()
         {
-            return (Result == GameResult.Lose || Result == GameResult.Win);
+            return (Result == GameResultEnum.Lose || Result == GameResultEnum.Win);
         }
 
         private void ShowMyFlyout()
@@ -171,12 +175,12 @@ namespace Slipstream.Models
 
         private void SetGameLost()
         {
-            Result = Result == GameResult.Lose ? DefaultState : GameResult.Lose;
+            Result = Result == GameResultEnum.Lose ? DefaultState : GameResultEnum.Lose;
         }
 
         private void SetGameWon()
         {
-            Result = Result == GameResult.Win ? DefaultState : GameResult.Win;
+            Result = Result == GameResultEnum.Win ? DefaultState : GameResultEnum.Win;
         }
     }
 }
