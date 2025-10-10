@@ -493,7 +493,7 @@
                                     Converter={StaticResource WidthToRangeConverter},
                                     ConverterParameter=Small}"
                                     Value="True">
-                <Setter Property="Margin" Value="10, 0, 20, 0" />
+                <Setter Property="Margin" Value="20, -20, 20, 0" />
             </DataTrigger>
 
             <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window},
@@ -501,7 +501,7 @@
                                     Converter={StaticResource WidthToRangeConverter},
                                     ConverterParameter=Medium}"
                                     Value="True">
-                <Setter Property="Margin" Value="80, 10, 0, 0" />
+                <Setter Property="Margin" Value="80, -20, 0, 0" />
             </DataTrigger>
 
             <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window},
@@ -521,7 +521,7 @@
                                        Converter={StaticResource WidthToRangeConverter},
                                        ConverterParameter=Small}"
                                        Value="True">
-                <Setter Property="Margin" Value="10, -20, 0, 0" />
+                <Setter Property="Margin" Value="10, 0, 20, 0" />
             </DataTrigger>
 
             <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window},
@@ -529,7 +529,7 @@
                                        Converter={StaticResource WidthToRangeConverter},
                                        ConverterParameter=Medium}"
                                        Value="True">
-                <Setter Property="Margin" Value="80, -20, 0, 0" />
+                <Setter Property="Margin" Value="56, 0, 20, 0" />
             </DataTrigger>
 
             <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Window},
@@ -537,7 +537,7 @@
                                        Converter={StaticResource WidthToRangeConverter},
                                        ConverterParameter=Large}"
                                        Value="True">
-                <Setter Property="Margin" Value="80, -20, 0, 0" />
+                <Setter Property="Margin" Value="56, 0, 20, 0" />
             </DataTrigger>
         </Style.Triggers>
     </Style>
