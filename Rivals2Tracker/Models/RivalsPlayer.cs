@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using Prism.Mvvm;
+using System.Windows.Forms;
 
 namespace Slipstream.Models
 {
@@ -32,7 +33,7 @@ namespace Slipstream.Models
             try
             {
                 // The OCR area clips the rest of 'Unranked' so instead of trying to code around it... just get the 'anked' and call it a day! :P
-                if (eloText == "UNRANKED" || eloText == "ANKED")
+                if (eloText == "UNRANKED" || eloText == "ANKED" || eloText == "ANKEO")
                 {
                     Elo = "U";
                 }
@@ -53,6 +54,7 @@ namespace Slipstream.Models
             {
                 Debug.WriteLine("Parsed Text: " + text);
                 string[] split = text.Split(' ');
+                string? characterName = FormatName(split[split.Length - 1]);
 
                 if (split.Length > 2)
                 {
@@ -62,8 +64,16 @@ namespace Slipstream.Models
                 {
                     PlayerTag = FormatName(split[0]);
                 }
-                
-                Character.Name = FormatName(split[split.Length - 1]);
+
+                try
+                {
+                    Character = GlobalData.AllRivals.First(r => r.Name == characterName);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Failed To Parse Character by name - defaulting to 'unknown' \n\n VALUE: {characterName ?? "null"}");
+                }
+
             }
             catch (Exception ex)
             {

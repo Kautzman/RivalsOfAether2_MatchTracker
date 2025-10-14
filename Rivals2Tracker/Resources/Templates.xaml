@@ -797,11 +797,11 @@
     </DataTemplate>
 
     <!-- DataTemplate for Portrait flyout -->
-    <DataTemplate x:Key="MyCharacterItemTemplate">
+    <DataTemplate x:Key="MyCharacterItemTemplate" DataType="{x:Type data:RivalsCharacter}">
         <Button Style="{StaticResource ImageFlyoutButtonStyle}"
                    Command="{Binding DataContext.SelectMyCharacterCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                    CommandParameter="{Binding}">
-            <Image Source="{Binding Converter={StaticResource PortraitConverter}}" Stretch="UniformToFill"/>
+            <Image Source="{Binding PortraitRef}" Stretch="UniformToFill"/>
         </Button>
     </DataTemplate>
 </ResourceDictionary>

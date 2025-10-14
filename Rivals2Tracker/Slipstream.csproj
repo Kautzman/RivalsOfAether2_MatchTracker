@@ -12,12 +12,14 @@
 
   <ItemGroup>
     <None Remove="Fonts\after_disaster.ttf" />
+    <None Remove="Icons\galvan.png" />
     <None Remove="ImageResources\embossLogo2.png" />
     <None Remove="ImageResources\Portraits\absa_portrait.png" />
     <None Remove="ImageResources\Portraits\clairen_portrait.png" />
     <None Remove="ImageResources\Portraits\etalus_portrait.png" />
     <None Remove="ImageResources\Portraits\fleet_portrait.png" />
     <None Remove="ImageResources\Portraits\forsburn_portrait.png" />
+    <None Remove="ImageResources\Portraits\galvan_portrait.png" />
     <None Remove="ImageResources\Portraits\kragg_portrait.png" />
     <None Remove="ImageResources\Portraits\loxodont_portrait.png" />
     <None Remove="ImageResources\Portraits\maypul_portrait.png" />
@@ -33,6 +35,7 @@
     <None Remove="Resources\CharacterIcons\empty.png" />
     <None Remove="Resources\CharacterIcons\etalus.png" />
     <None Remove="Resources\CharacterIcons\fleet.png" />
+    <None Remove="Resources\CharacterIcons\galvan.png" />
     <None Remove="Resources\CharacterIcons\kragg.png" />
     <None Remove="Resources\CharacterIcons\loxodont.png" />
     <None Remove="Resources\CharacterIcons\maypul.png" />
@@ -87,6 +90,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Icons\galvan.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="ImageResources\Portraits\galvan_portrait.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="ImageResources\Portraits\kragg_portrait.png" />
   </ItemGroup>
 
@@ -140,6 +149,9 @@
     </Resource>
     <Resource Include="Resources\CharacterIcons\etalus.png" />
     <Resource Include="Resources\CharacterIcons\fleet.png" />
+    <Resource Include="Resources\CharacterIcons\galvan.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\CharacterIcons\kragg.png" />
     <Resource Include="Resources\CharacterIcons\loxodont.png" />
     <Resource Include="Resources\CharacterIcons\maypul.png" />

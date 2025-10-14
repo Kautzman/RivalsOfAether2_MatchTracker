@@ -180,7 +180,7 @@ namespace Slipstream
         }
 
         // Subwindow Matches
-        private Visibility _playerMatchesVisibility = Visibility.Collapsed;
+        private Visibility _playerMatchesVisibility = Visibility.Visible;
         public Visibility PlayerMatchesVisibility
         {
             get { return _playerMatchesVisibility; }

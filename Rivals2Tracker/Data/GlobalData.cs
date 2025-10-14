@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 
 namespace Slipstream.Data
 {
@@ -41,11 +42,19 @@ namespace Slipstream.Data
 
         public static RivalsStage GetStageByID(long id)
         {
-            return AllStages.First(s => s.ID == id);
+            try
+            {
+                return AllStages.First(s => s.ID == id);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to parse a stage by ID in GlobalData.GetStageByID, value: {id}");
+                return null;
+            }
         }
     }
 
-    public enum MatchHistoryView
+        public enum MatchHistoryView
     {
         Stages,
         Rivals,

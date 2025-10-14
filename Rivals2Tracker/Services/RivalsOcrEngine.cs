@@ -68,7 +68,7 @@ namespace Slipstream.Services
             sw.Restart();
 
             nint hWndFound = 0;
-            //hWndFound = FindWindow(null, "Rivals2  ");
+            // hWndFound = FindWindow(null, "Rivals2  ");
             // hWndFound = FindWindow(null, "Photos Legacy");
             // hWndFound = FindWindow(null, "CaptureAll-08-22-23-24-25.jpg \u200e- Photos Legacy");
 
@@ -77,7 +77,7 @@ namespace Slipstream.Services
             {
                 StringBuilder sb = new StringBuilder(256);
                 GetWindowText(hWnd, sb, sb.Capacity);
-                if (sb.ToString().Contains("26-32"))
+                if (sb.ToString().Contains("All-Capture"))
                 {
                     hWndFound = hWnd;
                     return false;

@@ -81,7 +81,7 @@ namespace Slipstream.Models
         {
             foreach (RivalsStage stage in GlobalData.AllStages)
             {
-                RivalsStage newStage = new RivalsStage(stage.StageName, stage.StageRefVertical, stage.IsCounterpick);
+                RivalsStage newStage = new RivalsStage(stage.ID, stage.StageName, stage.StageRefVertical, stage.IsCounterpick);
                 newStage.SetParentGame(this);
 
                 if (GameNumber == 1)

@@ -42,8 +42,9 @@ namespace Slipstream.Models
             IsCounterpick = record.IsCounterpick == 1;
         }
 
-        public RivalsStage(string name, string imageV, bool isCounterpick)
+        public RivalsStage(long id, string name, string imageV, bool isCounterpick)
         {
+            ID = id;
             StageName = name;
             StageRefVertical = imageV;
             IsCounterpick = isCounterpick;
