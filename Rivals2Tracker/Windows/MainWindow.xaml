@@ -155,9 +155,9 @@
 
                     <!-- Recent Matches -->
                     <Grid DockPanel.Dock="Left" Style="{StaticResource MatchContainerStyle}" Visibility="{Binding ActiveMatch, Converter={StaticResource MatchStatusToVisibilityInvertedConverter}}">
-                        <Label Content="Recent Matches" FontFamily="Franklin Gothic Demi" FontSize="32" Margin="50, 25, 0, 0"/>
+                        <Label Content="Recent Matches" FontFamily="Franklin Gothic Demi" FontSize="32" Margin="50, 25, 0, 0"  x:Name="MainGrid"/>
 
-                        <ListView ItemsSource="{Binding MatchResults}" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Top"
+                        <ListView ItemsSource="{Binding MatchResults}" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Top" 
                                       BorderThickness="0" Margin="10, 70, 0, 50" Style="{StaticResource RecentMatchesTemplateStyle}" >
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem" BasedOn="{StaticResource BaseListViewItem}">
@@ -173,7 +173,7 @@
                                                         </Border>
                                                     </ControlTemplate>
                                                 </ContextMenu.Template>
-                                                <MenuItem Command="{Binding DataContext.SearchPlayerFromContextMenuCommand, RelativeSource={RelativeSource AncestorType=Grid}}" CommandParameter="{Binding Opponent}">
+                                                <MenuItem Command="{Binding DataContext.SearchPlayerFromContextMenuCommand, Source={x:Reference MainGrid}}" CommandParameter="{Binding Opponent}">
                                                     <MenuItem.Header>
                                                         <TextBlock>
                                                             <Run Text="Show " />

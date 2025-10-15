@@ -599,7 +599,7 @@ namespace Slipstream
             SelectCharacterCommand = new DelegateCommand<RivalsCharacter>(SelectOppCharacter);
             SelectSecondaryCharacterCommand = new DelegateCommand<RivalsCharacter>(SelectSecondaryCharacter);
             ShowSettingsWindowCommand = new DelegateCommand(ShowSettingsWindow);
-            UpdateOpponentMatchHistoryCommand = new DelegateCommand(GetOpponentSeasonInfo);
+            UpdateOpponentMatchHistoryCommand = new DelegateCommand(GetOpponentInformation);
             SearchPlayerFromContextMenuCommand = new DelegateCommand<string>(SearchPlayerFromContextMenu);
             ToggleStageMatchHistoryCommand = new DelegateCommand(ToggleStageMatchHistory);
             ToggleRivalsMatchHistoryCommand = new DelegateCommand(ToggleRivalsMatchHistory);
@@ -789,6 +789,7 @@ namespace Slipstream
             RaisePropertyChanged(nameof(ActiveMatchStatusString));
             RefreshPlaceholderVisibility();
             GetMatches();
+            GetOpponentInformation();
             return;
         }
 
@@ -838,7 +839,7 @@ namespace Slipstream
             RaisePropertyChanged(nameof(ActiveMatchStatusString));
 
             MatchHistoryOpponentTagSearch = ActiveMatch.Opponent.PlayerTag;
-            GetOpponentSeasonInfo();
+            GetOpponentInformation();
             ToggleMatchHistoryView(MatchHistoryView.Players);
             TogglePlayerInformationView(PlayerInformationView.Notes);
             RefreshPlaceholderVisibility();
@@ -861,10 +862,10 @@ namespace Slipstream
         private void SearchPlayerFromContextMenu(string playerTag)
         {
             MatchHistoryOpponentTagSearch = playerTag;
-            GetOpponentSeasonInfo();
+            GetOpponentInformation();
         }
 
-        private void GetOpponentSeasonInfo()
+        private void GetOpponentInformation()
         {
             MatchHistoryOpponent = new Opponent(MatchHistoryOpponentTagSearch);
 
