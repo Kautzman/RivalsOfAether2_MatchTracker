@@ -20,7 +20,7 @@
     <Grid Background="{StaticResource LGR_Blue_Opacity}">
         <Grid Height="70" Background="{StaticResource LGR_Banner}" MouseDown="EnableDrag" VerticalAlignment="Top">
             <Label Content="Settings" FontFamily="Franklin Gothic Demi" FontSize="32" Margin="10, 10, 0, 0" Grid.ColumnSpan="3" IsHitTestVisible="False"/>
-            <Label Content="Slipstream v0.6.0 (Galvan) - Beta" FontSize="20" Margin="10, 10, 0, 0" Foreground="#c0c0f0" Grid.ColumnSpan="3" HorizontalAlignment="Center" IsHitTestVisible="False"/>
+            <Label Content="Slipstream v0.6.0a (Galvan) - Beta" FontSize="20" Margin="10, 10, 0, 0" Foreground="#c0c0f0" Grid.ColumnSpan="3" HorizontalAlignment="Center" IsHitTestVisible="False"/>
 
             <Button x:Name="WindowClose" Style="{StaticResource WindowingButton_Close}" Click="WindowCloseClick" VerticalAlignment="Top">
                 <Image Style="{StaticResource Windowing_Image}" Source="/Slipstream;component/Resources/Icons/Windowing/Close.png" />
