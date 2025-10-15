@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Windows;
 
 namespace Slipstream.Data
@@ -12,6 +13,8 @@ namespace Slipstream.Data
 
         public static void CheckForDataSchemaUpdates()
         {
+            CheckIfDatabaseExists();
+
             try
             {
                 GlobalData.CurrentDataVersion = GetCurrentDataVersion();
@@ -22,6 +25,21 @@ namespace Slipstream.Data
             }
 
             StepThroughDataUpdates();
+        }
+
+        private static void CheckIfDatabaseExists()
+        {
+            if (File.Exists("rivals2results2.db"))
+                return;
+
+            try
+            {
+                File.Copy(@"Resources\BaseDatabase\emptydb.db", "rivals2results2.db", false);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to copy the baseline database.  The file might be missing - try redownloading the latest version of Slipstream to resolve this issue \n\n {ex.Message} \n {ex}");
+            }
         }
 
         private static int GetCurrentDataVersion()
@@ -40,7 +58,7 @@ namespace Slipstream.Data
             }
         }
 
-        // This returns a bool based on whether or not it's 'done' updating the database.  A value of true means that the update is complete, and a value of false means it needs to do another cycle of updates.
+        // This returns a bool based on whether or not it's 'done' updating the database.  A value of true means that the update is complete, and a value of false means it needs to go to the next step.
         public static bool RunDatabaseUpdates(int currentDataVersion)
         {
             if (currentDataVersion == GlobalData.LatestDataVersion)

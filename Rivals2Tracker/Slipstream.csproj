@@ -141,6 +141,9 @@
     <Resource Include="ImageResources\Portraits\fleet_portrait.png" />
     <Resource Include="ImageResources\Portraits\forsburn_portrait.png" />
     <Resource Include="ImageResources\Portraits\wrastor_portrait.png" />
+    <Content Include="Resources\BaseDatabase\emptydb.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Resource Include="Resources\CharacterIcons\absa.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
