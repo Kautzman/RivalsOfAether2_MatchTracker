@@ -162,6 +162,29 @@
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem" BasedOn="{StaticResource BaseListViewItem}">
                                     <Setter Property="Padding" Value="0, 2, 15, 0" />
+
+                                    <Setter Property="ContextMenu">
+                                        <Setter.Value>
+                                            <ContextMenu>
+                                                <ContextMenu.Template>
+                                                    <ControlTemplate TargetType="ContextMenu">
+                                                        <Border BorderBrush="{StaticResource FG_BlueLabel}"  BorderThickness="1" SnapsToDevicePixels="True">
+                                                            <StackPanel IsItemsHost="True" />
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </ContextMenu.Template>
+                                                <MenuItem Command="{Binding DataContext.SearchPlayerFromContextMenuCommand, RelativeSource={RelativeSource AncestorType=Grid}}" CommandParameter="{Binding Opponent}">
+                                                    <MenuItem.Header>
+                                                        <TextBlock>
+                                                            <Run Text="Show " />
+                                                            <Run Text="{Binding Opponent}" />
+                                                            <Run Text=" History" />
+                                                        </TextBlock>
+                                                    </MenuItem.Header>
+                                                </MenuItem>
+                                            </ContextMenu>
+                                        </Setter.Value>
+                                    </Setter>
                                 </Style>
                             </ListView.ItemContainerStyle>
                         </ListView>
@@ -244,7 +267,8 @@
 
                                 <Grid Margin="20, 100, 20, 0">
                                     <!-- Player Match History-->
-                                    <Grid Visibility="{Binding PlayerMatchesVisibility}">
+                                    <!--<Grid Visibility="{Binding PlayerMatchesVisibility}">-->
+                                    <Grid>
                                         <StackPanel>
                                             <Label Content="Player Notes" FontSize="18" Foreground="{StaticResource FG_BlueLabel}" FontWeight="Bold" Style="{StaticResource MatchHistoryNotes}"/>
                                             <Grid>

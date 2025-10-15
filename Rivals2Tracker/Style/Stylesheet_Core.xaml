@@ -611,7 +611,7 @@
     <Geometry x:Key="Checkmark">M 0,5.1 L 1.7,5.2 L 3.4,7.1 L 8,0.4 L 9.2,0 L 3.3,10.8 Z</Geometry>
     
     <ControlTemplate x:Key="{ComponentResourceKey ResourceId=SubmenuItemTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}" TargetType="{x:Type MenuItem}">
-        <Grid SnapsToDevicePixels="true" Height="20">
+        <Grid SnapsToDevicePixels="true" Height="30">
             <Rectangle x:Name="Bg" Fill="{TemplateBinding Background}" RadiusY="0" RadiusX="0" Stroke="{TemplateBinding BorderBrush}" StrokeThickness="0"/>
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -622,21 +622,23 @@
                     <ColumnDefinition SharedSizeGroup="MenuItemIGTColumnGroup" Width="Auto" />
                     <ColumnDefinition Width="17"/>
                 </Grid.ColumnDefinitions>
-                
+
                 <ContentPresenter x:Name="Icon" ContentSource="Icon" Margin="1" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Center"/>
-                
+
                 <Border x:Name="GlyphPanel" BorderBrush="#CDD3E6" BorderThickness="1" Background="#E6EFF4" CornerRadius="3" Height="22" Margin="1" Visibility="Hidden" Width="22">
                     <Path x:Name="Glyph" Data="{StaticResource Checkmark}" Fill="#0C12A1" FlowDirection="LeftToRight" Height="11" Width="9"/>
                 </Border>
-                
+
                 <ContentPresenter Grid.Column="2" ContentSource="Header" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Center"/>
-                
+
                 <TextBlock Grid.Column="4" Margin="{TemplateBinding Padding}" Text="{TemplateBinding InputGestureText}"/>
             </Grid>
         </Grid>
+
         <ControlTemplate.Triggers>
             <Trigger Property="IsHighlighted" Value="False">
-                <Setter Property="Fill" TargetName="Bg" Value="{StaticResource BG_Menu}"/>
+                <Setter Property="Fill" TargetName="Bg" Value="{StaticResource BG_DarkBlue}"/>
+                <Setter Property="Foreground" Value="{StaticResource FG_WhiteLabel}"/>
             </Trigger>
             <Trigger Property="Icon" Value="{x:Null}">
                 <Setter Property="Visibility" TargetName="Icon" Value="Collapsed"/>
@@ -646,8 +648,8 @@
                 <Setter Property="Visibility" TargetName="Icon" Value="Collapsed"/>
             </Trigger>
             <Trigger Property="IsHighlighted" Value="true">
-                <Setter Property="Fill" TargetName="Bg" Value="{StaticResource BG_Menu_Selected}"/>
-                <Setter Property="Stroke" TargetName="Bg" Value="#8071CBF1"/>
+                <Setter Property="Fill" TargetName="Bg" Value="{StaticResource FG_BlueLabel}"/>
+                <Setter Property="Stroke" TargetName="Bg" Value="red"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="false">
                 <Setter Property="Foreground" Value="#FF9A9A9A"/>
@@ -740,7 +742,7 @@
     <ControlTemplate x:Key="{ComponentResourceKey ResourceId=SubmenuContent, TypeInTargetAssembly={x:Type FrameworkElement}}" TargetType="{x:Type ContentControl}">
         <Border BorderBrush="{StaticResource Border_Component}" BorderThickness="1" Background="{StaticResource BG_Menu}" Margin="0, 0, 0, 0">
             <Grid>
-                <ContentPresenter Grid.ColumnSpan="2" Margin="0"/>
+                <ContentPresenter Grid.ColumnSpan="2" Margin="0" />
             </Grid>
         </Border>
     </ControlTemplate>
@@ -765,6 +767,7 @@
                 </Themes:SystemDropShadowChrome>
             </Popup>
         </Grid>
+
         <ControlTemplate.Triggers>
             <Trigger Property="IsSuspendingPopupAnimation" Value="true">
                 <Setter Property="PopupAnimation" TargetName="PART_Popup" Value="None"/>
@@ -806,6 +809,7 @@
                 <ContentPresenter ContentSource="Header" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
             </DockPanel>
         </Grid>
+
         <ControlTemplate.Triggers>
             <Trigger Property="Icon" Value="{x:Null}">
                 <Setter Property="Visibility" TargetName="Icon" Value="Collapsed"/>
@@ -895,6 +899,7 @@
         <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Template" Value="{DynamicResource {ComponentResourceKey ResourceId=SubmenuItemTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}}"/>
+
         <Style.Triggers>
             <Trigger Property="Role" Value="TopLevelHeader">
                 <Setter Property="Padding" Value="7,2,8,3"/>
@@ -912,6 +917,11 @@
                 <Setter Property="Padding" Value="2,3,2,3"/>
             </Trigger>
         </Style.Triggers>
+    </Style>
+
+    <Style TargetType="MenuItem">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontFamily" Value="Franklin Gothic Demi" />
     </Style>
 
     <Style TargetType="{x:Type Menu}">

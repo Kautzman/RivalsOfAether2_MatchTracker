@@ -17,8 +17,8 @@ namespace Slipstream.Data
     // TODO:  The ObjectRecord > Object pattern could be further compressed into the generic structures of CreateCollectionFromTable<T>.
     class RivalsORM
     {
-        private static SqliteConnection userConn = new SqliteConnection("Data Source=rivals2results.db;");
-        private static SqliteConnection staticConn = new SqliteConnection("Data Source=RivalsStatic.db;");
+        private static SqliteConnection userConn = new SqliteConnection(GlobalData.MatchDataConnectionString);
+        private static SqliteConnection staticConn = new SqliteConnection(GlobalData.StaticDataConnectionString);
 
         public static List<MatchResult> AllMatches = new();
 
@@ -338,6 +338,11 @@ namespace Slipstream.Data
         public static int GetCurrentSeason()
         {
             return ExecuteQueryForInt("SELECT CurrentSeason FROM Metadata LIMIT 1");
+        }
+
+        public static int GetCurrentDataVersion()
+        {
+            return ExecuteQueryForInt("SELECT CurrentDataVersion FROM Metadata LIMIT 1");
         }
 
         public static void SaveHotKeyToDatabase(ModifierKeys modifiers, Key key)

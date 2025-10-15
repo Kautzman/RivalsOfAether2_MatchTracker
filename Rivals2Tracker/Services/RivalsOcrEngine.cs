@@ -68,23 +68,29 @@ namespace Slipstream.Services
             sw.Restart();
 
             nint hWndFound = 0;
+
+#if DEBUG
             hWndFound = FindWindow(null, "Rivals2  ");
-            // hWndFound = FindWindow(null, "Photos Legacy");
-            // hWndFound = FindWindow(null, "CaptureAll-08-22-23-24-25.jpg \u200e- Photos Legacy");
+#endif
 
+#if DEBUGPHOTO
             // DO NOT USE PHOTOS LEGACY -- The handler is stupid and doesn't work. Use new Photos
-            //EnumWindows(delegate (IntPtr hWnd, IntPtr lParam)
-            //{
-            //    StringBuilder sb = new StringBuilder(256);
-            //    GetWindowText(hWnd, sb, sb.Capacity);
-            //    if (sb.ToString().Contains("All-Capture"))
-            //    {
-            //        hWndFound = hWnd;
-            //        return false;
-            //    }
-            //    return true;
-            //}, IntPtr.Zero);
+            EnumWindows(delegate (IntPtr hWnd, IntPtr lParam)
+            {
+                StringBuilder sb = new StringBuilder(256);
+                GetWindowText(hWnd, sb, sb.Capacity);
+                if (sb.ToString().Contains("All-Capture"))
+                {
+                    hWndFound = hWnd;
+                    return false;
+                }
+                return true;
+            }, IntPtr.Zero);
+#endif
 
+#if RELEASE
+            hWndFound = FindWindow(null, "Rivals2  ");
+#endif
 
             if (hWndFound == nint.Zero)
             {

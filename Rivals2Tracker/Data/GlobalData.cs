@@ -23,6 +23,11 @@ namespace Slipstream.Data
         public static ObservableCollection<RivalsStage> AllStages = new();
         public static Dictionary<long, ObservableCollection<GameResult>> GameResultsRef = new();
 
+        public const string MatchDataConnectionString = "Data Source=rivals2results.db;";
+        public const string StaticDataConnectionString = "Data Source=RivalsStatic.db;";
+        public static int CurrentDataVersion = -1;
+        public const int LatestDataVersion = 1;
+
         public static RivalsCharacter GetCharacterByID(string id)
         {
             if (String.IsNullOrEmpty(id) || id == "-1")

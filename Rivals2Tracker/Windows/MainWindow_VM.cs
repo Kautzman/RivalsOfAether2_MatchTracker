@@ -575,14 +575,18 @@ namespace Slipstream
         public DelegateCommand ToggleStageMatchHistoryCommand { get; set; }
         public DelegateCommand ToggleRivalsMatchHistoryCommand { get; set; }
         public DelegateCommand TogglePlayersMatchHistoryCommand { get; set; }
-        public DelegateCommand TogglePlayerNotesCommand { get; set; }
-        public DelegateCommand TogglePlayerMatchesCommand { get; set; }
+        public DelegateCommand TogglePlayerNotesCommand { get; set; } // Deprecated
+        public DelegateCommand TogglePlayerMatchesCommand { get; set; }  // Deprecated
+        public DelegateCommand<string> SearchPlayerFromContextMenuCommand { get; set; }
         public DelegateCommand UpdateOpponentMatchHistoryCommand { get; set; }
 
         #endregion
 
         public MainWindow_VM()
         {
+            // This MUST be the first thing that happens or else you'll fuck up the data.
+            DatabaseUpdates.CheckForDataSchemaUpdates();
+
             StartMatchCommand = new DelegateCommand(() => _ = StartMatch());
             SetMatchWinCommand = new DelegateCommand(() => _ = SetMatchWin());
             SetMatchLoseCommand = new DelegateCommand(() => _ = SetMatchLose());
@@ -596,11 +600,12 @@ namespace Slipstream
             SelectSecondaryCharacterCommand = new DelegateCommand<RivalsCharacter>(SelectSecondaryCharacter);
             ShowSettingsWindowCommand = new DelegateCommand(ShowSettingsWindow);
             UpdateOpponentMatchHistoryCommand = new DelegateCommand(GetOpponentSeasonInfo);
+            SearchPlayerFromContextMenuCommand = new DelegateCommand<string>(SearchPlayerFromContextMenu);
             ToggleStageMatchHistoryCommand = new DelegateCommand(ToggleStageMatchHistory);
             ToggleRivalsMatchHistoryCommand = new DelegateCommand(ToggleRivalsMatchHistory);
-            TogglePlayersMatchHistoryCommand = new DelegateCommand(TogglePlayersMatchHistory);
-            TogglePlayerNotesCommand = new DelegateCommand(TogglePlayerNotes);
-            TogglePlayerMatchesCommand = new DelegateCommand(TogglePlayerMatches);
+            TogglePlayersMatchHistoryCommand = new DelegateCommand(TogglePlayersMatchHistory); 
+            TogglePlayerNotesCommand = new DelegateCommand(TogglePlayerNotes);  // Deprecated
+            TogglePlayerMatchesCommand = new DelegateCommand(TogglePlayerMatches);  // Deprecated
 
             GlobalData.AllStages = RivalsORM.GetAllStages();
             Seasons = RivalsORM.GetSeasons();
@@ -853,6 +858,12 @@ namespace Slipstream
             IsMatchTextBoxesReadOnly = activeMatchStatus != MatchStatus.InProgress;
         }
 
+        private void SearchPlayerFromContextMenu(string playerTag)
+        {
+            MatchHistoryOpponentTagSearch = playerTag;
+            GetOpponentSeasonInfo();
+        }
+
         private void GetOpponentSeasonInfo()
         {
             MatchHistoryOpponent = new Opponent(MatchHistoryOpponentTagSearch);
@@ -922,7 +933,7 @@ namespace Slipstream
             }
         }
 
-        private void TogglePlayerInformationView(PlayerInformationView viewToToggle)
+        private void TogglePlayerInformationView(PlayerInformationView viewToToggle)  // Deprecated
         {
             if (viewToToggle == PlayerInformationView.Notes)
             {
@@ -998,13 +1009,13 @@ namespace Slipstream
             ToggleMatchHistoryView(MatchHistoryView.Players);
         }
 
-        private void TogglePlayerNotes()
+        private void TogglePlayerNotes()  // Deprecated
         {
             IsShowingPlayerNotes = true;
             TogglePlayerInformationView(PlayerInformationView.Notes);
         }
 
-        private void TogglePlayerMatches()
+        private void TogglePlayerMatches()  // Deprecated
         {
             IsShowingPlayerNotes = false;
             TogglePlayerInformationView(PlayerInformationView.Matches);
