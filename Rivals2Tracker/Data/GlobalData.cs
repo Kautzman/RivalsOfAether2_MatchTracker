@@ -57,6 +57,16 @@ namespace Slipstream.Data
                 return null;
             }
         }
+
+        // Remove . and , and other punctuation from a string
+        public static string NormalizeInput(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return string.Empty;
+
+            var cleaned = new string(input.Where(c => !char.IsPunctuation(c)).ToArray());
+            return cleaned;
+        }
     }
 
         public enum MatchHistoryView

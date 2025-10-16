@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls.Primitives;
 using Prism.Mvvm;
 using Slipstream.Data;
+using Windows.Security.Authentication.OnlineId;
 
 namespace Slipstream.Models
 {
@@ -126,7 +127,7 @@ namespace Slipstream.Models
         }
 
         // Lambda is the strength knob for Elo adjustment here
-        public void CalculateWeightedElo(double lambda = 0.8)
+        public void CalculateWeightedElo(double lambda = 1)
         {
             double totalScore = 0.0;
             double totalExpect = 0.0;
@@ -138,9 +139,34 @@ namespace Slipstream.Models
                     "Win" => 1.0,
                     "Lose" => 0.0,
                     _ => throw new ArgumentException($"Unknown result: {match.Result}")
+
                 };
 
-                double expected = 1.0 / (1.0 + Math.Pow(10.0, - (match.MyElo - match.OpponentElo) / 400.0));
+                int myElo = 0;
+                int opponentElo = 0;
+
+                if (match.MyElo == -1 && match.OpponentElo == -1)
+                {
+                    myElo = 1000;
+                    opponentElo = 1000;
+                }
+                else if (match.MyElo == -1)
+                {
+                    myElo = match.OpponentElo;
+                    opponentElo = match.OpponentElo;
+                }
+                else if (match.OpponentElo == -1)
+                {
+                    myElo = match.MyElo;
+                    opponentElo = match.MyElo;
+                }
+                else
+                {
+                    myElo = match.MyElo;
+                    opponentElo = match.OpponentElo;
+                }
+
+                double expected = 1.0 / (1.0 + Math.Pow(10.0, -(myElo - opponentElo) / 250.0));
 
                 totalScore += score;
                 totalExpect += expected;

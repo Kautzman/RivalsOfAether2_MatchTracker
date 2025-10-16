@@ -875,7 +875,10 @@ namespace Slipstream
             }
 
             MatchHistoryOpponentMatches.MatchResults = new ObservableCollection<MatchResult>(
-                RivalsORM.AllMatches.Where(r => r.Opponent?.Equals(MatchHistoryOpponent.Tag, StringComparison.OrdinalIgnoreCase) == true).ToList());
+                RivalsORM.AllMatches
+                    .Where(r => GlobalData.NormalizeInput(r.Opponent)
+                        .Equals(GlobalData.NormalizeInput(MatchHistoryOpponent.Tag), StringComparison.OrdinalIgnoreCase))
+                    .ToList());
 
             foreach (MatchResult match in MatchHistoryOpponentMatches.MatchResults)
             {
