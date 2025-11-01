@@ -1,4 +1,4 @@
-﻿using Slipstream.Models;
+using Slipstream.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -42,7 +42,16 @@ namespace Slipstream.Data
 
         public static RivalsCharacter GetCharacterByID(long id)
         {
-            return AllRivals.First(r => r.ID == id);
+            try
+            {
+                return AllRivals.First(r => r.ID == id);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to parse a character by ID in GlobalData.GetCharacterByID, value: {id}");
+                return null;
+
+            }
         }
 
         public static RivalsStage GetStageByID(long id)
@@ -66,6 +75,14 @@ namespace Slipstream.Data
 
             var cleaned = new string(input.Where(c => !char.IsPunctuation(c)).ToArray());
             return cleaned;
+        }
+
+        public static string CapitalizeFirstLetter(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return string.Empty;
+
+            return char.ToUpper(input[0]) + input.Substring(1).ToLower();
         }
     }
 

@@ -1,4 +1,4 @@
-﻿using Prism.Commands;
+using Prism.Commands;
 using Prism.Mvvm;
 using Slipstream.Data;
 using System.Collections.Generic;

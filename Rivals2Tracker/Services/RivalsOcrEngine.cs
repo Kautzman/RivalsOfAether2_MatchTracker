@@ -1,19 +1,17 @@
-﻿using System;
-using System.Dynamic;
-using System.Runtime.InteropServices;
-using System.Windows.Documents;
-using System.Drawing;
-using System.IO;
-using Windows.Media.Ocr;
-using System.Diagnostics;
-using System.Drawing.Imaging;
-using Windows.Graphics.Imaging;
-using System.Threading.Tasks;
-using Windows.Storage.Streams;
-using Windows.Globalization;
-using System.Text;
 using Slipstream.Data;
 using Slipstream.Models;
+using System;
+using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading.Tasks;
+using Windows.Globalization;
+using Windows.Graphics.Imaging;
+using Windows.Media.Ocr;
+using Windows.Storage.Streams;
 
 namespace Slipstream.Services
 {
@@ -39,26 +37,37 @@ namespace Slipstream.Services
             public int Left, Top, Right, Bottom;
         }
 
-        private const double p1c_Xoffset = 0.245;
-        private const double p1c_Yoffset = 0.9028;
-        private const double p1c_Xselection = 0.09258;
-        private const double p1c_Yselection = 0.0583;
+        private const double p1char_Xoffset = 0.2432;
+        private const double p1char_Yoffset = 0.9190;
+        private const double p1char_Xselection = 0.09258;
+        private const double p1char_Yselection = 0.0270;
 
-        private const double p1e_Xoffset = 0.3617;
-        private const double p1e_Yoffset = 0.8896;
-        private const double p1e_Xselection = 0.0313;
-        private const double p1e_Yselection = 0.0285;
+        private const double p1tag_Xoffset = 0.2442;
+        private const double p1tag_Yoffset = 0.8928;
+        private const double p1tag_Xselection = 0.09258;
+        private const double p1tag_Yselection = 0.0300;
 
-        private const double p2c_Xoffset = 0.6699;
-        private const double p2c_Yoffset = 0.9028;
-        private const double p2c_Xselection = 0.09258;
-        private const double p2c_Yselection = 0.0604;
+        private const double p1elo_Xoffset = 0.3617;
+        private const double p1elo_Yoffset = 0.8716;
+        private const double p1elo_Xselection = 0.0313;
+        private const double p1elo_Yselection = 0.0285;
 
-        private const double p2e_Xoffset = 0.7871;
-        private const double p2e_Yoffset = 0.8896;
-        private const double p2e_Xselection = 0.0313;
-        private const double p2e_Yselection = 0.0285;
+        private const double p2char_Xoffset = 0.6689;
+        private const double p2char_Yoffset = 0.9200;
+        private const double p2char_Xselection = 0.09258;
+        private const double p2char_Yselection = 0.0270;
 
+        private const double p2tag_Xoffset = 0.6689;
+        private const double p2tag_Yoffset = 0.8928;
+        private const double p2tag_Xselection = 0.09258;
+        private const double p2tag_Yselection = 0.0300;
+
+        private const double p2elo_Xoffset = 0.7871;
+        private const double p2elo_Yoffset = 0.8716;
+        private const double p2elo_Xselection = 0.0313;
+        private const double p2elo_Yselection = 0.0285;
+
+        private static Color upperThreshold = Color.FromArgb(0x75, 0x7B, 0xC3); // Threshold for character text - in theory anyway
 
         private static OcrEngine ocrEngine = OcrEngine.TryCreateFromLanguage(new Language("en"));
 
@@ -103,10 +112,13 @@ namespace Slipstream.Services
             int height = rect.Bottom - rect.Top;
 
             // REMEMBER:  "Out Of Memory" in the bmp.Clone() areas means the Rectangle is out of bounds because GDI is a troll.
-            Rectangle player1Crop = new Rectangle(Convert.ToInt32(width * p1c_Xoffset), Convert.ToInt32(height * p1c_Yoffset), Convert.ToInt32(width * p1c_Xselection), Convert.ToInt32(height * p1c_Yselection));
-            Rectangle player1EloCrop = new Rectangle(Convert.ToInt32(width * p1e_Xoffset), Convert.ToInt32(height * p1e_Yoffset), Convert.ToInt32(width * p1e_Xselection), Convert.ToInt32(height * p1e_Yselection));
-            Rectangle player2Crop = new Rectangle(Convert.ToInt32(width * p2c_Xoffset), Convert.ToInt32(height * p2c_Yoffset), Convert.ToInt32(width * p2c_Xselection), Convert.ToInt32(height * p2c_Yselection));
-            Rectangle player2EloCrop = new Rectangle(Convert.ToInt32(width * p2e_Xoffset), Convert.ToInt32(height * p2e_Yoffset), Convert.ToInt32(width * p2e_Xselection), Convert.ToInt32(height * p2e_Yselection));
+            Rectangle player1char_crop = new Rectangle(Convert.ToInt32(width * p1char_Xoffset), Convert.ToInt32(height * p1char_Yoffset), Convert.ToInt32(width * p1char_Xselection), Convert.ToInt32(height * p1char_Yselection));
+            Rectangle player1tag_crop = new Rectangle(Convert.ToInt32(width * p1tag_Xoffset), Convert.ToInt32(height * p1tag_Yoffset), Convert.ToInt32(width * p1tag_Xselection), Convert.ToInt32(height * p1tag_Yselection));
+            Rectangle player1elo_crop = new Rectangle(Convert.ToInt32(width * p1elo_Xoffset), Convert.ToInt32(height * p1elo_Yoffset), Convert.ToInt32(width * p1elo_Xselection), Convert.ToInt32(height * p1elo_Yselection));
+
+            Rectangle player2char_crop = new Rectangle(Convert.ToInt32(width * p2char_Xoffset), Convert.ToInt32(height * p2char_Yoffset), Convert.ToInt32(width * p2char_Xselection), Convert.ToInt32(height * p2char_Yselection));
+            Rectangle player2tag_crop = new Rectangle(Convert.ToInt32(width * p2tag_Xoffset), Convert.ToInt32(height * p2tag_Yoffset), Convert.ToInt32(width * p2tag_Xselection), Convert.ToInt32(height * p2tag_Yselection));
+            Rectangle player2elo_crop = new Rectangle(Convert.ToInt32(width * p2elo_Xoffset), Convert.ToInt32(height * p2elo_Yoffset), Convert.ToInt32(width * p2elo_Xselection), Convert.ToInt32(height * p2elo_Yselection));
 
             using Bitmap bmp = new Bitmap(width, height, PixelFormat.Format32bppArgb);
 
@@ -117,41 +129,58 @@ namespace Slipstream.Services
 
             string filename = $"Capture-{DateTime.Now:MM-dd-HH-mm-ss}.jpg";
 
-            Bitmap player1bmp = bmp.Clone(player1Crop, bmp.PixelFormat);
-            Bitmap player2bmp = bmp.Clone(player2Crop, bmp.PixelFormat);
-            Bitmap player1elobmp = bmp.Clone(player1EloCrop, bmp.PixelFormat);
-            Bitmap player2elobmp = bmp.Clone(player2EloCrop, bmp.PixelFormat);
+            Bitmap player1char_bmp = bmp.Clone(player1char_crop, bmp.PixelFormat);
+            Bitmap player1tag_bmp = bmp.Clone(player1tag_crop, bmp.PixelFormat);
+            Bitmap player1elo_bmp = bmp.Clone(player1elo_crop, bmp.PixelFormat);
+
+            Bitmap player2char_bmp = bmp.Clone(player2char_crop, bmp.PixelFormat);
+            Bitmap player2tag_bmp = bmp.Clone(player2tag_crop, bmp.PixelFormat);
+            Bitmap player2elo_bmp = bmp.Clone(player2elo_crop, bmp.PixelFormat);
+
+            SoftwareBitmap p1charsbmp = await ConvertToSoftwareBitmap(player1char_bmp);
+            SoftwareBitmap p2charsbmp = await ConvertToSoftwareBitmap(player2char_bmp);
+            SoftwareBitmap p1tagbmp = await ConvertToSoftwareBitmap(player1tag_bmp);
+            SoftwareBitmap p2tagbmp = await ConvertToSoftwareBitmap(player2tag_bmp);
+            SoftwareBitmap p1elosbmp = await ConvertToSoftwareBitmap(player1elo_bmp);
+            SoftwareBitmap p2elosbmp = await ConvertToSoftwareBitmap(player2elo_bmp);
+
+            OcrResult player1tag_text = await ocrEngine.RecognizeAsync(p1tagbmp);
+            OcrResult player2tag_text = await ocrEngine.RecognizeAsync(p2tagbmp);
+            OcrResult player1elo_text = await ocrEngine.RecognizeAsync(p1elosbmp);
+            OcrResult player2elo_text = await ocrEngine.RecognizeAsync(p2elosbmp);
+
+            Bitmap p1CharBmp_HighContrast = EnhanceContrast(ScaleImage(player1char_bmp), contrast: 120, brightness: 0.1f);
+            SoftwareBitmap p1CharsBmp_HighContrast = await ConvertToSoftwareBitmap(p1CharBmp_HighContrast);
+            OcrResult player1char_text = await ocrEngine.RecognizeAsync(p1CharsBmp_HighContrast);
+
+            Bitmap p2CharBmp_HighContrast = ApplyColorThreshold(ScaleImage(player2char_bmp), upperThreshold);
+            SoftwareBitmap p2CharsBmp_HighContrast = await ConvertToSoftwareBitmap(ScaleImage(p2CharBmp_HighContrast));
+            OcrResult player2char_text = await ocrEngine.RecognizeAsync(p2CharsBmp_HighContrast);
 
             if (GlobalData.IsSaveCaptures)
             {
                 string subDirectory = "OCRCaptures";
                 Directory.CreateDirectory(subDirectory);
 
-                bmp.Save(Path.Combine(subDirectory, $"All-Capture-{DateTime.Now:MM-dd-HH-mm-ss}.jpg"), ImageFormat.Jpeg);
-                player1bmp.Save(Path.Combine(subDirectory, $"p1-{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
-                player2bmp.Save(Path.Combine(subDirectory, $"p2-{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
-                player1elobmp.Save(Path.Combine(subDirectory, $"p1elo-{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
-                player2elobmp.Save(Path.Combine(subDirectory, $"p2elo-{Path.GetFileName(filename)}"), ImageFormat.Jpeg); 
+                bmp.Save(Path.Combine(subDirectory, $"All_Capture_{DateTime.Now:MM-dd-HH-mm-ss}.jpg"), ImageFormat.Jpeg);
+                player1char_bmp.Save(Path.Combine(subDirectory, $"p1_char_{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
+                player2char_bmp.Save(Path.Combine(subDirectory, $"p2_char_{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
+                player1elo_bmp.Save(Path.Combine(subDirectory, $"p1_elo_{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
+                player2elo_bmp.Save(Path.Combine(subDirectory, $"p2_elo_{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
+                player1tag_bmp.Save(Path.Combine(subDirectory, $"p1_tag_{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
+                player2tag_bmp.Save(Path.Combine(subDirectory, $"p2_tag_{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
+                p1CharBmp_HighContrast.Save(Path.Combine(subDirectory, $"p1_tag_hc_{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
+                p2CharBmp_HighContrast.Save(Path.Combine(subDirectory, $"p2_tag_hc_{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
             }
 
-            SoftwareBitmap p1sbmp = await ConvertToSoftwareBitmap(player1bmp);
-            SoftwareBitmap p2sbmp = await ConvertToSoftwareBitmap(player2bmp);
-            SoftwareBitmap p1elosbmp = await ConvertToSoftwareBitmap(player1elobmp);
-            SoftwareBitmap p2elosbmp = await ConvertToSoftwareBitmap(player2elobmp);
-
-            OcrResult player1text = await ocrEngine.RecognizeAsync(p1sbmp);
-            OcrResult player2text = await ocrEngine.RecognizeAsync(p2sbmp);
-            OcrResult player1elotext = await ocrEngine.RecognizeAsync(p1elosbmp);
-            OcrResult player2elotext = await ocrEngine.RecognizeAsync(p2elosbmp);
-
-            RivalsPlayer player1 = new RivalsPlayer(player1text.Text, player1elotext.Text);
-            RivalsPlayer player2 = new RivalsPlayer(player2text.Text, player2elotext.Text);
+            RivalsPlayer player1 = new RivalsPlayer(player1char_text.Text, player1tag_text.Text, player1elo_text.Text);
+            RivalsPlayer player2 = new RivalsPlayer(player2char_text.Text, player2tag_text.Text, player2elo_text.Text);
 
             RivalsMatch match = new RivalsMatch(player1, player2);
 
             sw.Stop();
           
-            string finaltext = $"Player 1: {player1text.Text}~~ Elo: {player1elotext.Text} \n\n Player 2: {player2text.Text}~~ Elo: {player2elotext.Text} \n\n perf: {sw.ElapsedMilliseconds}";
+            string finaltext = $"Player 1: {player1char_text.Text}~~ Elo: {player1elo_text.Text} \n\n Player 2: {player2char_text.Text}~~ Elo: {player2elo_text.Text} \n\n perf: {sw.ElapsedMilliseconds}";
             Console.WriteLine(finaltext);
 
             if (!match.IsValid(out MatchValidityFlag validityFlag))
@@ -173,6 +202,75 @@ namespace Slipstream.Services
             using IRandomAccessStream stream = ms.AsRandomAccessStream();
             var decoder = await BitmapDecoder.CreateAsync(stream);
             return await decoder.GetSoftwareBitmapAsync();
+        }
+
+        private static Bitmap EnhanceContrast(Bitmap bmp, float contrast, float brightness)
+        {
+            Bitmap adjustedImage = new Bitmap(bmp.Width, bmp.Height);
+
+            using (Graphics g = Graphics.FromImage(adjustedImage))
+            {
+                float adjustedContrast = contrast / 100.0f;
+                float translation = 0.5f * (1.0f - adjustedContrast);
+
+                // Create a color matrix to adjust contrast and brightness
+                float[][] colorMatrixElements = {
+                    new float[] { adjustedContrast, 0, 0, 0, 0 },
+                    new float[] { 0, adjustedContrast, 0, 0, 0 },
+                    new float[] { 0, 0, adjustedContrast, 0, 0 },
+                    new float[] { 0, 0, 0, 1, 0 },
+                    new float[] { translation + brightness, translation + brightness, translation + brightness, 0, 1 }
+                };
+
+                ColorMatrix colorMatrix = new ColorMatrix(colorMatrixElements);
+                ImageAttributes attributes = new ImageAttributes();
+                attributes.SetColorMatrix(colorMatrix);
+
+                // Draw the adjusted image
+                g.DrawImage(bmp, new Rectangle(0, 0, bmp.Width, bmp.Height), 0, 0, bmp.Width, bmp.Height, GraphicsUnit.Pixel, attributes);
+            }
+
+            return adjustedImage;
+        }
+
+        private static Bitmap ApplyColorThreshold(Bitmap bmp, Color upperThreshold)
+        {
+            Bitmap thresholdedImage = new Bitmap(bmp.Width, bmp.Height);
+
+            for (int y = 0; y < bmp.Height; y++)
+            {
+                for (int x = 0; x < bmp.Width; x++)
+                {
+                    Color pixelColor = bmp.GetPixel(x, y);
+
+                    if (pixelColor.B >= upperThreshold.B)
+                    {
+                        thresholdedImage.SetPixel(x, y, Color.White);
+                    }
+                    else
+                    {
+                        thresholdedImage.SetPixel(x, y, Color.Black);
+                    }
+                }
+            }
+
+            return thresholdedImage;
+        }
+
+        // This ended up being the key to making this system work - the capture needs to be a little bigger than it is by default.
+        private static Bitmap ScaleImage(Bitmap bmp, int scaleFactor = 2)
+        {
+            int newWidth = bmp.Width * scaleFactor;
+            int newHeight = bmp.Height * scaleFactor;
+            Bitmap scaledImage = new Bitmap(newWidth, newHeight);
+
+            using (Graphics g = Graphics.FromImage(scaledImage))
+            {
+                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                g.DrawImage(bmp, 0, 0, newWidth, newHeight);
+            }
+
+            return scaledImage;
         }
     }
 }

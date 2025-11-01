@@ -1,4 +1,4 @@
-﻿using Slipstream.Data;
+using Slipstream.Data;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -25,21 +25,25 @@ namespace Slipstream.Models
             }
         }
 
-        public RivalsPlayer(string playerText, string eloText)
-        { 
-            EloString = eloText.Trim();
-            ParseOcrResult(playerText.Trim());
+        public RivalsPlayer(string playerChar, string playerTag, string playerElo)
+        {
+            ParseElo(playerElo.Trim());
+            ParseTag(playerTag.Trim());
+            ParseChar(playerChar.Trim());
+        }
 
+        private void ParseElo(string text)
+        {
             try
             {
                 // The OCR area clips the rest of 'Unranked' so instead of trying to code around it... just get the 'anked' and call it a day! :P
-                if (eloText == "UNRANKED" || eloText == "ANKED" || eloText == "ANKEO")
+                if (text == "UNRANKED" || text == "ANKED" || text == "ANKEO")
                 {
                     Elo = "U";
                 }
                 else
                 {
-                    Elo = EloString;
+                    Elo = text;
                 }
             }
             catch (Exception ex)
@@ -48,37 +52,31 @@ namespace Slipstream.Models
             }
         }
 
-        public void ParseOcrResult(string text)
+        private void ParseTag(string text)
+        {
+            if (!String.IsNullOrEmpty(text))
+            {
+                PlayerTag = GlobalData.CapitalizeFirstLetter(text);
+            }
+            else
+            {
+                PlayerTag = "UNKNOWN";
+            }
+        }
+
+        private void ParseChar(string text)
         {
             try
             {
-                Debug.WriteLine("Parsed Text: " + text);
-                string[] split = text.Split(' ');
-                string? characterName = FormatName(split[split.Length - 1]);
-
-                if (split.Length > 2)
-                {
-                    PlayerTag = FormatName(string.Join(" ", split.Take(split.Length - 1)));
-                }
-                else
-                {
-                    PlayerTag = FormatName(split[0]);
-                }
-
-                try
-                {
-                    Character = GlobalData.AllRivals.First(r => r.Name == characterName);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Failed To Parse Character by name - defaulting to 'unknown' \n\n VALUE: {characterName ?? "null"}");
-                }
-
+                Debug.WriteLine("Parsed Char Text: " + text);
+                Character = GlobalData.AllRivals.First(r => r.Name.ToLower() == text.ToLower());
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Failed to Parse Character and Name catastrophically.");
-                PlayerTag = "";
+#if DEBUGPHOTO
+                MessageBox.Show($"Failed To Parse Character from text: {text} - defaulting to 'unknown'");
+#endif
+                Debug.WriteLine($"Failed To Parse Character from text: {text} - defaulting to 'unknown'");
                 Character.Name = "";
             }
         }
