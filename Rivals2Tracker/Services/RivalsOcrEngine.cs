@@ -67,7 +67,8 @@ namespace Slipstream.Services
         private const double p2elo_Xselection = 0.0313;
         private const double p2elo_Yselection = 0.0285;
 
-        private static Color upperThreshold = Color.FromArgb(0x75, 0x7B, 0xC3); // Threshold for character text - in theory anyway
+        private static Color charUpperThreshold = Color.FromArgb(0x75, 0x7B, 0xC3);
+        private static Color tagUpperThreshold = Color.FromArgb(0xD0, 0xD0, 0xD0);
 
         private static OcrEngine ocrEngine = OcrEngine.TryCreateFromLanguage(new Language("en"));
 
@@ -88,7 +89,7 @@ namespace Slipstream.Services
             {
                 StringBuilder sb = new StringBuilder(256);
                 GetWindowText(hWnd, sb, sb.Capacity);
-                if (sb.ToString().Contains("All-Capture"))
+                if (sb.ToString().Contains("All_Capture"))
                 {
                     hWndFound = hWnd;
                     return false;
@@ -144,16 +145,22 @@ namespace Slipstream.Services
             SoftwareBitmap p1elosbmp = await ConvertToSoftwareBitmap(player1elo_bmp);
             SoftwareBitmap p2elosbmp = await ConvertToSoftwareBitmap(player2elo_bmp);
 
-            OcrResult player1tag_text = await ocrEngine.RecognizeAsync(p1tagbmp);
-            OcrResult player2tag_text = await ocrEngine.RecognizeAsync(p2tagbmp);
             OcrResult player1elo_text = await ocrEngine.RecognizeAsync(p1elosbmp);
             OcrResult player2elo_text = await ocrEngine.RecognizeAsync(p2elosbmp);
 
-            Bitmap p1CharBmp_HighContrast = EnhanceContrast(ScaleImage(player1char_bmp), contrast: 120, brightness: 0.1f);
-            SoftwareBitmap p1CharsBmp_HighContrast = await ConvertToSoftwareBitmap(p1CharBmp_HighContrast);
+            Bitmap p1TagBmp_HighContrast = ApplyBrightnessColorThreshold(ScaleImage(player1tag_bmp), tagUpperThreshold);
+            SoftwareBitmap p1TagsBmp_HighContrast = await ConvertToSoftwareBitmap(ScaleImage(p1TagBmp_HighContrast));
+            OcrResult player1tag_text = await ocrEngine.RecognizeAsync(p1TagsBmp_HighContrast);
+
+            Bitmap p2TagBmp_HighContrast = ApplyBrightnessColorThreshold(ScaleImage(player2tag_bmp), tagUpperThreshold);
+            SoftwareBitmap p2TagsBmp_HighContrast = await ConvertToSoftwareBitmap(ScaleImage(p2TagBmp_HighContrast));
+            OcrResult player2tag_text = await ocrEngine.RecognizeAsync(p2TagsBmp_HighContrast);
+
+            Bitmap p1CharBmp_HighContrast = ApplyBlueColorThreshold(ScaleImage(player1char_bmp), charUpperThreshold);
+            SoftwareBitmap p1CharsBmp_HighContrast = await ConvertToSoftwareBitmap(ScaleImage(p1CharBmp_HighContrast));
             OcrResult player1char_text = await ocrEngine.RecognizeAsync(p1CharsBmp_HighContrast);
 
-            Bitmap p2CharBmp_HighContrast = ApplyColorThreshold(ScaleImage(player2char_bmp), upperThreshold);
+            Bitmap p2CharBmp_HighContrast = ApplyBlueColorThreshold(ScaleImage(player2char_bmp), charUpperThreshold);
             SoftwareBitmap p2CharsBmp_HighContrast = await ConvertToSoftwareBitmap(ScaleImage(p2CharBmp_HighContrast));
             OcrResult player2char_text = await ocrEngine.RecognizeAsync(p2CharsBmp_HighContrast);
 
@@ -167,10 +174,10 @@ namespace Slipstream.Services
                 player2char_bmp.Save(Path.Combine(subDirectory, $"p2_char_{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
                 player1elo_bmp.Save(Path.Combine(subDirectory, $"p1_elo_{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
                 player2elo_bmp.Save(Path.Combine(subDirectory, $"p2_elo_{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
-                player1tag_bmp.Save(Path.Combine(subDirectory, $"p1_tag_{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
-                player2tag_bmp.Save(Path.Combine(subDirectory, $"p2_tag_{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
-                p1CharBmp_HighContrast.Save(Path.Combine(subDirectory, $"p1_tag_hc_{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
-                p2CharBmp_HighContrast.Save(Path.Combine(subDirectory, $"p2_tag_hc_{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
+                p1TagBmp_HighContrast.Save(Path.Combine(subDirectory, $"p1_tag_{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
+                p2TagBmp_HighContrast.Save(Path.Combine(subDirectory, $"p2_tag_{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
+                p1CharBmp_HighContrast.Save(Path.Combine(subDirectory, $"p1_char_hc_{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
+                p2CharBmp_HighContrast.Save(Path.Combine(subDirectory, $"p2_char_hc_{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
             }
 
             RivalsPlayer player1 = new RivalsPlayer(player1char_text.Text, player1tag_text.Text, player1elo_text.Text);
@@ -233,7 +240,7 @@ namespace Slipstream.Services
             return adjustedImage;
         }
 
-        private static Bitmap ApplyColorThreshold(Bitmap bmp, Color upperThreshold)
+        private static Bitmap ApplyBlueColorThreshold(Bitmap bmp, Color upperThreshold)
         {
             Bitmap thresholdedImage = new Bitmap(bmp.Width, bmp.Height);
 
@@ -244,6 +251,30 @@ namespace Slipstream.Services
                     Color pixelColor = bmp.GetPixel(x, y);
 
                     if (pixelColor.B >= upperThreshold.B)
+                    {
+                        thresholdedImage.SetPixel(x, y, Color.White);
+                    }
+                    else
+                    {
+                        thresholdedImage.SetPixel(x, y, Color.Black);
+                    }
+                }
+            }
+
+            return thresholdedImage;
+        }
+
+        private static Bitmap ApplyBrightnessColorThreshold(Bitmap bmp, Color upperThreshold)
+        {
+            Bitmap thresholdedImage = new Bitmap(bmp.Width, bmp.Height);
+
+            for (int y = 0; y < bmp.Height; y++)
+            {
+                for (int x = 0; x < bmp.Width; x++)
+                {
+                    Color pixelColor = bmp.GetPixel(x, y);
+
+                    if (pixelColor.B >= upperThreshold.B && pixelColor.R >= upperThreshold.R && pixelColor.G >= upperThreshold.G)
                     {
                         thresholdedImage.SetPixel(x, y, Color.White);
                     }
