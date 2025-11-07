@@ -1,4 +1,4 @@
-﻿using Prism.Mvvm;
+using Prism.Mvvm;
 using Slipstream.Data;
 using System;
 using System.Windows;
@@ -32,13 +32,13 @@ namespace Slipstream.Models
             {
                 string[] stages = record.BannedStagesList.Split(',');
 
-                if (stages[0] is not null)
+                if (stages.Length > 0 && !string.IsNullOrEmpty(stages[0]))
                 {
                     BannedStage1 = GlobalData.GetStageByID(Convert.ToInt64(stages[0]));
                     BannedStage1Visibility = Visibility.Visible;
                 }
 
-                if (stages[1] is not null)
+                if (stages.Length > 1 && !string.IsNullOrEmpty(stages[1]))
                 {
                     BannedStage2 = GlobalData.GetStageByID(Convert.ToInt64(stages[1]));
                     BannedStage2Visibility = Visibility.Visible;

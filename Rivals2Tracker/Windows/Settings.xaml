@@ -20,7 +20,7 @@
     <Grid Background="{StaticResource LGR_Blue_Opacity}">
         <Grid Height="70" Background="{StaticResource LGR_Banner}" MouseDown="EnableDrag" VerticalAlignment="Top">
             <Label Content="Settings" FontFamily="Franklin Gothic Demi" FontSize="32" Margin="10, 10, 0, 0" Grid.ColumnSpan="3" IsHitTestVisible="False"/>
-            <Label Content="Slipstream v0.6.5 (Glavan) - Beta" FontSize="20" Margin="10, 10, 0, 0" Foreground="#c0c0f0" Grid.ColumnSpan="3" HorizontalAlignment="Center" IsHitTestVisible="False"/>
+            <Label Content="Slipstream v0.7.0 - Beta" FontSize="20" Margin="10, 10, 0, 0" Foreground="#c0c0f0" Grid.ColumnSpan="3" HorizontalAlignment="Center" IsHitTestVisible="False"/>
 
             <Button x:Name="WindowClose" Style="{StaticResource WindowingButton_Close}" Click="WindowCloseClick" VerticalAlignment="Top">
                 <Image Style="{StaticResource Windowing_Image}" Source="/Slipstream;component/Resources/Icons/Windowing/Close.png" />
@@ -66,14 +66,8 @@
                 <TextBlock FontSize="16" Foreground="#d0d0d0">*Check this to save the OCR screen captures to your disk<LineBreak/> This is useful for bug reporting and troubleshooting.</TextBlock>
             </Grid>
 
-            <Button Content="Show Tutorial" Margin="0, 15, 0, 0" Width="200" Height="35" Foreground="{StaticResource FG_BlueLabel}"
-                    FontSize="22" FontFamily="Franklin Gothic Demi Cond" BorderThickness="1" Background="{StaticResource BG_DarkBlue}"
-                    Command="{Binding ShowTutorialCommand}" />
-
-            <Button Content="Save and Close" Margin="0, 35, 0, 0" Width="200" Height="35" Foreground="{StaticResource FG_BlueLabel}"
-                    FontSize="22" FontFamily="Franklin Gothic Demi Cond" BorderThickness="1" Background="{StaticResource BG_DarkBlue}"
-                    Command="{Binding SaveAndCloseCommand}"/>
-
+            <Button Content="Show Tutorial" Margin="0, 15, 0, 0" Width="200" FontSize="22" Command="{Binding ShowTutorialCommand}" />
+            <Button Content="Save and Close" Margin="0, 35, 0, 0" Width="200" FontSize="22" Command="{Binding SaveAndCloseCommand}" />
 
         </StackPanel>
     </Grid>

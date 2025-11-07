@@ -1,13 +1,17 @@
+using PowerOCR.Models;
 using Slipstream.Data;
 using Slipstream.Models;
 using System;
 using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using Windows.Globalization;
 using Windows.Graphics.Imaging;
 using Windows.Media.Ocr;
@@ -67,10 +71,13 @@ namespace Slipstream.Services
         private const double p2elo_Xselection = 0.0313;
         private const double p2elo_Yselection = 0.0285;
 
-        private static Color charUpperThreshold = Color.FromArgb(0x75, 0x7B, 0xC3);
+        private static Color charUpperThreshold = Color.FromArgb(0x75, 0x7B, 0xC0);
         private static Color tagUpperThreshold = Color.FromArgb(0xD0, 0xD0, 0xD0);
 
         private static OcrEngine ocrEngine = OcrEngine.TryCreateFromLanguage(new Language("en"));
+
+        private static string subDirectory = "OCRCaptures";
+        private static string filename = $"Capture-{DateTime.Now:MM-dd-HH-mm-ss}.jpg";
 
         public static async Task<RivalsOcrResult> Capture()
         {
@@ -128,8 +135,6 @@ namespace Slipstream.Services
                 ga.CopyFromScreen(rect.Left, rect.Top, 0, 0, new Size(width, height), CopyPixelOperation.SourceCopy);
             }
 
-            string filename = $"Capture-{DateTime.Now:MM-dd-HH-mm-ss}.jpg";
-
             Bitmap player1char_bmp = bmp.Clone(player1char_crop, bmp.PixelFormat);
             Bitmap player1tag_bmp = bmp.Clone(player1tag_crop, bmp.PixelFormat);
             Bitmap player1elo_bmp = bmp.Clone(player1elo_crop, bmp.PixelFormat);
@@ -148,46 +153,25 @@ namespace Slipstream.Services
             OcrResult player1elo_text = await ocrEngine.RecognizeAsync(p1elosbmp);
             OcrResult player2elo_text = await ocrEngine.RecognizeAsync(p2elosbmp);
 
-            Bitmap p1TagBmp_HighContrast = ApplyBrightnessColorThreshold(ScaleImage(player1tag_bmp), tagUpperThreshold);
-            SoftwareBitmap p1TagsBmp_HighContrast = await ConvertToSoftwareBitmap(ScaleImage(p1TagBmp_HighContrast));
-            OcrResult player1tag_text = await ocrEngine.RecognizeAsync(p1TagsBmp_HighContrast);
+            string player1tag_text = await ParseTextFromBitmap(player1tag_bmp, tagUpperThreshold, "p1_tag_", false);
+            string player2tag_text = await ParseTextFromBitmap(player2tag_bmp, tagUpperThreshold, "p2_tag_", false);
+            string player1char_text = await ParseTextFromBitmap(player1char_bmp, charUpperThreshold, "p1_char");
+            string player2char_text = await ParseTextFromBitmap(player2char_bmp, charUpperThreshold, "p2_char");
 
-            Bitmap p2TagBmp_HighContrast = ApplyBrightnessColorThreshold(ScaleImage(player2tag_bmp), tagUpperThreshold);
-            SoftwareBitmap p2TagsBmp_HighContrast = await ConvertToSoftwareBitmap(ScaleImage(p2TagBmp_HighContrast));
-            OcrResult player2tag_text = await ocrEngine.RecognizeAsync(p2TagsBmp_HighContrast);
+            await SaveDebugBMP(bmp, $"All_Capture_{DateTime.Now:MM-dd-HH-mm-ss}.jpg");
+            await SaveDebugBMP(player1char_bmp, $"p1_char_{Path.GetFileName(filename)}");
+            await SaveDebugBMP(player2char_bmp, $"p2_char_{Path.GetFileName(filename)}");
+            await SaveDebugBMP(player1elo_bmp, $"p1_elo_{Path.GetFileName(filename)}");
+            await SaveDebugBMP(player2elo_bmp, $"p2_elo_{Path.GetFileName(filename)}");
 
-            Bitmap p1CharBmp_HighContrast = ApplyBlueColorThreshold(ScaleImage(player1char_bmp), charUpperThreshold);
-            SoftwareBitmap p1CharsBmp_HighContrast = await ConvertToSoftwareBitmap(ScaleImage(p1CharBmp_HighContrast));
-            OcrResult player1char_text = await ocrEngine.RecognizeAsync(p1CharsBmp_HighContrast);
-
-            Bitmap p2CharBmp_HighContrast = ApplyBlueColorThreshold(ScaleImage(player2char_bmp), charUpperThreshold);
-            SoftwareBitmap p2CharsBmp_HighContrast = await ConvertToSoftwareBitmap(ScaleImage(p2CharBmp_HighContrast));
-            OcrResult player2char_text = await ocrEngine.RecognizeAsync(p2CharsBmp_HighContrast);
-
-            if (GlobalData.IsSaveCaptures)
-            {
-                string subDirectory = "OCRCaptures";
-                Directory.CreateDirectory(subDirectory);
-
-                bmp.Save(Path.Combine(subDirectory, $"All_Capture_{DateTime.Now:MM-dd-HH-mm-ss}.jpg"), ImageFormat.Jpeg);
-                player1char_bmp.Save(Path.Combine(subDirectory, $"p1_char_{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
-                player2char_bmp.Save(Path.Combine(subDirectory, $"p2_char_{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
-                player1elo_bmp.Save(Path.Combine(subDirectory, $"p1_elo_{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
-                player2elo_bmp.Save(Path.Combine(subDirectory, $"p2_elo_{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
-                p1TagBmp_HighContrast.Save(Path.Combine(subDirectory, $"p1_tag_{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
-                p2TagBmp_HighContrast.Save(Path.Combine(subDirectory, $"p2_tag_{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
-                p1CharBmp_HighContrast.Save(Path.Combine(subDirectory, $"p1_char_hc_{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
-                p2CharBmp_HighContrast.Save(Path.Combine(subDirectory, $"p2_char_hc_{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
-            }
-
-            RivalsPlayer player1 = new RivalsPlayer(player1char_text.Text, player1tag_text.Text, player1elo_text.Text);
-            RivalsPlayer player2 = new RivalsPlayer(player2char_text.Text, player2tag_text.Text, player2elo_text.Text);
+            RivalsPlayer player1 = new RivalsPlayer(player1char_text, player1tag_text, player1elo_text.Text);
+            RivalsPlayer player2 = new RivalsPlayer(player2char_text, player2tag_text, player2elo_text.Text);
 
             RivalsMatch match = new RivalsMatch(player1, player2);
 
             sw.Stop();
           
-            string finaltext = $"Player 1: {player1char_text.Text}~~ Elo: {player1elo_text.Text} \n\n Player 2: {player2char_text.Text}~~ Elo: {player2elo_text.Text} \n\n perf: {sw.ElapsedMilliseconds}";
+            string finaltext = $"Player 1: {player1char_text}~~ Elo: {player1elo_text.Text} \n\n Player 2: {player2char_text}~~ Elo: {player2elo_text.Text} \n\n perf: {sw.ElapsedMilliseconds}";
             Console.WriteLine(finaltext);
 
             if (!match.IsValid(out MatchValidityFlag validityFlag))
@@ -198,6 +182,51 @@ namespace Slipstream.Services
             {
                 return new RivalsOcrResult(match);
             }
+        }
+
+        private static async Task<string> ParseTextFromBitmap(Bitmap bitmapToParse, Color upperThreshold, string fileNamePrefix, bool isDetectingCharacter = true)
+        {
+            Func<string, bool> characterValidation = text => GlobalData.AllRivals.Any(r => r.Name == text);
+            Func<string, bool> generalValidation = text => !string.IsNullOrEmpty(text);
+            Func<string, bool> validationFunc = isDetectingCharacter ? characterValidation : generalValidation;
+
+            bitmapToParse.Save(Path.Combine(subDirectory, $"{fileNamePrefix}{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
+            string detectedText = await GetOcrResultFromImageAsync(bitmapToParse, validationFunc);
+
+            if (!string.IsNullOrEmpty(detectedText))
+            {
+                return detectedText;
+            }
+
+            Bitmap scaledBitmap = ScaleImage(bitmapToParse);
+            await SaveDebugBMP(scaledBitmap, $"{fileNamePrefix}_large_{Path.GetFileName(filename)}");
+            detectedText = await GetOcrResultFromImageAsync(scaledBitmap, validationFunc);
+
+            if (!string.IsNullOrEmpty(detectedText))
+            {
+                return detectedText;
+            }
+
+            Bitmap highContrastBitmap = ApplyBrightnessColorThreshold(bitmapToParse, upperThreshold);
+            highContrastBitmap = ScaleImage(highContrastBitmap);
+            await SaveDebugBMP(highContrastBitmap, $"{fileNamePrefix}_hc_{Path.GetFileName(filename)}");
+            detectedText = await GetOcrResultFromImageAsync(highContrastBitmap, validationFunc);
+
+            return detectedText;
+        }
+
+        private static async Task<string> PerformOcrAndValidate(Bitmap bitmap, Func<string, bool> validationFunc)
+        {
+            SoftwareBitmap softwareBitmap = await ConvertToSoftwareBitmap(bitmap);
+            OcrResult ocrResult = await ocrEngine.RecognizeAsync(softwareBitmap);
+            string detectedText = ocrResult.Text;
+
+            if (validationFunc(detectedText))
+            {
+                return detectedText;
+            }
+
+            return string.Empty;
         }
 
         static async Task<SoftwareBitmap> ConvertToSoftwareBitmap(Bitmap bmp)
@@ -297,11 +326,50 @@ namespace Slipstream.Services
 
             using (Graphics g = Graphics.FromImage(scaledImage))
             {
+                // Enable anti-aliasing and high-quality scaling
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
                 g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+
                 g.DrawImage(bmp, 0, 0, newWidth, newHeight);
             }
 
             return scaledImage;
+        }
+
+        private static async Task SaveDebugBMP(Bitmap bmp, string filename)
+        {
+            if (GlobalData.IsSaveCaptures)
+            {
+                Directory.CreateDirectory(subDirectory);
+                bmp.Save(Path.Combine(subDirectory, filename), ImageFormat.Jpeg);
+            }
+        }
+
+        private static async Task<String> GetOcrResultFromImageAsync(Bitmap bmp, Func<string, bool> validationFunc)
+        {
+            string detectedText;
+            await using MemoryStream memoryStream = new();
+            using WrappingStream wrappingStream = new(memoryStream);
+
+            bmp.Save(wrappingStream, ImageFormat.Bmp);
+            wrappingStream.Position = 0;
+
+            BitmapDecoder bmpDecoder = await BitmapDecoder.CreateAsync(wrappingStream.AsRandomAccessStream());
+            SoftwareBitmap softwareBmp = await bmpDecoder.GetSoftwareBitmapAsync();
+
+            await memoryStream.DisposeAsync();
+            await wrappingStream.DisposeAsync();
+
+            var ocrResult = await ocrEngine.RecognizeAsync(softwareBmp);
+            detectedText = ocrResult.Text;
+
+            if (validationFunc(detectedText))
+            {
+                return detectedText;
+            }
+
+            return string.Empty;
         }
     }
 }

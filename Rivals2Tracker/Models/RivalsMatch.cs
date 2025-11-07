@@ -1,4 +1,4 @@
-﻿using Prism.Mvvm;
+using Prism.Mvvm;
 using Slipstream.Data;
 using System;
 using System.Collections.Generic;
@@ -259,18 +259,15 @@ namespace Slipstream.Models
             int wins = Games.Where(g => g.Result == GameResultEnum.Win).Count();
             int losses = Games.Where(g => g.Result == GameResultEnum.Lose).Count();
 
-            if (wins > losses)
+            if (wins > losses && losses + wins >= 2)
             {
-                if (wins == 1)
-                {
-                    DialogResult result = MessageBox.Show("There aren't enough games to played for this set without a forfeit - are you sure you want to record it as a 'Win'?", "Record Partial Match", MessageBoxButtons.YesNo);
+                return true;
+            }
 
-                    if (result == DialogResult.Yes)
-                    {
-                        return true;
-                    }
-                }
+            DialogResult result = MessageBox.Show("There aren't enough games played for this set without a forfeit - are you sure you want to record it as a 'Win'?", "Record Partial Match", MessageBoxButtons.YesNo);
 
+            if (result == DialogResult.Yes)
+            {
                 return true;
             }
 
@@ -281,18 +278,15 @@ namespace Slipstream.Models
             int wins = Games.Where(g => g.Result == GameResultEnum.Win).Count();
             int losses = Games.Where(g => g.Result == GameResultEnum.Lose).Count();
 
-            if (losses > wins)
+            if (losses > wins && losses + wins >= 2)
             {
-                if (losses == 1)
-                {
-                    DialogResult result = MessageBox.Show("There aren't enough games to played for this set without a forfeit - are you sure you want to record it as a 'Loss'?", "Record Partial Match", MessageBoxButtons.YesNo);
+                return true;
+            }
 
-                    if (result == DialogResult.Yes)
-                    {
-                        return true;
-                    }
-                }
+            DialogResult result = MessageBox.Show("There aren't enough games played for this set without a forfeit - are you sure you want to record it as a 'Loss'?", "Record Partial Match", MessageBoxButtons.YesNo);
 
+            if (result == DialogResult.Yes)
+            {
                 return true;
             }
 

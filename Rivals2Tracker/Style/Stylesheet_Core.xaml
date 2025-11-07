@@ -1,4 +1,4 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:converters="clr-namespace:Slipstream.Resources.Converters"
                     xmlns:globaldata="clr-namespace:Slipstream.Data"
@@ -98,12 +98,13 @@
     <!-- ==================================================================================================================== -->
 
     <Style x:Key="BaseButton" TargetType="{x:Type Button}">
-        <Setter Property="Background" Value="{StaticResource BG_Button}" />
-        <Setter Property="Foreground" Value="{StaticResource FG_Interactable}" />
-        <Setter Property="BorderBrush" Value="{StaticResource Border_Control}" />
-        <Setter Property="BorderThickness" Value="4" />
-        <Setter Property="Height" Value="20" />
-        <Setter Property="FontSize" Value="11" />
+        <Setter Property="Background" Value="{StaticResource BG_DarkBlue}" />
+        <Setter Property="Foreground" Value="{StaticResource FG_BlueLabel}" />
+        <Setter Property="BorderBrush" Value="{StaticResource FG_BlueLabel}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Height" Value="35" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontFamily" Value="Franklin Gothic Demi Cond" />
 
         <Setter Property="Template">
             <Setter.Value>
