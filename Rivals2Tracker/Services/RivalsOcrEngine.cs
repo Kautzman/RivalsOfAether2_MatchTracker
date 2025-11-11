@@ -71,7 +71,7 @@ namespace Slipstream.Services
         private const double p2elo_Xselection = 0.0313;
         private const double p2elo_Yselection = 0.0285;
 
-        private static Color charUpperThreshold = Color.FromArgb(0x75, 0x7B, 0xC0);
+        private static Color charUpperThreshold = Color.FromArgb(0x75, 0x7B, 0xA0);
         private static Color tagUpperThreshold = Color.FromArgb(0xD0, 0xD0, 0xD0);
 
         private static OcrEngine ocrEngine = OcrEngine.TryCreateFromLanguage(new Language("en"));
@@ -79,8 +79,11 @@ namespace Slipstream.Services
         private static string subDirectory = "OCRCaptures";
         private static string filename = $"Capture-{DateTime.Now:MM-dd-HH-mm-ss}.jpg";
 
+        private static string debugOutput = String.Empty;
+
         public static async Task<RivalsOcrResult> Capture()
         {
+            debugOutput = String.Empty;
             Stopwatch sw = new Stopwatch();
             sw.Restart();
 
@@ -153,10 +156,19 @@ namespace Slipstream.Services
             OcrResult player1elo_text = await ocrEngine.RecognizeAsync(p1elosbmp);
             OcrResult player2elo_text = await ocrEngine.RecognizeAsync(p2elosbmp);
 
+            debugOutput += $"P1 ELO: {player1elo_text.Text}";
+            debugOutput += $"\nP2 ELO: {player2elo_text.Text}";
+
             string player1tag_text = await ParseTextFromBitmap(player1tag_bmp, tagUpperThreshold, "p1_tag_", false);
             string player2tag_text = await ParseTextFromBitmap(player2tag_bmp, tagUpperThreshold, "p2_tag_", false);
             string player1char_text = await ParseTextFromBitmap(player1char_bmp, charUpperThreshold, "p1_char");
             string player2char_text = await ParseTextFromBitmap(player2char_bmp, charUpperThreshold, "p2_char");
+
+
+            if (GlobalData.IsSaveCaptures)
+            {
+                File.WriteAllText(Path.Combine(subDirectory, $"ParseOutput_{DateTime.Now:MM-dd-HH-mm-ss}.txt"), debugOutput);
+            }
 
             await SaveDebugBMP(bmp, $"All_Capture_{DateTime.Now:MM-dd-HH-mm-ss}.jpg");
             await SaveDebugBMP(player1char_bmp, $"p1_char_{Path.GetFileName(filename)}");
@@ -186,12 +198,14 @@ namespace Slipstream.Services
 
         private static async Task<string> ParseTextFromBitmap(Bitmap bitmapToParse, Color upperThreshold, string fileNamePrefix, bool isDetectingCharacter = true)
         {
-            Func<string, bool> characterValidation = text => GlobalData.AllRivals.Any(r => r.Name == text);
+            Func<string, bool> characterValidation = text => GlobalData.AllRivals.Any(r => r.Name.ToLower() == text.ToLower());
             Func<string, bool> generalValidation = text => !string.IsNullOrEmpty(text);
             Func<string, bool> validationFunc = isDetectingCharacter ? characterValidation : generalValidation;
 
             bitmapToParse.Save(Path.Combine(subDirectory, $"{fileNamePrefix}{Path.GetFileName(filename)}"), ImageFormat.Jpeg);
             string detectedText = await GetOcrResultFromImageAsync(bitmapToParse, validationFunc);
+
+            debugOutput += $"\n\n{fileNamePrefix}:BASE - {detectedText}";
 
             if (!string.IsNullOrEmpty(detectedText))
             {
@@ -202,6 +216,8 @@ namespace Slipstream.Services
             await SaveDebugBMP(scaledBitmap, $"{fileNamePrefix}_large_{Path.GetFileName(filename)}");
             detectedText = await GetOcrResultFromImageAsync(scaledBitmap, validationFunc);
 
+            debugOutput += $"\n{fileNamePrefix}:LARGE - {detectedText}";
+
             if (!string.IsNullOrEmpty(detectedText))
             {
                 return detectedText;
@@ -211,6 +227,8 @@ namespace Slipstream.Services
             highContrastBitmap = ScaleImage(highContrastBitmap);
             await SaveDebugBMP(highContrastBitmap, $"{fileNamePrefix}_hc_{Path.GetFileName(filename)}");
             detectedText = await GetOcrResultFromImageAsync(highContrastBitmap, validationFunc);
+
+            debugOutput += $"\n{fileNamePrefix}:HIGHCONTRACT - {detectedText}";
 
             return detectedText;
         }
